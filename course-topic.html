@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Course Topic - LSM Portal</title>
+
+  <!-- Base styles -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+  /* Color Palette */
+  --primary: #0f4c75; /* A deep, professional blue */
+  --primary-dark: #002d62;
+  --accent: #ffb703; /* Bright contrasting accent */
+  --bg-main: #f8f9fa; /* Light background */
+  --bg-card: #ffffff;
+  --text-main: #212529;
+  --text-muted: #6c757d;
+  --border-color: #e9ecef;
+
+  /* Spacing & Typography */
+  --spacing-unit: 8px;
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  --font-body: 'Inter', sans-serif;
+  --font-code: 'Fira Code', monospace;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Base Reset & Typography */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  margin: 0;
+  background: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+h1, h2, h3 {
+  color: var(--text-main);
+  font-weight: 700;
+  margin-top: 0;
+}
+
+/* ========== STRUCTURE & LAYOUT ========== */
+
+.page-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Card Styling (Glassmorphism/Soft Shadow Effect) */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: calc(2 * var(--spacing-unit)); /* 16px */
+  margin-bottom: calc(2 * var(--spacing-unit));
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+  font-size: 1.15rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+/* ========== SIDEBAR (Enhanced Dark Mode) ========== */
+
+.topics-sidebar {
+  width: 300px;
+  background: var(--primary-dark);
+  color: #f8f9fa;
+  padding: calc(3 * var(--spacing-unit)) calc(2 * var(--spacing-unit));
+  box-shadow: 6px 0 20px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.sidebar-title-main {
+  font-size: 1.25rem;
+  color: var(--accent);
+}
+
+.topic-list {
+  padding-top: 1rem;
+}
+
+.topic-item a {
+  display: block;
+  padding: 0.75rem 1rem;
+  margin: 0.2rem 0;
+  border-radius: var(--radius-md);
+  color: #e5e7eb;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+  font-size: 0.9rem;
+}
+
+.topic-item a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.topic-item.active a {
+  background: var(--accent);
+  color: var(--primary-dark);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  transform: translateX(2px);
+}
+
+/* ========== MAIN CONTENT & HEADER ========== */
+
+.topic-main {
+  flex-grow: 1;
+  padding: calc(4 * var(--spacing-unit));
+}
+
+.topic-layout {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr;
+  gap: calc(3 * var(--spacing-unit));
+  align-items: flex-start;
+}
+
+.topic-header h1 {
+  font-size: 2rem;
+  margin: 0.5rem 0;
+  letter-spacing: -0.02em;
+}
+
+.breadcrumb {
+  font-size: 0.85rem;
+}
+
+/* Buttons (Modern Gradient Look) */
+.btn-primary, .btn-secondary {
+  border-radius: 50px;
+  padding: 0.7rem 1.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, var(--primary), #1a608a);
+  color: white;
+  box-shadow: 0 4px 15px rgba(15, 76, 117, 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(15, 76, 117, 0.5);
+}
+
+.btn-secondary {
+  background: var(--border-color);
+  color: var(--text-main);
+  border: 1px solid #ced4da;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #dee2e6;
+}
+
+.btn-back {
+  background: var(--text-muted);
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+
+/* Video & Notes */
+#topic-notes {
+  white-space: pre-wrap;
+  color: var(--text-main);
+  font-size: 1rem;
+}
+
+/* Video & Notes section mein badlav */
+.video-wrapper {
+    /* Pura ka pura yeh naya code daal do */
+    position: relative;                 /* Absolute positioning ke liye parent */
+    width: 100%;
+    padding-bottom: 56.25%;             /* 16:9 Aspect Ratio (9/16 = 0.5625) */
+    height: 0;
+    overflow: hidden;
+    border-radius: var(--radius-md);    /* Card se match karne ke liye */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Shadow wahi rakho */
+    margin-bottom: 0;
+}
+
+/* iframe ko container ke andar puri tarah faila do */
+#topic-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;                       /* Iframe ki border hatane ke liye */
+}
+
+/* ========== ASSIGNMENT & MCQ STYLING ========== */
+
+#mcq-container {
+  padding-bottom: 1rem;
+}
+
+#mcq-question-text {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+
+
+#mcq-options label {
+  display: block;
+  background: var(--bg-main);
+  padding: 1rem;
+  margin-bottom: 0.6rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+#mcq-options label:hover {
+  background: #e9ecef;
+  border-color: var(--primary);
+}
+
+#mcq-options input[type="radio"]:checked + span {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.mcq-nav {
+  display: flex;
+  gap: 10px;
+  margin-top: 1.5rem;
+  justify-content: space-between;
+}
+
+#mcq-submit {
+  flex-grow: 1;
+}
+
+/* MCQ Review Box */
+.mcq-review-box {
+  border-left: 5px solid var(--accent);
+  background: #fff8e1;
+  padding: 15px;
+  color: var(--text-main);
+  margin-top: 20px;
+}
+
+.mcq-review-status.correct { color: #198754; font-weight: 700; }
+.mcq-review-status.incorrect { color: #dc3545; font-weight: 700; }
+
+
+/* ========== COMPILER STYLES (Professional Dark Theme) ========== */
+
+#compiler-card {
+    background: #212529; /* Dark card background */
+    color: #e9ecef;
+    border: 1px solid #495057;
+    padding: 1.5rem;
+}
+
+#compiler-card h2 {
+    color: var(--accent); /* Accent color for dark card heading */
+    border-bottom-color: #495057;
+    /* NEW: Heading ki bottom margin badhao */
+    margin-bottom: 1rem; 
+}
+
+.compiler-select {
+    background: #343a40;
+    color: #f8f9fa;
+    border: 1px solid #495057;
+    /* NEW: Box model aur padding sudharo */
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    margin-bottom: 15px; 
+    display: block; /* Poori width lo */
+}
+
+
+
+.compiler-editor {
+    width: 100%;
+    min-height: 200px; 
+    background: #1c1f23; /* Very dark editor background */
+    color: #f8f9fa;
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    font-size: 0.95rem; /* Thoda bada font */
+    font-family: var(--font-code);
+    border: 1px solid #495057;
+    resize: vertical;
+    /* NEW: Focus effect */
+    transition: border-color 0.3s;
+}
+
+.compiler-editor:focus {
+    outline: none;
+    border-color: var(--accent); /* Focus hone par accent color */
+}
+
+#compiler-stdin {
+    min-height: 80px; /* Thoda chhota input area */
+}
+
+.compiler-output {
+    background: #343a40;
+    color: #5bc0de; /* Light blue output text */
+    padding: 1rem;
+    min-height: 80px;
+    border-radius: var(--radius-md);
+    border: 1px solid #495057;
+    white-space: pre-wrap;
+    overflow-x: auto;
+    font-family: var(--font-code);
+}
+/* ========== RESPONSIVENESS (Mobile First) ========== */
+
+@media (max-width: 992px) {
+  .topic-layout {
+    grid-template-columns: 1fr; /* Stack columns on tablets/mobile */
+  }
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    flex-direction: column;
+  }
+
+  .topics-sidebar {
+    width: 100%;
+    max-height: 280px; /* Limit height on mobile */
+    overflow-y: auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .topic-main {
+    padding: calc(2 * var(--spacing-unit));
+  }
+
+  .topic-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .topic-nav-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-primary, .btn-secondary {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    <!-- Sidebar: Topic list -->
+    <aside class="topics-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-label">Learning Path</div>
+        <div class="sidebar-title-main">
+          <span class="icon">📚</span>
+          <span>Course Topics</span>
+        </div>
+        <div id="course-title-sidebar">Course</div>
+      </div>
+
+      <ul id="sidebar-topic-list" class="topic-list">
+        <!-- JS will inject topics here -->
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="topic-main">
+      <div class="topic-main-inner">
+        <div class="topic-header">
+          <div class="left-header">
+            <button id="back-to-dashboard" class="btn-back" title="Back to Dashboard">
+              <span class="icon">←</span>
+              <span>Back to Dashboard</span>
+            </button>
+            <div>
+              <p class="breadcrumb">
+                <span>Dashboard</span> · <span>My Courses</span> · <span>Current Topic</span>
+              </p>
+              <h1 id="topic-title" class="loading">Loading topic...</h1>
+              <p class="topic-subtitle" id="topic-subtitle"></p>
+            </div>
+          </div>
+
+          
+        </div>
+
+        <div class="topic-layout">
+          <!-- Left column: Notes + Video -->
+          <div>
+            
+
+            <div class="card">
+              <h2><span class="emoji">🎥</span> Video Lecture</h2>
+              <div class="video-wrapper">
+                <iframe
+                  id="topic-video"
+                  src=""
+                  title="Topic Video"
+                  allowfullscreen
+                ></iframe>
+              </div>
+            </div>
+            <div class="topic-nav-buttons">
+            <button id="prev-topic" class="btn-secondary" type="button">Previous</button>
+            <button id="next-topic" class="btn-primary" type="button">Next</button>
+
+
+
+
+            <div class="card">
+              <h2><span class="emoji">📖</span> Topic Notes</h2>
+              <div id="topic-notes">Loading notes...</div>
+            </div>
+          </div>
+          </div>
+
+          
+
+          <!-- Right column: Assignment -->
+          <div>
+            <div class="card">
+  <div class="assignment-header">
+  <h2><span class="emoji">✏️</span> Quiz</h2>
+</div>
+
+<!-- MCQ area -->
+<div id="mcq-container">
+  <p id="mcq-question-text">Loading question...</p>
+
+  <div id="mcq-options">
+    <!-- JS se radio options inject honge -->
+  </div>
+
+  <div class="mcq-nav">
+    <button id="mcq-prev" class="btn-secondary" type="button">Previous</button>
+    <button id="mcq-next" class="btn-secondary" type="button">Next</button>
+    <button id="mcq-submit" class="btn-primary" type="button" disabled>Submit Quiz</button>
+    <button id="mcq-retest" class="btn-secondary" type="button" style="display:none;">
+    Retake Test
+  </button>
+  </div>
+
+  <p id="mcq-progress" class="topic-subtitle"></p>
+  <p id="mcq-result" class="topic-subtitle"></p>
+
+  <!-- 🔥 NEW: per-question review yahin render hoga -->
+  <div id="mcq-review" class="mcq-review-box"></div>
+</div>
+
+
+  <!-- Agar kisi topic me MCQ na ho, to old textarea use kar sakte ho (optional fallback) -->
+</div>
+
+
+          </div>
+        </div>
+        <div class="card" id="compiler-card" style="margin-top:20px;">
+  <h2><span class="emoji">💻</span> Code Compiler</h2>
+
+  <label style="font-size:14px; font-weight:600;">Language:</label>
+  <select id="compiler-language" class="compiler-select">
+    <option value="c">C</option>
+    <option value="cpp">C++</option>
+    <option value="java">Java</option>
+    <option value="python">Python</option>
+    <option value="javascript">JavaScript</option>
+  </select>
+
+  <textarea id="compiler-input" class="compiler-editor" placeholder="Write your code..."></textarea>
+  <h3 style="margin-top:15px;">Input:</h3>
+<textarea id="compiler-stdin" class="compiler-editor" style="height:120px;" placeholder="Enter input here..."></textarea>
+
+
+  <button id="compiler-run" class="btn-primary" style="margin-top:12px;">Run Code</button>
+
+  <h3 style="margin-top:15px;">Output:</h3>
+  <pre id="compiler-output" class="compiler-output"></pre>
+</div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Config: must define GOOGLE_SCRIPT_URL -->
+  <script src="js/config.js"></script>
+<script src="js/course-topic.js"></script>
+
+</body>
+</html>

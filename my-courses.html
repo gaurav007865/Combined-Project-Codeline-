@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>My Courses - LSM Portal</title>
+    <link rel="stylesheet" href="css/main.css"/> 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* :::::: 1. GLOBAL VARIABLES (Synced for Light/Dark) :::::: */
+        :root {
+            --primary-purple: rgba(111, 3, 106, 0.95); 
+            --primary-dark:rgba(111, 3, 106, 0.95); 
+            --pista-green: #27ae60;
+            --bg-color: #f7f6ff;
+            --card-bg: #ffffff;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --shadow-light: 0 4px 15px rgba(0,0,0,0.08);
+            --shadow-deep: 0 10px 30px rgba(72, 52, 212, 0.15);
+            --white: #ffffff; /* Added for general use */
+        }
+
+        /* :::::: DARK MODE VARIABLES :::::: */
+        [data-theme="dark"] {
+            --primary-purple:#3a1c71;
+            --primary-dark: #3a1c71;
+            --pista-green: #1abc9c;
+            --bg-color: #1e2029;
+            --card-bg: #282a36;
+            --text-dark: #f8f8f2;
+            --text-light: #bd93f9;
+            --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.4);
+            --shadow-deep: 0 10px 30px rgba(0, 0, 0, 0.6);
+            --white: #1e2029; /* Adjusted for contrast on dark elements */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background: var(--bg-color); 
+            display: flex;
+            color: var(--text-dark);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dashboard-wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* :::::: 2. SIDEBAR (Unified Styling) :::::: */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, var(--primary-purple) 0%, var(--primary-dark) 100%);
+            color: white; /* Sidebar text always light for contrast */
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem 1rem;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 50;
+            transition: background 0.3s, color 0.3s;
+        }
+        .logo-area {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+        .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar-nav li { margin-bottom: 0.5rem; }
+        .sidebar-nav a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            transition: background 0.3s, color 0.3s;
+        }
+        .sidebar-nav a:hover { background: rgba(255,255,255,0.15); }
+        .sidebar-nav .active a {
+            background: var(--card-bg);
+            color:  rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            box-shadow: var(--shadow-light);
+        }
+
+        /* :::::: 3. MAIN CONTENT & HEADER :::::: */
+        .main-content {
+            flex: 1;
+            padding: 2.5rem;
+        }
+
+        .dashboard-header {
+            /* Ensure the header container uses flex for internal alignment (h1 + button) */
+            padding-bottom: 2rem;
+        }
+        .dashboard-header h1 {
+            margin: 0;
+            font-size: 2rem;
+            color: var(--primary-purple);
+            font-weight: 700;
+            border-bottom: 2px solid var(--pista-green);
+            padding-bottom: 10px;
+            transition: color 0.3s;
+        }
+
+        /* :::::: 4. Dark Mode Toggle Button Styles :::::: */
+        .btn-toggle {
+            background: var(--card-bg);
+            color: var(--primary-purple);
+            border: 2px solid var(--primary-purple);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-left: 15px; /* Separate from the title on larger screens */
+        }
+        
+        .btn-toggle:hover {
+            background: var(--primary-purple);
+            color: var(--card-bg);
+            border-color: var(--primary-dark);
+        }
+        
+        [data-theme="dark"] .btn-toggle {
+            background: var(--card-bg);
+            color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+        
+        [data-theme="dark"] .btn-toggle:hover {
+            background: var(--primary-dark);
+            color: var(--card-bg);
+        }
+        
+        /* :::::: 5. MODERN LOADER STYLES :::::: */
+        .modern-loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--text-light);
+            border-top-color: var(--primary-purple);
+            border-radius: 50%;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        [data-theme="dark"] .modern-loader {
+            border: 5px solid #4a4d5e;
+            border-top-color: var(--primary-dark);
+        }
+
+        /* :::::: 6. COURSE CARDS (Refined Grid & Styling) :::::: */
+        .my-courses-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+        .course-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden; 
+            box-shadow: var(--shadow-light);
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+            position: relative;
+        }
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-deep);
+        }
+
+        /* Image/Icon Placeholder */
+        .course-image-placeholder {
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .course-image-placeholder::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+            pointer-events: none;
+        }
+        .course-image-placeholder .icon {
+            font-size: 3rem;
+            z-index: 2;
+        }
+        .course-image-placeholder .course-code {
+            font-size: 0.8rem;
+            color: rgba(0, 0, 0, 0.6); /* Default light text */
+            font-weight: 600;
+            margin-top: -5px;
+            z-index: 2;
+        }
+        [data-theme="dark"] .course-image-placeholder .course-code {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .course-card h3 {
+            margin: 0 0 0.4rem;
+            color: var(--primary-purple);
+            font-size: 1.4em;
+            transition: color 0.3s;
+        }
+        
+        /* Metadata */
+        .metadata {
+            font-size: 0.9em;
+            color: var(--text-light);
+            margin-bottom: 0.8rem;
+        }
+        .metadata p { margin: 0; padding: 2px 0; }
+
+        .course-description {
+            font-size: 0.95em;
+            color: var(--text-dark);
+            height: 40px; 
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        /* Progress Bar Styling */
+        .progress-container { margin: 1rem 0 0.5rem; }
+        .progress-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            transition: color 0.3s;
+        }
+        .progress-label span:last-child { color: var(--text-light); }
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-color);
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        [data-theme="dark"] .progress-bar {
+            background: #3c404c;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .progress-fill {
+            height: 100%;
+            transition: width 0.6s ease-in-out;
+            border-radius: 5px;
+        }
+        
+        /* Button Style */
+        .btn-action {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background: var(--primary-purple);
+            color: var(--card-bg);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+            text-decoration: none;
+            font-size: 1em;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(72, 52, 212, 0.2);
+        }
+        .btn-action:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(72, 52, 212, 0.3);
+        }
+
+        /* Style for disabled link (e.g., Course Pending Setup) */
+        .btn-action.disabled-link {
+            background: var(--text-light);
+            cursor: not-allowed;
+            opacity: 0.7;
+            box-shadow: none;
+        }
+        .btn-action.disabled-link:hover {
+            background: var(--text-light);
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Loading/Error/No Courses States */
+        .loading, .empty-state, .error-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-light);
+            margin-top: 20px;
+        }
+        .empty-icon, .error-icon { font-size: 3.5rem; margin-bottom: 10px; display: block; }
+        .empty-state h3, .error-state h3 { color: var(--primary-purple); }
+        .action-buttons a, .action-buttons button {
+            margin: 5px;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            font-weight: 500;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+        }
+        .btn-primary { background: var(--primary-purple); color: white; }
+        .btn-secondary { background: transparent; color: var(--primary-purple); border-color: var(--primary-purple); }
+        .btn-secondary:hover { background: var(--primary-purple); color: white; }
+
+        /* :::::: 7. RESPONSIVE ADJUSTMENTS :::::: */
+        @media (max-width: 768px) {
+            .sidebar { width: 70px; padding: 1.5rem 0.5rem; }
+            .sidebar-nav a span { display: none; }
+            .sidebar-nav a { padding: 0.8rem 0.4rem; justify-content: center; }
+            .logo-area { font-size: 0; }
+            .logo-area::before { content: '🎓'; font-size: 2rem; }
+            .main-content { padding: 1.5rem; }
+            .my-courses-list { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 600px) {
+            .dashboard-header h1 { 
+                font-size: 1.5rem; 
+                margin-bottom: 0.5rem;
+            }
+            .dashboard-header > div {
+                 flex-direction: column;
+                 align-items: flex-start;
+            }
+            .btn-toggle {
+                margin-top: 10px;
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="logo-area">🎓 LSM Portal</div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="dashboard.html" data-icon="🏠">🏠 <span>Dashboard</span></a></li>
+                    <li class="active"><a href="my-courses.html" data-icon="📚">📚 <span>My Courses</span></a></li>
+                    <li><a href="progress.html" data-icon="📈">📈 <span>Progress</span></a></li>
+                    <li><a href="discussions.html" data-icon="💬">💬 <span>Discussions</span></a></li>
+                    <li><a href="profile.html" data-icon="⚙️">⚙️ <span>Profile</span></a></li>
+                    <li><a href="#" id="logout-link" data-icon="🚪">🚪 <span>Logout</span></a></li>
+                    <li><a href="index.html" data-icon="🏠">🏠 <span>Back to Home</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="dashboard-header">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <h1>📚 My Enrolled Courses</h1>
+                    <button id="dark-mode-toggle" class="btn-toggle" title="Toggle Dark/Light Mode">
+                        <span id="toggle-icon">☀️</span>
+                    </button>
+                </div>
+            </header>
+            
+            <div id="loading-message-container" style="text-align: center; margin-top: 50px;">
+                <div id="loader-circle" class="modern-loader" style="display: none;"></div>
+                <p id="loading-text" style="font-size: 1.1rem; color: var(--text-light); margin-top: 20px;"></p>
+            </div>
+
+            <section class="my-courses-list" id="courses-container">
+                </section>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth-check.js"></script>
+    <script src="js/my-courses.js"></script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Placement Success - CODELINE AI</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        /* [COPY ALL EXISTING CSS HERE] */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+          font-family: "Inter", sans-serif;
+          line-height: 1.7;
+          color: #0f172a;
+          background: #f8fafc;
+        }
+        a { text-decoration: none; color: inherit; }
+
+        /* Header (Use same styles as aboutus) */
+        .header {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: #fff;
+          padding: 110px 20px 80px;
+          text-align: center;
+        }
+        .header-inner { max-width: 900px; margin: 0 auto; }
+        .header h1 {
+          font-size: clamp(2.4rem, 4vw, 3.5rem);
+          font-weight: 700;
+          margin-bottom: 1rem;
+        }
+        .header p {
+          font-size: 1.1rem;
+          opacity: 0.9;
+          max-width: 650px;
+          margin: 0 auto;
+        }
+
+        section { padding: 80px 20px; }
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+        .section-title {
+          text-align: center;
+          font-size: 2.2rem;
+          font-weight: 600;
+          margin-bottom: 0.75rem;
+          color: #111827;
+        }
+        .section-sub {
+          text-align: center;
+          color: #6b7280;
+          max-width: 600px;
+          margin: 0 auto 40px;
+          font-size: 0.98rem;
+        }
+
+        /* Stats Section (Re-used) */
+        .stats { background: #f9fafb; }
+        .stats-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 24px;
+        }
+        .stat-card {
+          background: #fff;
+          border-radius: 16px;
+          padding: 24px 20px;
+          text-align: center;
+          box-shadow: 0 12px 40px rgba(15, 23, 42, 0.06);
+        }
+        .stat-icon {
+          width: 52px;
+          height: 52px;
+          border-radius: 50%;
+          margin: 0 auto 14px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(99, 102, 241, 0.1);
+          color: #4f46e5;
+          font-size: 22px;
+        }
+        .stat-number {
+          font-size: 2.1rem;
+          font-weight: 700;
+          color: #111827;
+          margin-bottom: 4px;
+        }
+        .stat-label { color: #6b7280; font-size: 0.95rem; }
+
+        /* Testimonial Section (New) */
+        .testimonial-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 24px;
+          margin-top: 20px;
+        }
+        .testimonial-card {
+          background: #ffffff;
+          border-radius: 16px;
+          padding: 30px;
+          border-left: 5px solid #6366f1;
+          box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+        }
+        .testimonial-quote {
+          font-style: italic;
+          color: #4b5563;
+          margin-bottom: 15px;
+          font-size: 1.05rem;
+        }
+        .testimonial-author {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          margin-top: 20px;
+        }
+        .author-avatar {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          overflow: hidden;
+        }
+        .author-avatar img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .author-info strong { display: block; font-weight: 600; color: #111827; }
+        .author-info span { color: #6b7280; font-size: 0.9rem; }
+
+        /* Partner Section (New) */
+        .partners-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 30px;
+          align-items: center;
+          margin-top: 40px;
+        }
+        .partner-logo {
+          opacity: 0.6;
+          max-width: 150px;
+          width: 100%;
+          height: auto;
+          margin: 0 auto;
+          filter: grayscale(100%);
+          transition: opacity 0.3s, filter 0.3s;
+        }
+        .partner-logo:hover {
+          opacity: 1;
+          filter: grayscale(0%);
+        }
+
+        /* Process Section (Re-used for design consistency) */
+        .mission-grid {
+          display: grid;
+          grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+          gap: 40px;
+          align-items: center;
+        }
+        .mission-text h2 {
+          font-size: 2.1rem;
+          margin-bottom: 12px;
+        }
+        .mission-text p {
+          color: #4b5563;
+          font-size: 0.98rem;
+          margin-bottom: 12px;
+        }
+        .mission-points {
+          margin-top: 16px;
+          list-style: none;
+        }
+        .mission-points li {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 8px;
+          color: #374151;
+          font-size: 0.96rem;
+        }
+        .mission-points i { color: #10b981; }
+        .mission-img-wrap { position: relative; }
+        .mission-img {
+          width: 100%;
+          border-radius: 20px;
+          box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+          object-fit: cover;
+          max-height: 360px;
+        }
+
+        /* CTA (Re-used) */
+        .cta {
+          background: #0f172a;
+          color: #e5e7eb;
+          text-align: center;
+          padding: 70px 20px 80px;
+        }
+        .cta h2 {
+          font-size: 2.1rem;
+          margin-bottom: 10px;
+          color: #f9fafb;
+        }
+        .cta p {
+          color: #9ca3af;
+          max-width: 480px;
+          margin: 0 auto 24px;
+          font-size: 0.98rem;
+        }
+        .cta-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 11px 26px;
+          border-radius: 999px;
+          background: linear-gradient(135deg, #4f46e5, #7c3aed);
+          color: #fff;
+          font-weight: 500;
+          font-size: 0.98rem;
+          box-shadow: 0 12px 35px rgba(79, 70, 229, 0.4);
+        }
+        .cta-btn i { font-size: 0.98rem; }
+
+        /* Responsive (Re-used) */
+        @media (max-width: 900px) {
+          .mission-grid { grid-template-columns: 1fr; }
+          .mission-img-wrap { order: -1; margin-bottom: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-inner">
+            <h1>Career Success & Placements</h1>
+            <p>
+                Our students are in high demand! See the results of dedicated learning 
+                and structured career guidance from CODELINE AI.
+            </p>
+        </div>
+    </header>
+
+    <section class="stats">
+        <div class="container">
+            <h2 class="section-title">Placement Highlights</h2>
+            <p class="section-sub">
+                The numbers speak for themselves. Our focused training leads to top outcomes.
+            </p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;"><i class="fas fa-chart-line"></i></div>
+                    <div class="stat-number">$150K+</div>
+                    <div class="stat-label">Highest Salary Offered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;"><i class="fas fa-hand-holding-usd"></i></div>
+                    <div class="stat-number">$75K</div>
+                    <div class="stat-label">Average Salary</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(99, 102, 241, 0.1); color: #4f46e5;"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="stat-number">95%</div>
+                    <div class="stat-label">Placement Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;"><i class="fas fa-briefcase"></i></div>
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Hiring Partners</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="team" style="background: #ffffff;">
+        <div class="container">
+            <h2 class="section-title">Student Success Stories</h2>
+            <p class="section-sub">
+                Hear directly from our graduates who landed their dream jobs after completing our program.
+            </p>
+
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <i class="fas fa-quote-left" style="color: #6366f1; font-size: 20px; opacity: 0.8;"></i>
+                    <p class="testimonial-quote">
+                        "The curriculum was practical and job-focused. The portfolio projects gave me the confidence 
+                        to ace the interviews. I secured a role as a Frontend Developer at a major tech company."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=60&h=60&q=80" alt="Student 1" />
+                        </div>
+                        <div class="author-info">
+                            <strong>Aisha Sharma</strong>
+                            <span>Frontend Developer, TechCorp</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <i class="fas fa-quote-left" style="color: #6366f1; font-size: 20px; opacity: 0.8;"></i>
+                    <p class="testimonial-quote">
+                        "The dedicated mentorship and mock interviews were invaluable. I transitioned from a non-tech 
+                        background into a high-paying Java Developer role in under 6 months. Highly recommend!"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a6dd7228f7d?auto=format&fit=crop&w=60&h=60&q=80" alt="Student 2" />
+                        </div>
+                        <div class="author-info">
+                            <strong>Chetan Jilladwar</strong>
+                            <span>Java Developer, Global Data Solutions</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="team">
+        <div class="container">
+            <h2 class="section-title">Our Top Hiring Partners</h2>
+            <p class="section-sub">
+                We connect our graduates with leading companies in the industry, from high-growth startups to Fortune 500 giants.
+            </p>
+
+            <div class="partners-grid">
+                <img class="partner-logo" src="https://placehold.co/150x50/eef2ff/667eea?text=Acme+Solutions" alt="Partner Logo 1" />
+                <img class="partner-logo" src="https://placehold.co/150x50/eef2ff/667eea?text=Global+Tech" alt="Partner Logo 2" />
+                <img class="partner-logo" src="https://placehold.co/150x50/eef2ff/667eea?text=Innovate+Now" alt="Partner Logo 3" />
+                <img class="partner-logo" src="https://placehold.co/150x50/eef2ff/667eea?text=Future+Labs" alt="Partner Logo 4" />
+                <img class="partner-logo" src="https://placehold.co/150x50/eef2ff/667eea?text=DataCore" alt="Partner Logo 5" />
+            </div>
+        </div>
+    </section>
+
+    <section class="values">
+        <div class="container mission-grid">
+            <div class="mission-text">
+                <h2>Our 3-Step Career Path</h2>
+                <p>
+                    We guide every student through a structured process designed for career readiness.
+                </p>
+                <ul class="mission-points">
+                    <li><i class="fas fa-check-circle"></i> **Phase 1: Skill Mastery** - Deep-dive courses and real-world projects.</li>
+                    <li><i class="fas fa-check-circle"></i> **Phase 2: Career Prep** - Resume building, portfolio development, and mock interviews.</li>
+                    <li><i class="fas fa-check-circle"></i> **Phase 3: Placement Drive** - Direct introductions to hiring partners and job application support.</li>
+                </ul>
+                <p style="margin-top: 15px;">
+                    Our commitment is to ensure you are confident, prepared, and connected when you enter the job market.
+                </p>
+            </div>
+            <div class="mission-img-wrap">
+                <img
+                    class="mission-img"
+                    src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1000&q=80"
+                    alt="Career Guidance Meeting"
+                />
+            </div>
+        </div>
+    </section>
+
+
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to launch your tech career?</h2>
+            <p>Start your journey now and join the list of our successful graduates.</p>
+            <a href="index.html" class="cta-btn">
+                <i class="fas fa-arrow-right"></i>
+                Explore Courses
+            </a>
+        </div>
+    </section>
+
+</body>
+</html>

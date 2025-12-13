@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Course Detail - LSM Portal</title>
+  <link rel="stylesheet" href="css/main.css"/>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #f8f9fa;
+      display: flex;
+    }
+
+    .dashboard-wrapper {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(180deg, #0056b3, #6f42c1);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 1rem;
+    }
+    .logo-area {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .sidebar-nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar-nav li {
+      margin-bottom: 1rem;
+    }
+    .sidebar-nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      display: block;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+    .sidebar-nav a:hover,
+    .sidebar-nav .active a {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+    }
+
+    .dashboard-header h1 {
+      margin: 0;
+      color: #0056b3;
+    }
+    .dashboard-header p {
+      margin: 0.2rem 0;
+      color: #555;
+    }
+
+    /* Tabs */
+    .course-tabs {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+    .course-tabs .tab-link {
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      background: #e9ecef;
+      color: #333;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .course-tabs .tab-link:hover {
+      background: #d6d8db;
+      transform: translateY(-2px);
+    }
+    .course-tabs .active {
+      background: #0056b3;
+      color: #fff;
+    }
+
+    /* Tab Content */
+    .tab-content-wrapper {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+    .tab-pane h2 {
+      margin-top: 0;
+      color: #6f42c1;
+    }
+    .curriculum-list {
+      list-style: none;
+      padding: 0;
+    }
+    .curriculum-list li {
+      margin-bottom: 0.8rem;
+    }
+    .curriculum-list a {
+      text-decoration: none;
+      color: #0056b3;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .curriculum-list a:hover {
+      color: #6f42c1;
+    }
+
+    .btn-primary {
+      background: #0056b3;
+      color: #fff;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .btn-primary:hover {
+      background: #004494;
+      transform: translateY(-2px);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 200px;
+      }
+    }
+    @media (max-width: 576px) {
+      .sidebar {
+        display: none;
+      }
+      .main-content {
+        padding: 1rem;
+      }
+      .course-tabs {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo-area">🎓 LSM Portal</div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li><a href="dashboard.html">🏠 Dashboard</a></li>
+          <li class="active"><a href="my-courses.html">📚 My Courses</a></li>
+          <li><a href="progress.html">📈 Progress</a></li>
+          <li><a href="discussions.html">💬 Discussions</a></li>
+          <li><a href="profile.html">⚙️ Profile</a></li>
+          <li><a href="#" id="logout-link">🚪 Logout</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1 id="course-title">Loading Course Details...</h1>
+        <p id="course-instructor"></p>
+        <div id="course-progress"></div>
+      </header>
+
+      <!-- Tabs -->
+      <nav class="course-tabs">
+        <a href="#overview" class="tab-link active" data-tab="overview">Overview</a>
+        <a href="#curriculum" class="tab-link" data-tab="curriculum">Curriculum</a>
+        <a href="#assignments" class="tab-link" data-tab="assignments">Assignments / Tests</a>
+        <a href="#discussion" class="tab-link" data-tab="discussion">Discussion / Q&A</a>
+      </nav>
+
+      <!-- Tab Content -->
+      <div class="tab-content-wrapper">
+        <div id="overview" class="tab-pane active">
+          <h2>Course Overview</h2>
+          <p id="course-description">Loading description...</p>
+          <p><strong>Duration:</strong> <span id="course-duration"></span></p>
+          <a href="course-topic.html" class="btn btn-primary btn-lg" style="margin-top: 1rem;">Start/Continue Learning</a>
+        </div>
+        
+        <div id="curriculum" class="tab-pane">
+          <h2>Course Syllabus</h2>
+          <ul class="curriculum-list" id="curriculum-content">
+            <li><a href="course-topic.html">1. Core Java Basics (Completed)</a></li>
+            <li><a href="course-topic.html">2. JDBC Connection</a></li>
+            <li><a href="course-topic.html">3. Spring Boot Fundamentals</a></li>
+          </ul>
+        </div>
+
+        <div id="assignments" class="tab-pane">
+          <h2>Assignments & Tests</h2>
+          <p>No active assignments yet for this course.</p>
+        </div>
+
+        <div id="discussion" class="tab-pane">
+          <h2>Q&A Forum</h2>
+          <p>This section will contain discussion threads for this course.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+  <script src="js/course-detail.js"></script>
+</body>
+</html>

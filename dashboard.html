@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Student Dashboard - LSM Portal</title>
+    <link rel="stylesheet" href="css/main.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* BASE & LIGHT MODE VARIABLES */
+        :root {
+            --primary-purple: #9a0669; /* Darker Pink/Violet for accents */
+            --primary-dark: #b12733; /* Deep Blue/Violet for main text/accents */
+            --pista-green: #1cc6cc; /* Bright Green accent */
+            --bg-color: #f6f8fa; /* Light background */
+            --white: #ffffff;
+            --card-bg: var(--white);
+            --text-dark: #141616;
+            --text-light: #636e72;
+            --shadow-light: 0 4px 15px rgba(0,0,0,0.08);
+            --shadow-deep: 0 15px 35px rgba(227, 83, 21, 0.15);
+            --sidebar-gradient-start: rgba(111, 3, 106, 0.95); /* Lighter Purple */
+            --sidebar-gradient-end: #6d135d; /* Darker Blue */
+            --sidebar-text: var(--white);
+        }
+
+        /* DARK MODE VARIABLES - PREMIUM THEME */
+[data-theme="dark"] {
+    /* BRAND ACCENTS */
+    --primary-purple: #b37bff;        /* Soft neon purple */
+    --primary-dark: #6ea8fe;          /* Clear bright blue */
+    --pista-green: #2ecc71;           /* Fresh modern green (success) */
+
+    /* BACKGROUND SYSTEM */
+    --bg-color: #0e0f14;              /* Deep, clean black-blue */
+    --white: #1b1c24;                 /* Card background */
+    --card-bg: var(--white);
+
+    /* TEXT COLORS */
+    --text-dark: #f5f5f7;             /* High contrast white */
+    --text-light: #a6accd;            /* Soft light gray for secondary text */
+
+    /* SHADOWS */
+    --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.35);
+    --shadow-deep: 0 18px 42px rgba(0, 0, 0, 0.6);
+
+    /* SIDEBAR */
+    --sidebar-gradient-start: #3a1c71;  /* Royal purple */
+    --sidebar-gradient-end: #2a0845;    /* Deep cosmic purple */
+    --sidebar-text: #eceaff;            /* Soft lavender white */
+}
+
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background: var(--bg-color);
+            display: flex;
+            color: var(--text-dark);
+            scroll-behavior: smooth;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* DASHBOARD WRAPPER */
+        .dashboard-wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR STYLES */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, var(--sidebar-gradient-start) 0%, var(--sidebar-gradient-end) 100%);
+            color: var(--sidebar-text);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem 1rem;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.14);
+            z-index: 50;
+            transition: background 0.3s, color 0.3s;
+        }
+        .logo-area {
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.7rem;
+        }
+        .sidebar-nav a {
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.9rem 1rem;
+            border-radius: 12px;
+            transition: background 0.3s, color 0.3s;
+            position: relative;
+            font-size: 1rem;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(244, 241, 241, 0.18);
+        }
+        .sidebar-nav .active a {
+            background: var(--card-bg);
+            color: #ffffff; /* Use Dark Primary for active link text */
+            font-weight: 600;
+            box-shadow: var(--shadow-light);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            padding: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* DASHBOARD HEADER */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            border-bottom: 2px solid var(--pista-green);
+            padding-bottom: 1rem;
+        }
+        .dashboard-header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            color: var(--primary-dark);
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        /* DARK MODE TOGGLE */
+        #dark-mode-toggle {
+            background: var(--card-bg);
+            border: 2px solid var(--text-light);
+            color: var(--primary-dark);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 10px 12px;
+            border-radius: 50%;
+            transition: all 0.3s;
+            line-height: 1;
+        }
+
+        #dark-mode-toggle:hover {
+            background: var(--pista-green);
+            color: var(--white);
+            border-color: var(--pista-green);
+            transform: rotate(15deg) scale(1.05);
+        }
+        
+        [data-theme="dark"] #dark-mode-toggle {
+            background: var(--bg-color);
+            color: var(--text-dark);
+            border-color: var(--text-light);
+        }
+
+        [data-theme="dark"] #dark-mode-toggle:hover {
+            background: var(--primary-dark);
+            color: var(--white);
+            border-color: var(--primary-dark);
+        }
+
+        /* PROFILE INFO */
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 0.7rem;
+            border-radius: 25px;
+            background: var(--card-bg);
+            box-shadow: var(--shadow-light);
+            cursor: pointer;
+            transition: box-shadow 0.3s, background 0.3s;
+            text-decoration: none;
+            color: inherit;
+        }
+        .profile-info:hover {
+            box-shadow: var(--shadow-deep);
+        }
+        .profile-name {
+            font-weight: 600;
+            color: var(--primary-dark);
+            transition: color 0.3s;
+        }
+        .profile-avatar-sm {
+            width: 42px;
+            height: 42px;
+            background: var(--pista-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-purple);
+            border: 2px solid var(--primary-purple);
+            transition: background 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        /* SUMMARY CARDS */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.1rem;
+            margin-bottom: 3rem;
+        }
+        .card {
+            background: var(--card-bg); /* Unified background */
+            border-radius: 17px;
+            padding: 1.9rem;
+            box-shadow: var(--shadow-light);
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s, border-left 0.3s;
+            position: relative;
+            overflow: hidden;
+            border-left: 6px solid transparent;
+        }
+        .card:hover {
+            transform: translateY(-8px); /* Slightly more prominent lift */
+            box-shadow: var(--shadow-deep);
+        }
+        .card h3 {
+            margin: 0 0 0.8rem;
+            color: var(--text-light);
+            font-size: 0.97em;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            transition: color 0.3s;
+        }
+        .card p {
+            font-size: 2.8rem; /* Larger font size for impact */
+            font-weight: 700;
+            color: var(--primary-dark);
+            line-height: 1;
+            transition: color 0.3s;
+        }
+        
+        /* Specific card colors for visual distinction */
+        .card:nth-child(1) { border-left-color: var(--pista-green); }
+        .card:nth-child(1) p { color: var(--pista-green); }
+        .card:nth-child(2) { border-left-color: var(--primary-purple); }
+        .card:nth-child(2) p { color: var(--primary-purple); }
+        .card:nth-child(3) { border-left-color: #ff9f43; } /* Orange */
+        .card:nth-child(3) p { color: #ff9f43; font-size: 2.4rem; }
+        .card small { 
+            color: var(--text-light) !important; 
+            font-weight: 600;
+            display: block;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+
+        /* DASHBOARD SECTION */
+        .dashboard-section {
+            background: var(--card-bg);
+            border-radius: 17px;
+            padding: 2.2rem;
+            box-shadow: var(--shadow-light);
+            margin-top: 1.5rem;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+        .dashboard-section h2 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--pista-green);
+            padding-bottom: 9px;
+            margin-bottom: 1.4rem;
+            display: inline-block;
+            transition: color 0.3s;
+        }
+
+        /* ACTIVITY LIST */
+        .activity-list {
+            display: flex; /* Changed to flex for better structure */
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .activity-item {
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            border: 1px solid rgba(154, 6, 105, 0.1); /* Light border based on primary color */
+            background: #fafbff; /* Light background for items */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        .activity-item:hover {
+            box-shadow: var(--shadow-light);
+            transform: translateX(5px);
+            background: var(--card-bg);
+        }
+        
+        [data-theme="dark"] .activity-item {
+            background: var(--bg-color);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .activity-item strong {
+            color: var(--primary-dark);
+            font-size: 1.05em;
+        }
+        .activity-item p {
+            margin: 0; font-size: 0.9em; color: var(--text-light);
+        }
+        .activity-item .status-tag {
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .activity-item .status-completed {
+            color: var(--pista-green);
+        }
+        .activity-item .status-new {
+            color: var(--primary-purple);
+        }
+        .activity-item .error-state, .activity-item .loading {
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        /* MEDIA QUERIES */
+        @media (max-width: 992px) {
+            .main-content { padding: 1.5rem; }
+            .sidebar { width: 200px; }
+            .sidebar-nav a { font-size: 0.95rem; }
+        }
+        @media (max-width: 768px) {
+            .dashboard-header { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+            .profile-info { align-self: stretch; width: 100%; }
+            .dashboard-wrapper { flex-direction: column; }
+            .sidebar { 
+                width: 100%; 
+                flex-direction: row; 
+                align-items: center; 
+                justify-content: space-between; 
+                border-radius: 0; /* Remove rounded corners on mobile */
+                padding: 1rem 1.5rem;
+                height: auto;
+            }
+            .logo-area { 
+                font-size: 0; 
+                margin-bottom: 0;
+                display: flex;
+                align-items: center;
+            }
+            .logo-area::before { 
+                content: '🎓 LSM Portal'; 
+                font-size: 1.4rem;
+                margin-right: 10px;
+            }
+            .sidebar-nav { display: none; } /* Hide main nav on small mobile */
+            .header-actions {
+                align-self: flex-start;
+                margin-top: 10px;
+            }
+            .summary-cards { grid-template-columns: 1fr; }
+            .activity-item { flex-direction: column; align-items: flex-start; gap: 5px; }
+        }
+
+    </style>
+</head>
+<body data-theme="light">
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="logo-area">🎓 LSM Portal</div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="dashboard.html" data-icon="🏠">🏠 <span>Dashboard</span></a></li>
+                    <li><a href="my-courses.html" data-icon="📚">📚 <span>My Courses</span></a></li>
+                    <li><a href="progress.html" data-icon="📈">📈 <span>Progress</span></a></li>
+                    <li><a href="fees.html" data-icon="💬">💬 <span>Fees</span></a></li>
+                    <li><a href="profile.html" data-icon="⚙️">⚙️ <span>Profile</span></a></li>
+                    <li><a href="#" id="logout-link" data-icon="🚪">🚪 <span>Logout</span></a></li>
+                    <li><a href="index.html" data-icon="🏠">🏠<span>Back to Home</span></a></li>
+                    
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="dashboard-header">
+                <h1>Hi, <span id="welcome-user-name">Loading...</span> 👋</h1> 
+                <div class="header-actions">
+                    <button id="dark-mode-toggle" title="Toggle Dark/Light Mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+
+                    <a href="profile.html" class="profile-info">
+                        
+                        <div class="profile-avatar-sm" id="user-avatar-initials">L</div>
+                    </a>
+                </div>
+            </header>
+
+            <section class="summary-cards">
+                <div class="card">
+                    <h3>Enrolled Courses</h3>
+                    <p id="enrolled-count">3</p>
+                </div>
+                <div class="card">
+                    <h3>Overall Progress</h3>
+                    <p id="progress-percent">45%</p>
+                </div>
+                <div class="card">
+                    <h3>Upcoming Session</h3>
+                    <p id="upcoming-session">Spring Boot Project Review</p>
+                    <small>@ 7:00 PM IST</small>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="recent-activity-section">
+                <h2>Recent Activity & Updates</h2>
+                <div class="activity-list" id="activity-data-container">
+                    <div class="activity-item">
+                        <div>
+                            <strong>Core Java: Topic 5 Quiz</strong>
+                            <p>Completed on Nov 30</p>
+                        </div>
+                        <span class="status-tag status-completed">✅ Completed</span>
+                    </div>
+                    <div class="activity-item">
+                        <div>
+                            <strong>Data Science Course: New Assignment</strong>
+                            <p>Due: Dec 5th</p>
+                        </div>
+                        <span class="status-tag status-new">✨ New</span>
+                    </div>
+                    <div class="activity-item">
+                        <div>
+                            <strong>UI/UX Design: Module 3 Video</strong>
+                            <p>Watched 80%</p>
+                        </div>
+                        <span class="status-tag" style="color:#20a39e;">⏳ In Progress</span>
+                    </div>
+                    </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth-check.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

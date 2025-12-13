@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CODELINE AI - Learn Smarter</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    /* CSS VARIABLES & RESET */
+    :root {
+      /* Light Mode Variables */
+      --primary-purple: #9a0669;
+      --primary-dark: #301b9e;
+      --pista-green: #eef0e6;
+      --pista-light: #f7fbfc;
+      --text-dark: #2d3436;
+      --text-light: #636e72;
+      --white: #ffffff;
+      --bg-color: #f6f8fa;
+      --card-bg: var(--white);
+      --section-bg: var(--pista-light);
+      --shadow: 0 10px 30px rgba(72, 52, 212, 0.15);
+      --course-border: 1px solid rgba(0,0,0,0.03);
+      --nav-height: 80px; 
+    }
+
+    /* DARK MODE VARIABLES */
+    [data-theme="dark"] {
+      --primary-purple: #d5adb9; 
+      --primary-dark: #7b99ff;   
+      --pista-green: #4537e2;    
+      --pista-light: #3448dd;    
+      --text-dark: #e8e8e8;      
+      --text-light: #a4b0be;     
+      --white: #2e3040;          
+      --bg-color: #1a1b26;      
+      --card-bg: #2e3040;
+      --section-bg: #1e2030;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      --course-border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-dark);
+      line-height: 1.6;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      transition: background-color 0.3s, color 0.3s;
+      padding-top: var(--nav-height); 
+    }
+
+    /* CONTAINER */
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    /* NAVBAR - FIXED */
+    .navbar {
+      background: rgba(111, 3, 106, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 10px 0;
+      position: fixed; 
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--nav-height);
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    
+    .navbar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .navbar .logo {
+      font-size: clamp(1.4rem, 4vw, 1.8rem);
+      font-weight: 700;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .navbar nav {
+        display: flex; 
+        align-items: center;
+    }
+
+    .navbar nav ul {
+      list-style: none;
+      display: flex;
+      gap: clamp(15px, 3vw, 30px);
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar nav ul li a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    .navbar nav ul li a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background-color: var(--pista-green);
+      transition: width 0.3s;
+    }
+
+    .navbar nav ul li a:hover,
+    .navbar nav ul li a.active {
+      color: var(--pista-green);
+    }
+    
+    .navbar nav ul li a:hover::after,
+    .navbar nav ul li a.active::after {
+      width: 100%;
+    }
+    
+    .auth-buttons-nav {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      margin-left: 30px; 
+    }
+
+    /* DARK MODE TOGGLE */
+    #dark-mode-toggle {
+        background: none;
+        border: none;
+        color: var(--white);
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 5px;
+        transition: transform 0.2s, color 0.3s;
+    }
+
+    #dark-mode-toggle:hover {
+        transform: rotate(15deg);
+        color: var(--pista-green);
+    }
+
+    /* BUTTONS */
+    .btn {
+      padding: clamp(8px, 2vw, 10px) clamp(20px, 4vw, 24px);
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 600;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      display: inline-block;
+      font-size: clamp(0.85rem, 2vw, 0.95rem);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--white);
+      border-color: rgba(255,255,255,0.4);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--white);
+      background-color: rgba(255,255,255,0.1);
+    }
+
+    .btn-primary {
+      background-color: var(--pista-green);
+      color: var(--primary-purple);
+      box-shadow: 0 4px 15px rgba(186, 220, 88, 0.4);
+    }
+
+    .btn-primary:hover {
+      background-color: #cbeb5f;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(186, 220, 88, 0.6);
+    }
+
+    .btn-lg {
+      padding: clamp(12px, 3vw, 14px) clamp(30px, 6vw, 35px);
+      font-size: clamp(1rem, 2.5vw, 1.1rem);
+      margin-top: 25px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      position: relative;
+      min-height: clamp(60vh, 70vw, 75vh);
+      color: white;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      z-index: 1;
+      background-size: cover;
+      background-position: center;
+      transition: background-image 1s ease-in-out;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5); 
+      z-index: -1;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 8vw, 3.8rem);
+      font-weight: 700;
+      margin-bottom: 15px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: clamp(1.1rem, 4vw, 1.4rem);
+      max-width: 600px;
+      margin: 0 auto 30px auto;
+      opacity: 0.95;
+    }
+
+    /* SLIDESHOW */
+    .slideshow {
+      background: var(--card-bg);
+      padding: clamp(30px, 8vw, 50px) 0;
+      margin-top: clamp(-40px, -5vw, -50px);
+      position: relative;
+      z-index: 10;
+    }
+
+    .slide-container {
+      max-width: 1000px;
+      margin: auto;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .slide img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .fade {
+      animation-name: fade;
+      animation-duration: 1.5s;
+    }
+    @keyframes fade { from {opacity: .6} to {opacity: 1} }
+
+    /* SECTIONS */
+    section {
+      padding: clamp(60px, 12vw, 90px) 0;
+    }
+
+    .section-title, h2 {
+      font-size: clamp(2rem, 6vw, 2.8rem);
+      font-weight: 700;
+      margin-bottom: 15px;
+      text-align: center;
+      color: var(--primary-purple);
+      position: relative;
+      transition: color 0.3s;
+    }
+    
+    .section-title::after, h2::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      background: var(--pista-green);
+      margin: 10px auto 0;
+      border-radius: 2px;
+      transition: background 0.3s;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-light);
+      margin-bottom: clamp(30px, 8vw, 50px);
+      font-size: clamp(1rem, 3vw, 1.15rem);
+      transition: color 0.3s;
+    }
+
+    /* WHY LSM SECTION */
+    .why-lsm {
+      padding: clamp(70px, 15vw, 100px) 0;
+    }
+
+    .why-lsm-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(40px, 6vw, 60px);
+      align-items: center;
+    }
+
+    .why-lsm-left {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: clamp(20px, 4vw, 30px);
+    }
+
+    .student-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s;
+    }
+
+    .student-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow);
+    }
+
+    .student-avatar-wrap {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+    }
+
+    .student-avatar-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .student-namebar {
+      height: 6px;
+      width: 100%;
+      background: var(--pista-green);
+      margin-top: 8px;
+      border-radius: 4px;
+    }
+
+    .why-lsm-right {
+      text-align: left;
+    }
+
+    .why-lsm-right h2 {
+      text-align: left;
+      font-size: clamp(2rem, 5vw, 2.6rem);
+      margin-bottom: 20px;
+    }
+
+    .why-lsm-right h2::after { 
+        margin: 10px 0 0 0;
+        transform-origin: left;
+        display: block;
+        width: 60px;
+    }
+
+    .why-lsm-right p.lead-text {
+      font-size: clamp(1rem, 3vw, 1.15rem);
+      margin-bottom: 15px;
+      color: var(--text-light);
+    }
+
+    .why-lsm-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+    }
+
+    .why-lsm-bullets li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: clamp(0.95rem, 2.5vw, 1rem);
+      color: var(--text-dark);
+      transition: color 0.3s;
+    }
+
+    .why-lsm-bullets span.icon {
+      background: var(--pista-green);
+      color: var(--primary-purple);
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+
+    /* COURSES (UPDATED FOR SLIDER/CAROUSEL) */
+    .popular-courses {
+      background-color: var(--section-bg);
+      transition: background-color 0.3s;
+    }
+
+    /* Slider Wrapper */
+    .course-slider-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+    }
+
+    /* The Scrollable Area */
+    .course-slider {
+      display: flex;
+      gap: 25px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding: 20px 5px; /* Padding for shadow */
+      width: 100%;
+      
+      /* Hide Scrollbar */
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .course-slider::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Fixed width for cards in slider */
+    .course-slider .course-card {
+      min-width: 300px;
+      max-width: 300px;
+      flex-shrink: 0;
+    }
+
+    /* Course Card Styles */
+    .course-card {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      border: var(--course-border);
+      display: flex;
+      flex-direction: column; 
+    }
+
+    .course-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow);
+    }
+
+    .course-image-container img {
+      width: 100%;
+      height: clamp(160px, 25vw, 200px);
+      object-fit: cover;
+    }
+
+    .course-header {
+      padding: clamp(15px, 4vw, 20px) clamp(15px, 4vw, 20px) 0 clamp(15px, 4vw, 20px);
+    }
+    
+    .course-header h3 {
+      color: var(--primary-purple);
+      font-size: clamp(1.1rem, 3vw, 1.3rem);
+      margin: 0;
+    }
+    
+    .course-info {
+      padding: 0 clamp(15px, 4vw, 20px);
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      flex-grow: 1; 
+    }
+
+    .course-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+      padding: 0 clamp(15px, 4vw, 20px) clamp(15px, 4vw, 20px);
+    }
+
+    .course-actions .btn-action {
+      padding: 10px 18px; 
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem; 
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-align: center;
+      white-space: nowrap;
+      flex-grow: 1;
+      border: 2px solid transparent;
+      text-transform: uppercase; 
+      letter-spacing: 0.5px;
+    }
+
+    /* Enroll Button */
+    .btn-enroll {
+      background-color: var(--pista-green);
+      color: var(--primary-purple);
+      box-shadow: 0 4px 12px rgba(186, 220, 88, 0.3);
+    }
+    .btn-enroll:hover {
+      background-color: #cbeb5f;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(186, 220, 88, 0.6);
+    }
+
+    /* View Details Button */
+    .btn-view {
+      background-color: var(--primary-dark);
+      color: white;
+      box-shadow: 0 4px 12px rgba(48, 27, 158, 0.3);
+      border: 2px solid var(--primary-dark);
+    }
+    .btn-view:hover {
+      background-color: #4532c5;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(48, 27, 158, 0.6);
+    }
+    [data-theme="dark"] .btn-view {
+        background-color: var(--card-bg); 
+        color: var(--text-dark);
+        border: 2px solid var(--text-light);
+        box-shadow: none;
+    }
+    [data-theme="dark"] .btn-view:hover {
+        background-color: var(--primary-dark);
+        color: var(--white);
+        border: 2px solid var(--primary-dark);
+    }
+
+    /* Continue Learning Button */
+    .btn-continue {
+        background-color: transparent;
+        color: var(--primary-purple);
+        border: 2px solid var(--primary-purple);
+        box-shadow: none;
+    }
+    .btn-continue:hover {
+        background-color: var(--primary-purple);
+        color: var(--white);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(154, 6, 105, 0.4);
+    }
+    [data-theme="dark"] .btn-continue {
+        color: var(--primary-purple);
+        border: 2px solid var(--primary-purple);
+    }
+    [data-theme="dark"] .btn-continue:hover {
+        background-color: var(--primary-purple);
+        color: var(--bg-color);
+    }
+
+    /* --- SLIDER NAVIGATION BUTTONS --- */
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background-color: var(--card-bg);
+      border: 1px solid rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      cursor: pointer;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-purple);
+      transition: all 0.3s ease;
+      font-size: 1.2rem;
+    }
+
+    .slider-btn:hover {
+      background-color: var(--primary-purple);
+      color: #fff;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .prev-btn { left: -20px; }
+    .next-btn { right: -20px; }
+
+    [data-theme="dark"] .slider-btn {
+        border: 1px solid rgba(255,255,255,0.1);
+        background-color: #3e4050;
+        color: var(--white);
+    }
+    [data-theme="dark"] .slider-btn:hover {
+        background-color: var(--primary-purple);
+    }
+
+
+    /* TESTIMONIALS */
+    .testimonials-section {
+      background: var(--bg-color);
+      padding: 60px 20px;
+      text-align: center;
+      transition: background 0.3s;
+    }
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .testimonial-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+      text-align: left;
+    }
+    .testimonial-card:hover {
+      transform: translateY(-5px);
+    }
+    .stars {
+      color: #f1c40f;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    .testimonial-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      color: var(--text-dark);
+    }
+    .testimonial-card p {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+
+    .student-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .student-info img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .student-info strong {
+      color: var(--primary-purple);
+    }
+    .student-info small {
+      color: var(--text-light);
+      font-size: 0.85rem;
+    }
+
+
+    /* NEWSLETTER */
+    .newsletter {
+      background: linear-gradient(135deg, var(--primary-purple), var(--primary-dark));
+      color: white;
+      text-align: center;
+      padding: clamp(50px, 12vw, 70px) 0;
+    }
+
+    .newsletter h2 {
+      color: white;
+      margin-bottom: 10px;
+    }
+    
+    .newsletter h2::after { 
+      background: var(--pista-green); 
+    }
+
+    .newsletter form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(15px, 4vw, 20px);
+      margin-top: 30px;
+    }
+
+    .newsletter input[type="email"] {
+      padding: clamp(12px, 3vw, 15px) clamp(15px, 5vw, 20px);
+      border: none;
+      border-radius: 50px;
+      width: min(90%, 350px);
+      font-family: 'Poppins', sans-serif;
+      outline: none;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      color: var(--text-dark);
+    }
+
+    /* FOOTER */
+    .footer {
+      background-color: #1e1e2f;
+      color: #a4b0be;
+      padding: clamp(25px, 8vw, 40px) 0;
+      text-align: center;
+      font-size: clamp(0.85rem, 2.5vw, 0.9rem);
+      border-top: 5px solid var(--pista-green);
+      transition: background-color 0.3s;
+    }
+
+
+    /* MOBILE MENU FIXES & RESPONSIVENESS */
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* RESPONSIVE BREAKPOINTS */
+    @media (max-width: 992px) {
+      .why-lsm-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+      }
+      .why-lsm-right h2::after { 
+        margin: 10px auto 0;
+      }
+      .why-lsm-right {
+        text-align: center;
+      }
+      .why-lsm-bullets {
+        display: grid; 
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        justify-items: start;
+        text-align: left;
+      }
+      .why-lsm-bullets li {
+        width: 100%;
+        margin-bottom: 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+        .navbar .container {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            gap: 0;
+        }
+
+        .navbar nav {
+            display: none; 
+            position: fixed; 
+            top: var(--nav-height);
+            left: 0;
+            right: 0;
+            background: rgba(111, 3, 106, 0.98);
+            backdrop-filter: blur(15px);
+            flex-direction: column;
+            padding: 30px 20px;
+            border-bottom: 2px solid var(--pista-green);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out, opacity 0.4s;
+            opacity: 0;
+        }
+
+        .navbar nav.active {
+            display: flex;
+            max-height: 80vh; 
+            opacity: 1;
+        }
+        
+        .navbar nav ul {
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .navbar nav ul li a {
+            font-size: 1.1rem;
+            display: block;
+            padding: 10px;
+        }
+        
+        .mobile-menu-toggle {
+            display: block;
+            margin-left: 15px;
+        }
+
+        .auth-buttons-nav {
+            display: none;
+        }
+
+        .navbar nav .auth-buttons-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 15px;
+            margin-left: 0;
+            width: 100%;
+        }
+
+        .why-lsm-bullets {
+            grid-template-columns: 1fr; 
+            justify-items: center;
+        }
+
+        /* HIDE SLIDER BUTTONS ON MOBILE */
+        .slider-btn { display: none; }
+        .course-slider-wrapper { padding: 0; }
+        .prev-btn, .next-btn { display: none; }
+    }
+
+    @media (min-width: 769px) {
+        .auth-buttons-nav {
+            display: flex !important; 
+        }
+    }
+
+    /* EXTRA SMALL DEVICES (< 576px) FIXES */
+    @media (max-width: 576px) {
+      .why-lsm-left {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        max-width: 320px;
+        margin: 0 auto;
+      }
+      
+      .course-actions {
+        flex-direction: column; 
+      }
+      
+      .course-actions .btn-action {
+        width: 100%; 
+      }
+      
+      .newsletter input[type="email"] {
+          width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body data-theme="light">
+  <header class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <span style="color: var(--pista-green);">🚀</span> CODELINE AI
+      </a>
+      
+      <nav id="main-nav">
+        <ul>
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="login.html" id="nav-dashboard">Dashboard</a></li>
+          <li><a href="aboutus.html">About</a></li>
+          <li><a href="placement.html">Placements</a></li>
+        </ul>
+        
+        <div class="auth-buttons-nav">
+            <a href="login.html" class="btn btn-secondary">Login/Register</a>
+        </div>
+      </nav>
+
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button id="dark-mode-toggle" title="Toggle Dark/Light Mode">
+            <i class="fas fa-moon"></i>
+        </button>
+        <button class="mobile-menu-toggle" id="mobile-toggle">☰</button>
+      </div>
+
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <div class="container">
+      <h1 class="animated-text">Unlock Your <span style="color: var(--pista-green);">Potential</span></h1>
+      <p>Master new skills with expert mentors. Join the future of learning today.</p>
+      <a href="#popular-courses-section" class="btn btn-primary btn-lg">Explore Courses</a>
+    </div>
+  </section>
+
+  <section class="slideshow">
+    <div class="slide-container">
+      <div class="slide fade"><img src="https://via.placeholder.com/1200x400/4834d4/ffffff?text=Full+Stack+Development" alt=""></div>
+      <div class="slide fade"><img src="https://via.placeholder.com/1200x400/badc58/4834d4?text=Data+Science+with+Python" alt=""></div>
+      <div class="slide fade"><img src="https://via.placeholder.com/1200x400/2ecc71/ffffff?text=Modern+UI/UX+Design" alt=""></div>
+    </div>
+  </section>
+
+  <section class="why-lsm">
+    <div class="container why-lsm-inner">
+      <div class="why-lsm-left">
+        <div class="student-card">
+          <div class="student-avatar-wrap">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop" alt="Student 1">
+          </div>
+          <div class="student-namebar"></div>
+        </div>
+        <div class="student-card">
+          <div class="student-avatar-wrap">
+            <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=800&auto=format&fit=crop" alt="Student 2">
+          </div>
+          <div class="student-namebar"></div>
+        </div>
+        <div class="student-card">
+          <div class="student-avatar-wrap">
+            <img src="https://images.unsplash.com/photo-1558021211-6d1403321394?q=80&w=800&auto=format&fit=crop" alt="Student 3">
+          </div>
+          <div class="student-namebar"></div>
+        </div>
+        <div class="student-card">
+          <div class="student-avatar-wrap">
+            <img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=800&auto=format&fit=crop" alt="Student 4">
+          </div>
+          <div class="student-namebar"></div>
+        </div>
+      </div>
+
+      <div class="why-lsm-right">
+        <h2>Why CODELINE AI Learning Platform?</h2>
+        <p class="lead-text">We're building a modern, project‑based LMS designed for developers, designers, and working professionals.</p>
+        <p class="lead-text">Learn faster with real‑world projects, mentorship, and a clean dashboard that keeps your progress crystal clear.</p>
+
+        <ul class="why-lsm-bullets">
+          <li><span class="icon"><i class="fas fa-check"></i></span> Wide range of job‑ready courses</li>
+          <li><span class="icon"><i class="fas fa-check"></i></span> Cost‑effective plans for students</li>
+          <li><span class="icon"><i class="fas fa-check"></i></span> Global community & networking</li>
+          <li><span class="icon"><i class="fas fa-check"></i></span> Certificates to showcase skills</li>
+        </ul>
+
+        <a href="register.html" class="btn btn-primary btn-lg">Create an Account</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="popular-courses" id="popular-courses-section">
+    <div class="container">
+      <h2 class="section-title">🔥 Trending Courses</h2>
+      <p class="section-subtitle">Top-rated classes selected just for you</p>
+      
+      <div class="course-slider-wrapper">
+          <button id="prevBtn" class="slider-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
+          
+          <div id="course-catalog-container" class="course-slider">
+              </div>
+  
+          <button id="nextBtn" class="slider-btn next-btn"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials-section">
+    <div class="container">
+      <h2 class="section-title">Hear From Our Students</h2>
+      <p class="section-subtitle">Discover what learners around the world are saying about our courses</p>
+
+      <div class="testimonial-grid">
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <h3>"Awesome Service And Courses."</h3>
+          <p>The project-based curriculum really helped me apply the concepts immediately. The AI assistance felt like having a personal coding tutor.</p>
+          <div class="student-info">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rohit">
+            <div>
+              <strong>Rohit Sharma</strong><br>
+              <small>Full Stack Developer</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <h3>"Great Learning Experience Overall."</h3>
+          <p>I appreciated the flexibility and the deep dives into modern frameworks. The community forum is also super active and helpful!</p>
+          <div class="student-info">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Kausab">
+            <div>
+              <strong>Kausab Mirza</strong><br>
+              <small>Data Science Aspirant</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <h3>"Fantastic Platform With Quality Courses."</h3>
+          <p>The mentors were responsive and the course material was up-to-date. I landed my first job a month after getting my certificate!</p>
+          <div class="student-info">
+            <img src="https://randomuser.me/api/portraits/men/21.jpg" alt="Omkar">
+            <div>
+              <strong>Omkar Singh</strong><br>
+              <small>UI/UX Designer</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="newsletter">
+    <div class="container">
+      <h2>Join Our Community 🌐</h2>
+      <p>Subscribe for free tutorials, updates, and exclusive offers.</p>
+      <form>
+        <input type="email" placeholder="Enter your best email address" required>
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 CODELINE AI. Designed with 💜 & 🍵 (Pista).</p>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script>
+    // -------------------------------------------------------------------
+    // 1. DYNAMIC COURSE CATALOG GENERATION
+    // -------------------------------------------------------------------
+    // Added more courses to demonstrate scrolling functionality
+    const coursesData = [
+        {
+            title: "ReactJS Masterclass",
+            info: "Intermediate • 12 Weeks • John Doe",
+            image: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=800&auto=format&fit=crop",
+            status: "continue",
+            detailsUrl: "#",
+            enrollUrl: "#"
+        },
+        {
+            title: "Python for Data Science",
+            info: "Beginner • 8 Weeks • Jane Smith",
+            image: "https://images.unsplash.com/photo-1581092928929-e85b9b7e7a5d?q=80&w=800&auto=format&fit=crop",
+            status: "enroll",
+            detailsUrl: "#",
+            enrollUrl: "#"
+        },
+        {
+            title: "Introduction to Cybersecurity",
+            info: "Beginner • 6 Weeks • Alex Kim",
+            image: "https://images.unsplash.com/photo-1526498460520-4c2463309647?q=80&w=800&auto=format&fit=crop",
+            status: "enroll",
+            detailsUrl: "#",
+            enrollUrl: "#"
+        },
+        {
+            title: "Modern UI/UX Design",
+            info: "Intermediate • 10 Weeks • Sarah Lee",
+            image: "https://images.unsplash.com/photo-1558548177-3e11b0520d2a?q=80&w=800&auto=format&fit=crop",
+            status: "enroll",
+            detailsUrl: "#",
+            enrollUrl: "#"
+        },
+        {
+            title: "Advanced Java Spring Boot",
+            info: "Advanced • 14 Weeks • Michael Chen",
+            image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop",
+            status: "enroll",
+            detailsUrl: "#",
+            enrollUrl: "#"
+        },
+        {
+            title: "AWS Cloud Architect",
+            info: "Advanced • 10 Weeks • Amazon Certified",
+            image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop",
+            status: "enroll",
+            detailsUrl: "#",
+            enrollUrl: "#"
+        }
+    ];
+
+    const courseContainer = document.getElementById('course-catalog-container');
+
+    function renderCourses() {
+        if (!courseContainer) return;
+        
+        courseContainer.innerHTML = ''; 
+
+        courseContainer.innerHTML = coursesData.map(course => {
+            let actionButton = '';
+            
+            if (course.status === 'continue') {
+                actionButton = `
+                    <a href="${course.enrollUrl}" class="btn-action btn-continue">CONTINUE LEARNING</a>
+                    <a href="${course.detailsUrl}" class="btn-action btn-view">DETAILS</a>
+                `;
+            } else {
+                actionButton = `
+                    <a href="${course.enrollUrl}" class="btn-action btn-enroll">ENROLL NOW</a>
+                    <a href="${course.detailsUrl}" class="btn-action btn-view">VIEW DETAILS</a>
+                `;
+            }
+
+            return `
+                <div class="course-card">
+                    <div class="course-image-container">
+                        <img src="${course.image}" alt="${course.title}">
+                    </div>
+                    <div class="course-header">
+                        <h3>${course.title}</h3>
+                    </div>
+                    <div class="course-info">
+                        <p>${course.info}</p>
+                    </div>
+                    <div class="course-actions">
+                        ${actionButton}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    renderCourses();
+
+    // -------------------------------------------------------------------
+    // 2. SLIDER NAVIGATION LOGIC
+    // -------------------------------------------------------------------
+    const scrollContainer = document.getElementById('course-catalog-container');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    if (scrollContainer && prevBtn && nextBtn) {
+        // Scroll amount = card width (300px) + gap (25px)
+        const scrollAmount = 325; 
+
+        nextBtn.addEventListener('click', () => {
+            scrollContainer.scrollBy({
+                left: scrollAmount,
+                behavior: 'smooth'
+            });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            scrollContainer.scrollBy({
+                left: -scrollAmount,
+                behavior: 'smooth'
+            });
+        });
+
+        // Hide arrows logic (Optional but good UX)
+        function checkScrollButtons() {
+            // Left button
+            if (scrollContainer.scrollLeft <= 0) {
+                prevBtn.style.opacity = "0.5";
+                prevBtn.style.pointerEvents = "none";
+            } else {
+                prevBtn.style.opacity = "1";
+                prevBtn.style.pointerEvents = "auto";
+            }
+            
+            // Right button (with wiggle room)
+            if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 5) {
+                nextBtn.style.opacity = "0.5";
+                nextBtn.style.pointerEvents = "none";
+            } else {
+                nextBtn.style.opacity = "1";
+                nextBtn.style.pointerEvents = "auto";
+            }
+        }
+
+        scrollContainer.addEventListener('scroll', checkScrollButtons);
+        // Initial check
+        setTimeout(checkScrollButtons, 100); 
+    }
+
+
+    // -------------------------------------------------------------------
+    // 3. DARK MODE LOGIC 
+    // -------------------------------------------------------------------
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const body = document.body;
+    const icon = darkModeToggle.querySelector('i');
+
+    function setTheme(theme) {
+        body.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        if (theme === 'dark') {
+            icon.classList.replace('fa-moon', 'fa-sun');
+        } else {
+            icon.classList.replace('fa-sun', 'fa-moon');
+        }
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+
+    darkModeToggle.addEventListener('click', () => {
+        const currentTheme = body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+    });
+    
+    // -------------------------------------------------------------------
+    // 4. NAVIGATION & UI LOGIC
+    // -------------------------------------------------------------------
+    const mobileToggle = document.getElementById('mobile-toggle');
+    const mainNav = document.getElementById('main-nav');
+    
+    mobileToggle.addEventListener('click', () => {
+      mainNav.classList.toggle('active');
+    });
+
+    document.querySelectorAll('.navbar nav ul li a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+            mainNav.classList.remove('active');
+        }
+      });
+    });
+
+    // Slideshow
+    let slideIndex = 0;
+    showSlides();
+    function showSlides() {
+      let slides = document.getElementsByClassName("slide");
+      for (let i = 0; i < slides.length; i++) slides[i].style.display = "none";
+      slideIndex++;
+      if (slideIndex > slides.length) slideIndex = 1;
+      slides[slideIndex - 1].style.display = "block";
+      setTimeout(showSlides, 4000);
+    }
+
+    // Hero Background Rotator
+    const heroImages = [
+      'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop',
+      'https://cdn.prod.website-files.com/65c2f26b38857b3c9aadda29/6721960f8194328b94601b69_Cover%20Image%20for%20CourseMagic%20blog%20post.webp',
+      'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop'
+    ];
+    let heroIndex = 0;
+
+    function changeHeroBackground() {
+      document.querySelector('.hero').style.backgroundImage = `url('${heroImages[heroIndex]}')`;
+      heroIndex = (heroIndex + 1) % heroImages.length;
+    }
+    setInterval(changeHeroBackground, 5000);
+    changeHeroBackground();
+
+    // Smooth scrolling for anchor links with offset
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            const headerOffset = 80;
+            const elementPosition = target.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.scrollY - headerOffset;
+      
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: "smooth"
+            });
+        }
+      });
+    });
+  </script>
+  <script src="js/config.js"></script>
+
+  <script src="js/course-catalog.js"></script>
+
+</body>
+</html>
+
+
+
+
