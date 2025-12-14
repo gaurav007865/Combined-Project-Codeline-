@@ -6,294 +6,362 @@
     <title>My Progress - LSM Portal</title>
     <link rel="stylesheet" href="css/main.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        /* :::::: 1. GLOBAL VARIABLES (Synced) :::::: */
+        /* BASE & LIGHT MODE VARIABLES (Same beautiful design) */
         :root {
-            --primary-purple: rgba(111, 3, 106, 0.95);      /* Deep Royal Purple */
-            --primary-dark: rgba(111, 3, 106, 0.95);        /* Darker Purple for gradients */
-            --pista-green: #badc58;         /* Fresh Pistachio Accent */
-            --bg-color: #f7f6ff;            /* Very light background */
-            --card-bg: #ffffff;             /* Light card background */
-            --text-dark: #2d3436;           /* Main dark text */
-            --text-light: #636e72;          /* Secondary light text */
-            --shadow-light: 0 4px 15px rgba(0,0,0,0.08);
-            --shadow-deep: 0 10px 30px rgba(185, 17, 112, 0.15); /* Adjusted purple shadow */
+            --primary-purple: #9a0669;
+            --primary-dark: #b12733;
+            --pista-green: #1cc6cc;
+            --bg-color: #f6f8fa;
             --white: #ffffff;
-            --bar-bg: #e6e6e6; /* Progress bar background */
+            --card-bg: var(--white);
+            --text-dark: #141616;
+            --text-light: #636e72;
+            --shadow-light: 0 4px 15px rgba(0,0,0,0.08);
+            --shadow-deep: 0 15px 35px rgba(227, 83, 21, 0.15);
+            --sidebar-gradient-start: rgba(111, 3, 106, 0.95);
+            --sidebar-gradient-end: #6d135d;
+            --sidebar-text: var(--white);
+            --bar-bg: rgba(0,0,0,0.1);
         }
 
-        /* :::::: DARK MODE VARIABLES :::::: */
+        /* DARK MODE VARIABLES */
         [data-theme="dark"] {
-            --primary-purple:#3a1c71; /* Lighter Pinkish Red */
-            --primary-dark:#3a1c71;   /* Soft Lavender Blue */
-            --pista-green: #10ac84;    /* Vibrant Teal */
-            --bg-color: #1e2029;
-            --card-bg: #282a36;
-            --text-dark: #f8f8f2;
-            --text-light: #f0edf5;
-            --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.4);
-            --shadow-deep: 0 10px 30px rgba(162, 155, 254, 0.25);
-            --white: #1e2029; /* Adjusted for contrast on dark elements */
-            --bar-bg: #3c404c;
+            --primary-purple: #b37bff;
+            --primary-dark: #6ea8fe;
+            --pista-green: #2ecc71;
+            --bg-color: #0e0f14;
+            --white: #1b1c24;
+            --card-bg: var(--white);
+            --text-dark: #f5f5f7;
+            --text-light: #a6accd;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.35);
+            --shadow-deep: 0 18px 42px rgba(0, 0, 0, 0.6);
+            --sidebar-gradient-start: #3a1c71;
+            --sidebar-gradient-end: #2a0845;
+            --sidebar-text: #eceaff;
+            --bar-bg: rgba(255,255,255,0.1);
         }
 
-        /* :::::: 2. GENERAL & LAYOUT :::::: */
+        * { box-sizing: border-box; }
+
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
-            background: var(--bg-color); 
-            display: flex;
+            background: var(--bg-color);
             color: var(--text-dark);
+            scroll-behavior: smooth;
             transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
         }
+
+        /* MOBILE FIRST: Dashboard Wrapper */
         .dashboard-wrapper {
             display: flex;
             width: 100%;
             min-height: 100vh;
-        }
-        .main-content {
-            flex: 1;
-            padding: 2.5rem;
-        }
-        .dashboard-header {
-            padding-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .dashboard-header h1 {
-            margin: 0;
-            font-size: 2rem;
-            color: var(--primary-purple);
-            font-weight: 700;
-            border-bottom: 2px solid var(--pista-green);
-            padding-bottom: 10px;
-            transition: color 0.3s;
+            flex-direction: column;
         }
 
-        /* Sidebar styles remain the same as previous templates for consistency */
-        
+        /* MOBILE OFFCANVAS SIDEBAR */
         .sidebar {
-            width: 250px;
-            background: linear-gradient(180deg, var(--primary-purple) 0%, var(--primary-dark) 100%);
-            color: white; 
-            display: flex;
-            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--sidebar-gradient-start) 0%, var(--sidebar-gradient-end) 100%);
+            color: var(--sidebar-text);
+            z-index: 1000;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             padding: 1.5rem 1rem;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-            z-index: 50;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
         }
+
+        .sidebar.mobile-open { transform: translateX(0); }
+
         .logo-area {
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             font-weight: 700;
             margin-bottom: 2.5rem;
             text-align: center;
+            letter-spacing: 1px;
         }
+
         .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
-        .sidebar-nav li { margin-bottom: 0.5rem; }
+        .sidebar-nav li { margin-bottom: 0.7rem; }
         .sidebar-nav a {
-            color: rgba(255, 255, 255, 0.9);
+            color: var(--sidebar-text);
             text-decoration: none;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 0.8rem 1rem;
-            border-radius: 10px;
-            transition: background 0.3s, color 0.3s;
+            gap: 12px;
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            transition: all 0.3s;
+            font-size: 1rem;
+            min-height: 48px;
         }
         .sidebar-nav a:hover { background: rgba(255,255,255,0.15); }
         .sidebar-nav .active a {
             background: var(--card-bg);
-            color: rgba(255, 255, 255, 0.9);
+            color: var(--primary-purple);
             font-weight: 600;
             box-shadow: var(--shadow-light);
         }
 
-        /* :::::: 3. Dark Mode Toggle Button :::::: */
-        .btn-toggle {
-            background: var(--card-bg);
-            color: white;
-            border: 2px solid var(--primary-purple);
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            font-size: 1.4rem;
-            cursor: pointer;
+        /* SIDEBAR OVERLAY */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0; visibility: hidden;
             transition: all 0.3s;
-            box-shadow: var(--shadow-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
         }
-        .btn-toggle:hover {
-            background: white;
-            color: var(--card-bg);
-            border-color: var(--primary-dark);
-        }
-        [data-theme="dark"] .btn-toggle {
-            background:white;
-            color: var(--primary-dark);
-            border-color: var(--primary-dark);
-        }
-        [data-theme="dark"] .btn-toggle:hover {
-            background: white;
-            color: var(--card-bg);
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 100vh;
         }
 
-        /* :::::: 4. OVERALL PROGRESS CARD :::::: */
+        /* DASHBOARD HEADER */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--pista-green);
+            gap: 1rem;
+        }
+
+        .dashboard-header h1 {
+            margin: 0;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            color: var(--primary-dark);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* MOBILE MENU BUTTON */
+        .mobile-menu-btn {
+            background: var(--card-bg);
+            border: 2px solid var(--text-light);
+            color: var(--primary-dark);
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            display: none;
+            min-height: 44px; min-width: 44px;
+            align-items: center; justify-content: center;
+        }
+        .mobile-menu-btn:hover {
+            background: var(--pista-green);
+            color: var(--white);
+            border-color: var(--pista-green);
+            transform: scale(1.05);
+        }
+
+        /* DARK MODE TOGGLE */
+        #dark-mode-toggle {
+            background: var(--card-bg);
+            border: 2px solid var(--text-light);
+            color: var(--primary-dark);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 10px 12px;
+            border-radius: 50%;
+            transition: all 0.3s;
+            min-height: 44px; min-width: 44px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        #dark-mode-toggle:hover {
+            background: var(--pista-green);
+            color: var(--white);
+            border-color: var(--pista-green);
+            transform: rotate(15deg) scale(1.05);
+        }
+
+        /* OVERALL PROGRESS CARD (Your beautiful design preserved) */
         .overall-progress-card {
             background: linear-gradient(135deg, var(--primary-purple), var(--primary-dark));
             color: var(--white);
-            padding: 2.5rem;
+            padding: clamp(1.5rem, 5vw, 2.5rem);
             border-radius: 20px;
             box-shadow: var(--shadow-deep);
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             text-align: center;
         }
         .overall-progress-card h2 {
             margin: 0 0 0.5rem;
-            font-size: 1.5rem;
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
             color: var(--pista-green);
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-weight: 600;
         }
         #overall-progress-text {
-            font-size: 2rem; /* Adjusted size to fit descriptive text */
-            font-weight: 600;
-            margin: 0;
+            font-size: clamp(1.5rem, 6vw, 2.5rem);
+            font-weight: 700;
+            margin: 0.5rem 0 1rem 0;
             line-height: 1.2;
-            display: block;
         }
-
-        /* Overall Progress Bar (Wider and bolder) */
         .overall-progress-bar-container {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255,255,255,0.2);
             border-radius: 10px;
             overflow: hidden;
-            height: 25px; 
-            margin-top: 20px;
+            height: clamp(20px, 4vw, 25px);
+            margin-top: 1rem;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
         .overall-progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, var(--pista-green), #cbeb5f); 
+            background: linear-gradient(90deg, var(--pista-green), #cbeb5f);
             transition: width 1s ease-in-out;
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            padding-right: 15px;
+            padding-right: 12px;
             font-weight: 700;
             color: var(--primary-dark);
-            font-size: 1.1rem;
-            min-width: 50px; /* To ensure text is visible when progress is low */
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            min-width: 45px;
         }
         [data-theme="dark"] .overall-progress-bar {
-             background: linear-gradient(90deg, var(--pista-green), #38c89c);
-             color: var(--card-bg);
+            background: linear-gradient(90deg, var(--pista-green), #38c89c);
+            color: var(--card-bg);
         }
-        
-        /* :::::: 5. COURSE PROGRESS GRID & CARD :::::: */
+
+        /* COURSES GRID - MOBILE FIRST */
         .courses-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
         }
+
         .course-card {
             background: var(--card-bg);
-            border-radius: 16px;
-            padding: 2rem;
+            border-radius: 17px;
+            padding: 1.8rem 1.5rem;
             box-shadow: var(--shadow-light);
-            transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
-            border-left: 6px solid var(--pista-green); 
+            transition: all 0.3s;
+            border-left: 6px solid var(--pista-green);
         }
         .course-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-6px);
             box-shadow: var(--shadow-deep);
         }
+
         .course-header {
-             display: flex;
-             justify-content: space-between;
-             align-items: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            gap: 1rem;
         }
+
         .course-card h3 {
-            margin: 0 0 0.5rem;
+            margin: 0 0 0.5rem 0;
             color: var(--primary-dark);
-            font-size: 1.5em;
-            transition: color 0.3s;
+            font-size: clamp(1.1rem, 4vw, 1.4rem);
+            font-weight: 600;
+            line-height: 1.3;
         }
-        [data-theme="dark"] .course-card h3 {
-            color: var(--primary-purple);
-        }
+
         .course-id {
             font-size: 0.8rem;
             color: var(--text-light);
-            background: var(--bg-color);
-            padding: 3px 8px;
-            border-radius: 5px;
+            background: rgba(0,0,0,0.05);
+            padding: 4px 8px;
+            border-radius: 6px;
             font-weight: 600;
+            white-space: nowrap;
+        }
+        [data-theme="dark"] .course-id {
+            background: rgba(255,255,255,0.1);
         }
 
         .progress-stats {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-            padding-top: 10px;
+            margin-bottom: 1.2rem;
+            padding-top: 0.8rem;
+            font-size: 0.9rem;
         }
-        .topic-count {
-            font-weight: 600;
-            color: var(--text-dark);
-            font-size: 1em;
+        .topic-count { 
+            font-weight: 600; 
+            color: var(--text-dark); 
         }
         .progress-percent {
-            font-size: 1.5em;
+            font-size: 1.3rem;
             font-weight: 700;
             color: var(--primary-purple);
         }
 
-        /* Individual Course Progress Bar */
         .progress-bar-container {
             background: var(--bar-bg);
             border-radius: 8px;
             overflow: hidden;
-            height: 15px;
-            margin-bottom: 20px;
+            height: 12px;
+            margin-bottom: 1.5rem;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
         .progress-bar-fill {
             height: 100%;
-            background: var(--primary-purple); /* Default Purple */
+            background: var(--primary-purple);
             transition: width 1s ease-in-out;
             border-radius: 8px;
         }
-        
-        /* Buttons */
+
         .course-actions {
             display: flex;
-            gap: 15px;
-            padding-top: 10px;
+            gap: 10px;
+            padding-top: 1rem;
             border-top: 1px dashed rgba(0,0,0,0.1);
         }
         [data-theme="dark"] .course-actions {
             border-top: 1px dashed rgba(255,255,255,0.1);
         }
+
         .btn {
-            padding: 10px 15px;
-            border-radius: 8px;
+            padding: 12px 16px;
+            border-radius: 10px;
             text-decoration: none;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 0.9em;
+            font-size: 0.9rem;
+            flex: 1;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
         .btn-primary { 
             background: var(--primary-purple); 
             color: var(--white);
-            box-shadow: 0 4px 10px rgba(185, 17, 112, 0.3);
-            flex-grow: 1;
-            text-align: center;
+            box-shadow: 0 4px 15px rgba(154, 6, 105, 0.3);
         }
         .btn-primary:hover {
             background: var(--primary-dark);
@@ -303,90 +371,81 @@
             background: transparent;
             color: var(--primary-purple);
             border: 2px solid var(--primary-purple);
-            flex-grow: 1;
-            text-align: center;
         }
         .btn-outline:hover {
             background: var(--primary-purple);
-            color: var(--card-bg);
-        }
-        [data-theme="dark"] .btn-outline {
-             color: var(--primary-purple);
-             border-color: var(--primary-purple);
-        }
-        [data-theme="dark"] .btn-outline:hover {
-            background: var(--primary-purple);
-            color: var(--card-bg);
+            color: var(--white);
+            transform: translateY(-2px);
         }
 
-        /* :::::: 6. LOADER & STATE STYLES :::::: */
-        .loading-state, .empty-state, .error-state {
-            grid-column: 1 / -1;
+        /* STATE STYLES */
+        .loading-skeleton, .empty-state-container, .error-state-container {
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
             text-align: center;
-            padding: 50px 20px;
-            background: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: var(--shadow-light);
-            margin-top: 20px;
         }
-        .empty-icon, .error-icon { font-size: 4rem; margin-bottom: 15px; display: block; }
-        .empty-state h3, .error-state h3 { color: var(--primary-purple); margin-bottom: 10px; }
-
-        /* Impressive Spinner - Dual Ring */
-        .spinner {
-            display: inline-block;
-            width: 80px;
-            height: 80px;
+        .skeleton-card {
+            height: 250px;
+            width: 100%;
+            max-width: 400px;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            border-radius: 17px;
+            animation: pulse 1.5s infinite;
         }
-        .spinner:after {
-            content: " ";
-            display: block;
-            width: 64px;
-            height: 64px;
-            margin: 8px;
-            border-radius: 50%;
-            border: 6px solid var(--primary-purple);
-            border-color: var(--primary-purple) transparent var(--primary-purple) transparent;
-            animation: spinner-anim 1.2s linear infinite;
-        }
-        @keyframes spinner-anim {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        [data-theme="dark"] .spinner:after {
-            border-color: var(--primary-dark) transparent var(--primary-dark) transparent;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
         }
 
-        /* :::::: 7. RESPONSIVE ADJUSTMENTS :::::: */
+        /* TABLET & DESKTOP */
+        @media (min-width: 769px) {
+            .dashboard-wrapper { flex-direction: row; }
+            .sidebar {
+                position: static;
+                transform: none;
+                width: 260px;
+                height: auto;
+                flex-shrink: 0;
+            }
+            .sidebar-overlay { display: none; }
+            .mobile-menu-btn { display: none; }
+            .main-content { padding: 2.5rem; }
+            .courses-grid { grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 2rem; }
+        }
+
+        @media (min-width: 1200px) {
+            .main-content { padding: 3rem; }
+        }
+
+        /* MOBILE SPECIFIC */
         @media (max-width: 768px) {
-            .sidebar { width: 70px; padding: 1.5rem 0.5rem; }
-            .sidebar-nav a span { display: none; }
-            .sidebar-nav a { justify-content: center; }
-            .logo-area { font-size: 0; }
-            .logo-area::before { content: '🎓'; font-size: 2rem; }
-            .main-content { padding: 1.5rem; }
-            .courses-grid { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 500px) {
-             .dashboard-header { flex-direction: column; align-items: flex-start; }
-             .btn-toggle { margin-top: 15px; }
-             .course-actions { flex-direction: column; gap: 10px; }
+            .mobile-menu-btn { display: flex; }
+            .course-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .course-actions { flex-direction: column; }
+            .progress-stats { flex-direction: column; gap: 0.5rem; align-items: flex-start; }
         }
     </style>
 </head>
 <body data-theme="light">
+    <!-- MOBILE SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
     <div class="dashboard-wrapper">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="logo-area">🎓 LSM Portal</div>
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="dashboard.html" data-icon="🏠">🏠 <span>Dashboard</span></a></li>
                     <li><a href="my-courses.html" data-icon="📚">📚 <span>My Courses</span></a></li>
                     <li class="active"><a href="progress.html" data-icon="📈">📈 <span>Progress</span></a></li>
-                    <li><a href="discussions.html" data-icon="💬">💬 <span>Discussions</span></a></li>
+                    <li><a href="fees.html" data-icon="💬">💬 <span>Fees</span></a></li>
                     <li><a href="profile.html" data-icon="⚙️">⚙️ <span>Profile</span></a></li>
-                    <li><a href="index.html" data-icon="🏠">🏠 <span>Back to Home</span></a></li>
                     <li><a href="#" id="logout-link" data-icon="🚪">🚪 <span>Logout</span></a></li>
+                    <li><a href="index.html" data-icon="🏠">🏠 <span>Back to Home</span></a></li>
                 </ul>
             </nav>
         </aside>
@@ -394,9 +453,14 @@
         <main class="main-content">
             <header class="dashboard-header">
                 <h1>📈 My Learning Progress</h1>
-                <button id="dark-mode-toggle" class="btn-toggle" title="Toggle Dark/Light Mode">
-                    <span id="toggle-icon">☀️</span>
-                </button>
+                <div class="header-actions">
+                    <button class="mobile-menu-btn" id="mobile-menu-btn" title="Open Menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <button id="dark-mode-toggle" title="Toggle Dark/Light Mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
             </header>
             
             <section class="overall-progress-card">
@@ -407,15 +471,64 @@
                 </div>
             </section>
 
-            <div id="loading-message-container" style="min-height: 200px; display: none;"></div>
+            <div id="loading-message-container" style="display: none; min-height: 200px;"></div>
 
             <div class="courses-grid" id="progress-list">
-                </div>
+                <!-- Progress cards will load here -->
+            </div>
         </main>
     </div>
+
+    <script>
+        // Mobile Sidebar Controls
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('mobile-open');
+            sidebarOverlay.classList.toggle('active');
+            document.body.style.overflow = sidebar.classList.contains('mobile-open') ? 'hidden' : '';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('mobile-open');
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        mobileMenuBtn?.addEventListener('click', toggleSidebar);
+        sidebarOverlay?.addEventListener('click', closeSidebar);
+
+        // Close sidebar on nav clicks
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', closeSidebar);
+        });
+
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        darkModeToggle?.addEventListener('click', () => {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const icon = darkModeToggle.querySelector('i');
+            icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            document.querySelector('#dark-mode-toggle i').className = 'fas fa-sun';
+        }
+    </script>
 
     <script src="js/config.js"></script>
     <script src="js/auth-check.js"></script>
     <script src="js/progress.js"></script>
-    <script src="js/dark-mode-sync.js"></script> </body>
+</body>
 </html>
