@@ -10,47 +10,37 @@
     <style>
         /* BASE & LIGHT MODE VARIABLES */
         :root {
-            --primary-purple: #9a0669; /* Darker Pink/Violet for accents */
-            --primary-dark: #b12733; /* Deep Blue/Violet for main text/accents */
-            --pista-green: #1cc6cc; /* Bright Green accent */
-            --bg-color: #f6f8fa; /* Light background */
+            --primary-purple: #9a0669;
+            --primary-dark: #b12733;
+            --pista-green: #1cc6cc;
+            --bg-color: #f6f8fa;
             --white: #ffffff;
             --card-bg: var(--white);
             --text-dark: #141616;
             --text-light: #636e72;
             --shadow-light: 0 4px 15px rgba(0,0,0,0.08);
             --shadow-deep: 0 15px 35px rgba(227, 83, 21, 0.15);
-            --sidebar-gradient-start: rgba(111, 3, 106, 0.95); /* Lighter Purple */
-            --sidebar-gradient-end: #6d135d; /* Darker Blue */
+            --sidebar-gradient-start: rgba(111, 3, 106, 0.95);
+            --sidebar-gradient-end: #6d135d;
             --sidebar-text: var(--white);
         }
 
-        /* DARK MODE VARIABLES - PREMIUM THEME */
-[data-theme="dark"] {
-    /* BRAND ACCENTS */
-    --primary-purple: #b37bff;        /* Soft neon purple */
-    --primary-dark: #6ea8fe;          /* Clear bright blue */
-    --pista-green: #2ecc71;           /* Fresh modern green (success) */
-
-    /* BACKGROUND SYSTEM */
-    --bg-color: #0e0f14;              /* Deep, clean black-blue */
-    --white: #1b1c24;                 /* Card background */
-    --card-bg: var(--white);
-
-    /* TEXT COLORS */
-    --text-dark: #f5f5f7;             /* High contrast white */
-    --text-light: #a6accd;            /* Soft light gray for secondary text */
-
-    /* SHADOWS */
-    --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.35);
-    --shadow-deep: 0 18px 42px rgba(0, 0, 0, 0.6);
-
-    /* SIDEBAR */
-    --sidebar-gradient-start: #3a1c71;  /* Royal purple */
-    --sidebar-gradient-end: #2a0845;    /* Deep cosmic purple */
-    --sidebar-text: #eceaff;            /* Soft lavender white */
-}
-
+        /* DARK MODE VARIABLES */
+        [data-theme="dark"] {
+            --primary-purple: #b37bff;
+            --primary-dark: #6ea8fe;
+            --pista-green: #2ecc71;
+            --bg-color: #0e0f14;
+            --white: #1b1c24;
+            --card-bg: var(--white);
+            --text-dark: #f5f5f7;
+            --text-light: #a6accd;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.35);
+            --shadow-deep: 0 18px 42px rgba(0, 0, 0, 0.6);
+            --sidebar-gradient-start: #3a1c71;
+            --sidebar-gradient-end: #2a0845;
+            --sidebar-text: #eceaff;
+        }
 
         body {
             font-family: 'Poppins', sans-serif;
@@ -60,27 +50,37 @@
             color: var(--text-dark);
             scroll-behavior: smooth;
             transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
         }
 
-        /* DASHBOARD WRAPPER */
+        /* MOBILE FIRST APPROACH */
         .dashboard-wrapper {
             display: flex;
             width: 100%;
             min-height: 100vh;
+            flex-direction: column;
         }
 
-        /* SIDEBAR STYLES */
+        /* SIDEBAR - MOBILE OFFCANVAS */
         .sidebar {
-            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
             background: linear-gradient(180deg, var(--sidebar-gradient-start) 0%, var(--sidebar-gradient-end) 100%);
             color: var(--sidebar-text);
-            display: flex;
-            flex-direction: column;
+            z-index: 1000;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             padding: 1.5rem 1rem;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.14);
-            z-index: 50;
-            transition: background 0.3s, color 0.3s;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
         }
+
+        .sidebar.mobile-open {
+            transform: translateX(0);
+        }
+
         .logo-area {
             font-size: 1.7rem;
             font-weight: 700;
@@ -88,43 +88,70 @@
             text-align: center;
             letter-spacing: 1px;
         }
+
         .sidebar-nav ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
+
         .sidebar-nav li {
             margin-bottom: 0.7rem;
         }
+
         .sidebar-nav a {
             color: var(--sidebar-text);
             text-decoration: none;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 0.9rem 1rem;
+            gap: 12px;
+            padding: 1rem 1.2rem;
             border-radius: 12px;
-            transition: background 0.3s, color 0.3s;
+            transition: all 0.3s;
             position: relative;
             font-size: 1rem;
+            min-height: 48px; /* Touch-friendly size */
         }
+
         .sidebar-nav a:hover {
-            background: rgba(244, 241, 241, 0.18);
+            background: rgba(255, 255, 255, 0.15);
         }
+
         .sidebar-nav .active a {
             background: var(--card-bg);
-            color: #ffffff; /* Use Dark Primary for active link text */
+            color: var(--primary-purple);
             font-weight: 600;
             box-shadow: var(--shadow-light);
+        }
+
+        /* MOBILE SIDEBAR OVERLAY */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
 
         /* MAIN CONTENT */
         .main-content {
             flex: 1;
-            padding: 2.5rem;
-            max-width: 1200px;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 1400px;
             margin: 0 auto;
+            min-height: 100vh;
         }
 
         /* DASHBOARD HEADER */
@@ -132,24 +159,46 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2.5rem;
-            border-bottom: 2px solid var(--pista-green);
+            margin-bottom: 2rem;
             padding-bottom: 1rem;
+            border-bottom: 2px solid var(--pista-green);
+            gap: 1rem;
         }
+
         .dashboard-header h1 {
             margin: 0;
-            font-size: 2.2rem;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
             color: var(--primary-dark);
             font-weight: 700;
             letter-spacing: 1px;
-            transition: color 0.3s;
         }
+
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
-        
+
+        /* MOBILE MENU BUTTON */
+        .mobile-menu-btn {
+            background: var(--card-bg);
+            border: 2px solid var(--text-light);
+            color: var(--primary-dark);
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            display: none; /* Hidden on desktop */
+        }
+
+        .mobile-menu-btn:hover {
+            background: var(--pista-green);
+            color: var(--white);
+            border-color: var(--pista-green);
+            transform: scale(1.05);
+        }
+
         /* DARK MODE TOGGLE */
         #dark-mode-toggle {
             background: var(--card-bg);
@@ -161,6 +210,11 @@
             border-radius: 50%;
             transition: all 0.3s;
             line-height: 1;
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         #dark-mode-toggle:hover {
@@ -169,7 +223,7 @@
             border-color: var(--pista-green);
             transform: rotate(15deg) scale(1.05);
         }
-        
+
         [data-theme="dark"] #dark-mode-toggle {
             background: var(--bg-color);
             color: var(--text-dark);
@@ -186,24 +240,29 @@
         .profile-info {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 0.7rem;
+            gap: 12px;
+            padding: 0.8rem;
             border-radius: 25px;
             background: var(--card-bg);
             box-shadow: var(--shadow-light);
             cursor: pointer;
-            transition: box-shadow 0.3s, background 0.3s;
+            transition: all 0.3s;
             text-decoration: none;
             color: inherit;
+            min-height: 44px;
         }
+
         .profile-info:hover {
             box-shadow: var(--shadow-deep);
         }
+
         .profile-name {
             font-weight: 600;
             color: var(--primary-dark);
-            transition: color 0.3s;
+            font-size: 0.95rem;
+            white-space: nowrap;
         }
+
         .profile-avatar-sm {
             width: 42px;
             height: 42px;
@@ -212,180 +271,218 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--primary-purple);
             border: 2px solid var(--primary-purple);
-            transition: background 0.3s, color 0.3s, border-color 0.3s;
         }
 
         /* SUMMARY CARDS */
         .summary-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2.1rem;
-            margin-bottom: 3rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
         }
+
         .card {
-            background: var(--card-bg); /* Unified background */
+            background: var(--card-bg);
             border-radius: 17px;
-            padding: 1.9rem;
+            padding: 1.8rem 1.5rem;
             box-shadow: var(--shadow-light);
-            transition: transform 0.3s, box-shadow 0.3s, background 0.3s, border-left 0.3s;
+            transition: all 0.3s;
             position: relative;
             overflow: hidden;
             border-left: 6px solid transparent;
         }
+
         .card:hover {
-            transform: translateY(-8px); /* Slightly more prominent lift */
+            transform: translateY(-6px);
             box-shadow: var(--shadow-deep);
         }
+
         .card h3 {
             margin: 0 0 0.8rem;
             color: var(--text-light);
-            font-size: 0.97em;
+            font-size: 0.95rem;
             text-transform: uppercase;
-            letter-spacing: 0.7px;
-            transition: color 0.3s;
+            letter-spacing: 0.5px;
+            font-weight: 600;
         }
+
         .card p {
-            font-size: 2.8rem; /* Larger font size for impact */
+            font-size: clamp(1.8rem, 8vw, 2.8rem);
             font-weight: 700;
             color: var(--primary-dark);
             line-height: 1;
-            transition: color 0.3s;
+            margin: 0;
         }
-        
-        /* Specific card colors for visual distinction */
+
         .card:nth-child(1) { border-left-color: var(--pista-green); }
         .card:nth-child(1) p { color: var(--pista-green); }
         .card:nth-child(2) { border-left-color: var(--primary-purple); }
         .card:nth-child(2) p { color: var(--primary-purple); }
-        .card:nth-child(3) { border-left-color: #ff9f43; } /* Orange */
-        .card:nth-child(3) p { color: #ff9f43; font-size: 2.4rem; }
+        .card:nth-child(3) { border-left-color: #ff9f43; }
+        .card:nth-child(3) p { color: #ff9f43; }
+
         .card small { 
-            color: var(--text-light) !important; 
+            color: var(--text-light);
             font-weight: 600;
             display: block;
-            margin-top: 5px;
-            font-size: 0.9em;
+            margin-top: 8px;
+            font-size: 0.85rem;
         }
 
         /* DASHBOARD SECTION */
         .dashboard-section {
             background: var(--card-bg);
             border-radius: 17px;
-            padding: 2.2rem;
+            padding: 2rem;
             box-shadow: var(--shadow-light);
             margin-top: 1.5rem;
-            transition: background 0.3s, box-shadow 0.3s;
         }
+
         .dashboard-section h2 {
             margin-top: 0;
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
             color: var(--primary-dark);
             border-bottom: 2px solid var(--pista-green);
-            padding-bottom: 9px;
-            margin-bottom: 1.4rem;
+            padding-bottom: 10px;
+            margin-bottom: 1.5rem;
             display: inline-block;
-            transition: color 0.3s;
         }
 
         /* ACTIVITY LIST */
         .activity-list {
-            display: flex; /* Changed to flex for better structure */
+            display: flex;
             flex-direction: column;
             gap: 1.2rem;
         }
+
         .activity-item {
             border-radius: 12px;
-            padding: 1rem 1.2rem;
-            border: 1px solid rgba(154, 6, 105, 0.1); /* Light border based on primary color */
-            background: #fafbff; /* Light background for items */
+            padding: 1.2rem;
+            border: 1px solid rgba(154, 6, 105, 0.1);
+            background: rgba(255, 255, 255, 0.6);
             display: flex;
             justify-content: space-between;
             align-items: center;
             transition: all 0.3s;
+            min-height: 70px;
         }
+
         .activity-item:hover {
             box-shadow: var(--shadow-light);
-            transform: translateX(5px);
+            transform: translateX(4px);
             background: var(--card-bg);
         }
-        
+
         [data-theme="dark"] .activity-item {
-            background: var(--bg-color);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .activity-item strong {
             color: var(--primary-dark);
             font-size: 1.05em;
+            display: block;
         }
+
         .activity-item p {
-            margin: 0; font-size: 0.9em; color: var(--text-light);
-        }
-        .activity-item .status-tag {
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-        .activity-item .status-completed {
-            color: var(--pista-green);
-        }
-        .activity-item .status-new {
-            color: var(--primary-purple);
-        }
-        .activity-item .error-state, .activity-item .loading {
-            padding: 10px;
-            width: 100%;
-            text-align: center;
+            margin: 4px 0 0 0;
+            font-size: 0.9em;
             color: var(--text-light);
         }
 
-        /* MEDIA QUERIES */
-        @media (max-width: 992px) {
-            .main-content { padding: 1.5rem; }
-            .sidebar { width: 200px; }
-            .sidebar-nav a { font-size: 0.95rem; }
-        }
-        @media (max-width: 768px) {
-            .dashboard-header { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
-            .profile-info { align-self: stretch; width: 100%; }
-            .dashboard-wrapper { flex-direction: column; }
-            .sidebar { 
-                width: 100%; 
-                flex-direction: row; 
-                align-items: center; 
-                justify-content: space-between; 
-                border-radius: 0; /* Remove rounded corners on mobile */
-                padding: 1rem 1.5rem;
-                height: auto;
-            }
-            .logo-area { 
-                font-size: 0; 
-                margin-bottom: 0;
-                display: flex;
-                align-items: center;
-            }
-            .logo-area::before { 
-                content: '🎓 LSM Portal'; 
-                font-size: 1.4rem;
-                margin-right: 10px;
-            }
-            .sidebar-nav { display: none; } /* Hide main nav on small mobile */
-            .header-actions {
-                align-self: flex-start;
-                margin-top: 10px;
-            }
-            .summary-cards { grid-template-columns: 1fr; }
-            .activity-item { flex-direction: column; align-items: flex-start; gap: 5px; }
+        .activity-item .status-tag {
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            flex-shrink: 0;
         }
 
+        .activity-item .status-completed { color: var(--pista-green); }
+        .activity-item .status-new { color: var(--primary-purple); }
+
+        /* MOBILE ONLY STYLES */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .profile-name {
+                display: none;
+            }
+
+            .header-actions {
+                gap: 8px;
+            }
+
+            .dashboard-header {
+                padding: 1rem 0;
+            }
+
+            .activity-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                text-align: left;
+            }
+
+            .activity-item .status-tag {
+                align-self: flex-end;
+            }
+        }
+
+        /* TABLET AND UP */
+        @media (min-width: 769px) {
+            .dashboard-wrapper {
+                flex-direction: row;
+            }
+
+            .sidebar {
+                position: static;
+                transform: none;
+                width: 260px;
+                height: auto;
+                flex-shrink: 0;
+            }
+
+            .sidebar-overlay {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: none;
+            }
+
+            .main-content {
+                padding: 2.5rem;
+            }
+
+            .summary-cards {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 2rem;
+            }
+        }
+
+        /* LARGE SCREENS */
+        @media (min-width: 1200px) {
+            .main-content {
+                padding: 3rem;
+            }
+        }
     </style>
 </head>
 <body data-theme="light">
+    <!-- MOBILE SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
     <div class="dashboard-wrapper">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="logo-area">🎓 LSM Portal</div>
             <nav class="sidebar-nav">
                 <ul>
@@ -396,7 +493,6 @@
                     <li><a href="profile.html" data-icon="⚙️">⚙️ <span>Profile</span></a></li>
                     <li><a href="#" id="logout-link" data-icon="🚪">🚪 <span>Logout</span></a></li>
                     <li><a href="index.html" data-icon="🏠">🏠<span>Back to Home</span></a></li>
-                    
                 </ul>
             </nav>
         </aside>
@@ -405,13 +501,15 @@
             <header class="dashboard-header">
                 <h1>Hi, <span id="welcome-user-name">Loading...</span> 👋</h1> 
                 <div class="header-actions">
+                    <button class="mobile-menu-btn" id="mobile-menu-btn" title="Open Menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
                     <button id="dark-mode-toggle" title="Toggle Dark/Light Mode">
                         <i class="fas fa-moon"></i>
                     </button>
-
                     <a href="profile.html" class="profile-info">
-                        
                         <div class="profile-avatar-sm" id="user-avatar-initials">L</div>
+                        
                     </a>
                 </div>
             </header>
@@ -456,10 +554,56 @@
                         </div>
                         <span class="status-tag" style="color:#20a39e;">⏳ In Progress</span>
                     </div>
-                    </div>
+                </div>
             </section>
         </main>
     </div>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('mobile-open');
+            sidebarOverlay.classList.toggle('active');
+            document.body.style.overflow = sidebar.classList.contains('mobile-open') ? 'hidden' : '';
+        }
+
+        mobileMenuBtn?.addEventListener('click', toggleSidebar);
+        sidebarOverlay?.addEventListener('click', toggleSidebar);
+
+        // Close sidebar on route change (for single page apps)
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                sidebar.classList.remove('mobile-open');
+                sidebarOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // Dark mode toggle (existing functionality)
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        darkModeToggle?.addEventListener('click', () => {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update icon
+            const icon = darkModeToggle.querySelector('i');
+            icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            document.querySelector('#dark-mode-toggle i').className = 'fas fa-sun';
+        }
+    </script>
 
     <script src="js/config.js"></script>
     <script src="js/auth-check.js"></script>

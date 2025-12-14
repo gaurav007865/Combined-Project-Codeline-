@@ -6,284 +6,422 @@
     <title>My Profile - LSM Portal</title>
     <link rel="stylesheet" href="css/main.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        /* :::::: 1. GLOBAL VARIABLES (Synced) :::::: */
+        /* BASE & LIGHT MODE VARIABLES */
         :root {
-            --primary-purple: rgba(111, 3, 106, 0.95);       /* Deep Royal Purple */
-            --primary-dark: rgba(111, 3, 106, 0.95);         /* Darker Purple for gradients */
-            --pista-green: #badc58;          /* Fresh Pistachio */
-            --bg-color: #f7f6ff;             /* Very light purple/lavender base */ 
+            --primary-purple: #9a0669;
+            --primary-dark: #b12733;
+            --pista-green: #1cc6cc;
+            --bg-color: #f6f8fa;
             --white: #ffffff;
-            --text-dark: #2d3436;
+            --card-bg: var(--white);
+            --text-dark: #141616;
             --text-light: #636e72;
             --shadow-light: 0 4px 15px rgba(0,0,0,0.08);
-            --shadow-deep: 0 10px 30px rgba(72, 52, 212, 0.15);
+            --shadow-deep: 0 15px 35px rgba(227, 83, 21, 0.15);
+            --sidebar-gradient-start: rgba(111, 3, 106, 0.95);
+            --sidebar-gradient-end: #6d135d;
+            --sidebar-text: var(--white);
         }
+
+        /* DARK MODE VARIABLES */
+        [data-theme="dark"] {
+            --primary-purple: #b37bff;
+            --primary-dark: #6ea8fe;
+            --pista-green: #2ecc71;
+            --bg-color: #0e0f14;
+            --white: #1b1c24;
+            --card-bg: var(--white);
+            --text-dark: #f5f5f7;
+            --text-light: #a6accd;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.35);
+            --shadow-deep: 0 18px 42px rgba(0, 0, 0, 0.6);
+            --sidebar-gradient-start: #3a1c71;
+            --sidebar-gradient-end: #2a0845;
+            --sidebar-text: #eceaff;
+        }
+
+        * { box-sizing: border-box; }
 
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
-            background: var(--bg-color); 
-            display: flex;
+            background: var(--bg-color);
             color: var(--text-dark);
+            scroll-behavior: smooth;
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
         }
 
+        /* MOBILE FIRST: Dashboard Wrapper */
         .dashboard-wrapper {
             display: flex;
             width: 100%;
             min-height: 100vh;
+            flex-direction: column;
         }
 
-        /* :::::: 2. SIDEBAR (Synced with Dashboard) :::::: */
+        /* MOBILE OFFCANVAS SIDEBAR */
         .sidebar {
-            width: 250px;
-            background: linear-gradient(180deg, var(--primary-purple) 0%, var(--primary-dark) 100%);
-            color: var(--white);
-            display: flex;
-            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--sidebar-gradient-start) 0%, var(--sidebar-gradient-end) 100%);
+            color: var(--sidebar-text);
+            z-index: 1000;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             padding: 1.5rem 1rem;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-            z-index: 50;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
         }
+
+        .sidebar.mobile-open { transform: translateX(0); }
+
         .logo-area {
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             font-weight: 700;
             margin-bottom: 2.5rem;
             text-align: center;
+            letter-spacing: 1px;
         }
-        .sidebar-nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .sidebar-nav li {
-            margin-bottom: 0.5rem;
-        }
+
+        .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar-nav li { margin-bottom: 0.7rem; }
         .sidebar-nav a {
-            color: rgba(255, 255, 255, 0.9);
+            color: var(--sidebar-text);
             text-decoration: none;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 0.8rem 1rem;
-            border-radius: 10px;
-            transition: background 0.3s, color 0.3s;
+            gap: 12px;
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            transition: all 0.3s;
+            font-size: 1rem;
+            min-height: 48px;
         }
-        .sidebar-nav a:hover {
-            background: rgba(255,255,255,0.15);
-        }
+        .sidebar-nav a:hover { background: rgba(255,255,255,0.15); }
         .sidebar-nav .active a {
-            background: var(--white);
-            color:  rgba(255, 255, 255, 0.9);
+            background: var(--card-bg);
+            color: var(--primary-purple);
             font-weight: 600;
             box-shadow: var(--shadow-light);
         }
-        /* Utility for Sidebar icons on mobile */
-        .sidebar-nav a span { display: inline-block; }
-        .sidebar-nav a::before { content: none; }
 
-        /* :::::: 3. MAIN CONTENT & HEADER :::::: */
+        /* SIDEBAR OVERLAY */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0; visibility: hidden;
+            transition: all 0.3s;
+        }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
+        /* MAIN CONTENT */
         .main-content {
             flex: 1;
-            padding: 2.5rem;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        /* DASHBOARD HEADER */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--pista-green);
+            gap: 1rem;
         }
 
         .dashboard-header h1 {
-            margin: 0 0 2rem;
-            font-size: 2rem;
-            color: var(--primary-purple);
+            margin: 0;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            color: var(--primary-dark);
             font-weight: 700;
-            border-bottom: 2px solid var(--pista-green);
-            padding-bottom: 10px;
+            letter-spacing: 1px;
         }
 
-        /* :::::: 4. PROFILE CONTAINER & STYLING :::::: */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* MOBILE MENU BUTTON */
+        .mobile-menu-btn {
+            background: var(--card-bg);
+            border: 2px solid var(--text-light);
+            color: var(--primary-dark);
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            display: none;
+            min-height: 44px; min-width: 44px;
+            align-items: center; justify-content: center;
+        }
+        .mobile-menu-btn:hover {
+            background: var(--pista-green);
+            color: var(--white);
+            border-color: var(--pista-green);
+            transform: scale(1.05);
+        }
+
+        /* DARK MODE TOGGLE */
+        #dark-mode-toggle {
+            background: var(--card-bg);
+            border: 2px solid var(--text-light);
+            color: var(--primary-dark);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 10px 12px;
+            border-radius: 50%;
+            transition: all 0.3s;
+            min-height: 44px; min-width: 44px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        #dark-mode-toggle:hover {
+            background: var(--pista-green);
+            color: var(--white);
+            border-color: var(--pista-green);
+            transform: rotate(15deg) scale(1.05);
+        }
+
+        /* PROFILE CONTAINER */
         .profile-container {
-            background: var(--white);
-            border-radius: 20px; /* More rounded */
-            padding: 3rem;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: clamp(1.5rem, 4vw, 3rem);
             box-shadow: var(--shadow-deep);
-            max-width: 800px; /* Wider form for better feel */
+            max-width: 900px;
             margin: 0 auto;
         }
 
         .profile-container h2 {
-            margin-top: 2.5rem;
-            margin-bottom: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1.2rem;
             color: var(--primary-dark);
-            font-size: 1.7rem;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #eee;
+            font-size: clamp(1.2rem, 3vw, 1.7rem);
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            font-weight: 600;
         }
-        .profile-container h2:first-child {
-            margin-top: 0;
-        }
+        .profile-container h2:first-child { margin-top: 0; }
 
-        /* Profile Picture Area */
+        /* PROFILE PIC AREA */
         .profile-pic-area {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 1.5rem;
             margin-bottom: 2rem;
             padding-bottom: 1.5rem;
-            border-bottom: 1px dashed #ddd;
+            border-bottom: 1px dashed rgba(0,0,0,0.1);
         }
         .profile-pic-placeholder {
-            width: 100px;
-            height: 100px;
+            width: clamp(80px, 15vw, 120px);
+            height: clamp(80px, 15vw, 120px);
             background: var(--pista-green);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
+            font-size: clamp(1.8rem, 5vw, 3rem);
             color: var(--primary-purple);
             font-weight: 700;
             border: 3px solid var(--primary-purple);
+            flex-shrink: 0;
+        }
+
+        .profile-pic-info h2 {
+            margin: 0 0 0.5rem 0;
+            border-bottom: none;
+            padding-bottom: 0;
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+        }
+        .profile-pic-info p {
+            color: var(--text-light);
+            margin: 0 0 1rem 0;
+            font-size: 0.95rem;
+        }
+
+        .upload-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
         }
         .upload-buttons button {
-            margin-right: 10px;
-            padding: 8px 15px;
-            font-size: 0.9em;
+            padding: 10px 18px;
+            font-size: 0.9rem;
             border-radius: 8px;
-            background: #e6e6fa; /* Light purple */
+            background: rgba(154, 6, 105, 0.1);
             color: var(--primary-purple);
             border: 1px solid var(--primary-purple);
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            font-weight: 500;
+            white-space: nowrap;
         }
         .upload-buttons button:hover {
-            background: #d4d4f7;
+            background: var(--primary-purple);
+            color: white;
+            transform: translateY(-1px);
         }
 
-
-        /* Form Styling */
+        /* FORM STYLING */
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
         }
         .form-group label {
             display: block;
             font-weight: 600;
             margin-bottom: 0.6rem;
             color: var(--primary-purple);
+            font-size: 0.95rem;
         }
         .form-group input {
             width: 100%;
-            padding: 1rem; /* Larger padding */
-            border: 1px solid #ddd;
-            border-radius: 10px;
+            padding: 1.1rem;
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 12px;
             font-size: 1rem;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            box-sizing: border-box;
-            background: var(--white);
+            transition: all 0.3s;
+            background: var(--card-bg);
+            color: var(--text-dark);
         }
         .form-group input:focus {
             border-color: var(--pista-green);
-            box-shadow: 0 0 0 3px rgba(186, 220, 88, 0.3);
+            box-shadow: 0 0 0 4px rgba(28, 198, 204, 0.15);
             outline: none;
+            transform: translateY(-1px);
         }
-        /* Style for disabled email field */
         .form-group input[disabled] {
-            background: #f0f0f0;
+            background: rgba(0,0,0,0.05);
             color: var(--text-light);
             cursor: not-allowed;
         }
         small {
             color: var(--text-light);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
             display: block;
-            margin-top: 5px;
-            font-style: italic;
         }
 
-        /* Buttons (Synced with btn-action) */
+        /* BUTTONS */
         .btn-action {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 1.2rem 2rem;
             background: var(--primary-purple);
-            color: var(--white);
+            color: white;
             border: none;
-            padding: 0.9rem 2rem;
-            border-radius: 10px;
+            border-radius: 12px;
             font-weight: 600;
+            font-size: 1rem;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(154, 6, 105, 0.3);
             text-decoration: none;
-            font-size: 1em;
-            margin-top: 15px;
+            margin-top: 1rem;
         }
         .btn-action:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(72, 52, 212, 0.4);
+            box-shadow: 0 8px 25px rgba(154, 6, 105, 0.4);
         }
 
-        /* Password Button */
         #change-password-button {
-            background: var(--pista-green);
-            color: var(--primary-dark);
+            background: var(--pista-green) !important;
+            color: var(--primary-purple) !important;
+            box-shadow: 0 4px 15px rgba(28, 198, 204, 0.3) !important;
         }
         #change-password-button:hover {
-            background: #a9cc4b;
-            box-shadow: 0 4px 10px rgba(186, 220, 88, 0.5);
+            background: #00b7b3 !important;
+            transform: translateY(-2px);
         }
 
-        /* :::::: 5. RESPONSIVE ADJUSTMENTS :::::: */
-        @media (max-width: 992px) {
-            .main-content {
-                padding: 1.5rem;
-            }
+        #message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-weight: 500;
+            text-align: center;
         }
-        @media (max-width: 768px) {
+
+        /* TABLET & DESKTOP */
+        @media (min-width: 769px) {
+            .dashboard-wrapper { flex-direction: row; }
             .sidebar {
-                /* Mini Sidebar style */
-                width: 70px;
-                padding: 1.5rem 0.5rem;
+                position: static;
+                transform: none;
+                width: 260px;
+                height: auto;
+                flex-shrink: 0;
             }
-            .logo-area {
-                font-size: 0; 
-                margin-bottom: 1.5rem;
-            }
-            .logo-area::before {
-                content: '🎓';
-                font-size: 2rem;
-            }
-            .sidebar-nav a {
-                justify-content: center;
-                gap: 0;
-            }
-            .sidebar-nav a span {
-                display: none;
-            }
-            .sidebar-nav a[data-icon]::before {
-                content: attr(data-icon);
-                font-size: 1.4rem;
-            }
-            .profile-container {
-                padding: 2rem 1.5rem;
-            }
+            .sidebar-overlay { display: none; }
+            .mobile-menu-btn { display: none; }
+            .main-content { padding: 2.5rem; }
+        }
+
+        @media (min-width: 1200px) {
+            .main-content { padding: 3rem; }
+        }
+
+        /* MOBILE SPECIFIC */
+        @media (max-width: 768px) {
+            .mobile-menu-btn { display: flex; }
+            
             .profile-pic-area {
                 flex-direction: column;
                 text-align: center;
+                gap: 1rem;
             }
+            
+            .profile-pic-info {
+                text-align: center;
+                width: 100%;
+            }
+            
             .upload-buttons {
-                margin-top: 15px;
+                justify-content: center;
+            }
+            
+            .form-group {
+                margin-bottom: 1.5rem;
             }
         }
     </style>
 </head>
-<body>
+<body data-theme="light">
+    <!-- MOBILE SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
     <div class="dashboard-wrapper">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="logo-area">🎓 LSM Portal</div>
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="dashboard.html" data-icon="🏠">🏠 <span>Dashboard</span></a></li>
                     <li><a href="my-courses.html" data-icon="📚">📚 <span>My Courses</span></a></li>
                     <li><a href="progress.html" data-icon="📈">📈 <span>Progress</span></a></li>
-                    <li><a href="discussions.html" data-icon="💬">💬 <span>Discussions</span></a></li>
+                    <li><a href="fees.html" data-icon="💬">💬 <span>Fees</span></a></li>
                     <li class="active"><a href="profile.html" data-icon="⚙️">⚙️ <span>Profile</span></a></li>
-                    <li><a href="index.html" data-icon="🏠">🏠 <span>Back to Home</span></a></li>
                     <li><a href="#" id="logout-link" data-icon="🚪">🚪 <span>Logout</span></a></li>
+                    <li><a href="index.html" data-icon="🏠">🏠 <span>Back to Home</span></a></li>
                 </ul>
             </nav>
         </aside>
@@ -291,21 +429,30 @@
         <main class="main-content">
             <header class="dashboard-header">
                 <h1>⚙️ My Profile Settings</h1>
+                <div class="header-actions">
+                    <button class="mobile-menu-btn" id="mobile-menu-btn" title="Open Menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <button id="dark-mode-toggle" title="Toggle Dark/Light Mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
             </header>
 
             <div class="profile-container">
                 <form id="profile-form">
-                    
                     <div class="profile-pic-area">
-                        <div class="profile-pic-placeholder">
-                            AJ
-                        </div>
-                        <div>
-                            <h2 style="margin-top: 0; border-bottom: none; padding-bottom: 0; color: var(--primary-purple);">Avatar & Photo</h2>
-                            <p style="color:var(--text-light);">Update your profile image.</p>
+                        <div class="profile-pic-placeholder">AJ</div>
+                        <div class="profile-pic-info">
+                            <h2>Avatar & Photo</h2>
+                            <p>Update your profile image.</p>
                             <div class="upload-buttons">
-                                <button type="button" id="upload-photo-btn">Upload New Photo</button>
-                                <button type="button" id="remove-photo-btn">Remove Photo</button>
+                                <button type="button" id="upload-photo-btn">
+                                    <i class="fas fa-camera"></i> Upload Photo
+                                </button>
+                                <button type="button" id="remove-photo-btn">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -327,10 +474,12 @@
                         <input type="tel" id="phone" name="phone" value="+91 98765 43210">
                     </div>
                     
-                    <button type="submit" class="btn-action" id="save-button">Save Personal Details</button>
-                    <p id="message" style="margin-top: 15px;"></p>
+                    <button type="submit" class="btn-action" id="save-button">
+                        <i class="fas fa-save"></i> Save Personal Details
+                    </button>
+                    <p id="message"></p>
 
-                    <h2 style="margin-top: 3rem;">Account Security</h2>
+                    <h2>Account Security</h2>
                     <div class="form-group">
                         <label for="current-password">Current Password</label>
                         <input type="password" id="current-password" name="current-password" placeholder="Required to change password">
@@ -345,14 +494,64 @@
                         <input type="password" id="confirm-password" name="confirm-password" placeholder="Re-enter new password">
                     </div>
                     
-                    <button type="button" class="btn-action" id="change-password-button">Change Password</button>
-
+                    <button type="button" class="btn-action" id="change-password-button">
+                        <i class="fas fa-lock"></i> Change Password
+                    </button>
                 </form>
             </div>
         </main>
     </div>
 
-    <script src="js/dashboard.js"></script>
+    <script>
+        // Mobile Sidebar Controls
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('mobile-open');
+            sidebarOverlay.classList.toggle('active');
+            document.body.style.overflow = sidebar.classList.contains('mobile-open') ? 'hidden' : '';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('mobile-open');
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        mobileMenuBtn?.addEventListener('click', toggleSidebar);
+        sidebarOverlay?.addEventListener('click', closeSidebar);
+
+        // Close sidebar on nav clicks
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', closeSidebar);
+        });
+
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        darkModeToggle?.addEventListener('click', () => {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const icon = darkModeToggle.querySelector('i');
+            icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            document.querySelector('#dark-mode-toggle i').className = 'fas fa-sun';
+        }
+    </script>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth-check.js"></script>
     <script src="js/profile.js"></script>
 </body>
 </html>

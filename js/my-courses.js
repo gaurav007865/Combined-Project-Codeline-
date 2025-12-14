@@ -1,5 +1,5 @@
 // js/my-courses.js - Updated with Dark Mode Toggle and Modern Loader
-var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxFfc34-kTg72hx8uphOgO-5ZQApQv4cbjMHFaIkZyNjZQ7ChxkRN-cn7x2XS2K8Xf5AA/exec";
+var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwbp2TRprxwMuUxjS1Yz1BGs6jQIaTAx30cfVD0daUPm8nvRLQm6OkGKkMqijaitsdBXQ/exec";
 
 // --- Dark Mode Functions ---
 
