@@ -1,4 +1,4 @@
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxFfc34-kTg72hx8uphOgO-5ZQApQv4cbjMHFaIkZyNjZQ7ChxkRN-cn7x2XS2K8Xf5AA/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwbp2TRprxwMuUxjS1Yz1BGs6jQIaTAx30cfVD0daUPm8nvRLQm6OkGKkMqijaitsdBXQ/exec";
 
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('register-form');

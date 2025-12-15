@@ -226,10 +226,11 @@ function enableTopicUI() {
   document.getElementById('mark-complete')?.removeAttribute('disabled');
 }
 
-
-
 function displayTopicContent(topic) {
   // Title
+  console.log('FULL TOPIC DATA:', topic); // 🔥 YE ADD KARO
+  console.log('NotesURL:', topic.NotesURL); // 🔥 YE ADD KARO
+  console.log('ContentURL:', topic.ContentURL); // 🔥 YE ADD KARO
   const titleEl = document.getElementById('topic-title');
   if (titleEl) {
     titleEl.textContent = `${topic.TopicIndex}. ${topic.Title}`;
@@ -237,22 +238,34 @@ function displayTopicContent(topic) {
     titleEl.style.color = '';
   }
 
-  // Notes
+  // 🔥 NOTES FIXED - Admin ka ContentURL yahan button banega
   const notesEl = document.getElementById('topic-notes');
   if (notesEl) {
-    const safeNotes = topic.NotesContent || '';
-    notesEl.innerHTML = safeNotes
-      ? safeNotes.replace(/\n/g, '<br>')
-      : '<span class="text-muted">No notes for this topic.</span>';
+    if (topic.NotesURL && topic.NotesURL.trim() !== '') {
+      // Admin ne ContentURL me jo PDF/notes link diya, wahi button banega
+      notesEl.innerHTML = `
+        <a href="${topic.NotesURL}" target="_blank" style="
+          display:inline-flex; align-items:center; gap:6px;
+          padding:12px 20px; border-radius:12px;
+          background:#0f4c75; color:#fff; font-weight:500; font-size:0.95rem;
+          text-decoration:none; box-shadow:0 4px 12px rgba(15,76,117,0.3);
+        ">
+          📖 <span>Open Notes</span> 
+          <i class="fas fa-external-link-alt" style="font-size:0.85rem;"></i>
+        </a>
+      `;
+    } else {
+      notesEl.innerHTML = '<span class="text-muted">No notes for this topic.</span>';
+    }
   }
 
-  // Text-based Assignment question (fallback)
+  // Text-based Assignment question (fallback) - same
   const assignmentEl = document.getElementById('assignment-question');
   if (assignmentEl) {
     assignmentEl.textContent = topic.AssignmentQuestion || 'No assignment for this topic.';
   }
 
-  // Video (YouTube)
+  // Video (YouTube) - same (already working)
   const videoFrame = document.getElementById('topic-video');
   if (videoFrame) {
     if (topic.VideoURL) {
@@ -265,12 +278,13 @@ function displayTopicContent(topic) {
     }
   }
 
-  // Sidebar course title
+  // Sidebar course title - same
   const sidebarTitle = document.getElementById('course-title-sidebar');
   if (sidebarTitle) {
     sidebarTitle.textContent = topic.CourseTitle || `Course: ${currentCourseId}`;
   }
 }
+
 
 /* ================== LOAD SIDEBAR TOPICS ================== */
 
