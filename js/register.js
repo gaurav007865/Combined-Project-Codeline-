@@ -50,17 +50,16 @@ async function handleRegister(e) {
 
         const data = await response.json();
 
-        if (data.status === 'success' && data.userId) {
-            // 4. SUCCESS: Auto-login + Enroll
-            form.reset();
-            showMessage('Registration successful! Redirecting...', 'success', messageEl);
-            
-            localStorage.setItem('lsm_user_id', data.userId);
-            
-            // Auto-enroll if pending course
-            setTimeout(() => autoEnrollAndRedirect(data.userId), 1000);
-            
-        } else {
+       if (data.status === 'success' && data.userId) {
+    form.reset();
+    showMessage('Registration successful! Please login.', 'success', messageEl);
+
+    // ⏳ 1 second delay then open login form
+    setTimeout(() => {
+        window.location.href = 'login.html';
+    }, 1000);
+}
+else {
             throw new Error(data.message || 'Registration failed');
         }
 

@@ -28,7 +28,9 @@ async function handleLogin(e) {
     }
 
     // Loading state
-    showLoading(loginButton, messageEl, 'Logging in...');
+    // showLoading(loginButton, messageEl, 'Logging in...');
+    showLoader();
+
 
     try {
         // ⭐ FIXED: URL Parameters के साथ POST (Apps Script expects this)
@@ -67,6 +69,7 @@ async function handleLogin(e) {
         showMessage(error.message, 'error', messageEl);
     } finally {
         // Reset button
+        showLoader();
         loginButton.disabled = false;
         loginButton.textContent = 'Login';
     }
@@ -100,7 +103,8 @@ async function handleRegister(e) {
         return;
     }
 
-    showLoading(submitBtn, messageEl, 'Registering...');
+    // showLoading(submitBtn, messageEl, 'Registering...');
+     showLoader();
 
     try {
         // ⭐ FIXED: URL Parameters के साथ POST
@@ -114,14 +118,16 @@ async function handleRegister(e) {
         if (data.status === 'success' && data.userId) {
             // Auto-login & redirect
             localStorage.setItem('lsm_user_id', data.userId);
-            showMessage('Registration successful! Redirecting...', 'success', messageEl);
+            // showMessage('Registration successful! Redirecting...', 'success', messageEl);
             
             setTimeout(() => {
                 const pendingCourseId = localStorage.getItem('pendingEnrollCourseId');
                 if (pendingCourseId) {
                     enrollCourseAndRedirect(data.userId, pendingCourseId);
                 } else {
-                    window.location.href = 'dashboard.html';
+                    // window.location.href = 'login.html';
+                    document.querySelector('.container').classList.remove('active');
+
                 }
             }, 1500);
 
@@ -133,6 +139,7 @@ async function handleRegister(e) {
         console.error('Register error:', error);
         showMessage(error.message, 'error', messageEl);
     } finally {
+        hideLoader();
         submitBtn.disabled = false;
         submitBtn.textContent = 'Register';
     }
@@ -191,4 +198,28 @@ async function enrollCourseAndRedirect(userId, courseId) {
         console.error('Enrollment error:', error);
         window.location.href = 'dashboard.html';
     }
+}
+document.addEventListener("DOMContentLoaded", () => {
+
+  const container = document.querySelector(".container");
+  const loginLink = document.querySelector(".SignInLink");
+  const registerLink = document.querySelector(".SignUpLink");
+
+  registerLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    container.classList.add("active");
+  });
+
+  loginLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    container.classList.remove("active");
+  });
+
+});
+function showLoader() {
+    document.getElementById('page-loader').classList.add('show');
+}
+
+function hideLoader() {
+    document.getElementById('page-loader').classList.remove('show');
 }
