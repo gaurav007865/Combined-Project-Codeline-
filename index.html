@@ -14,12 +14,12 @@
       /* Light Mode Variables */
       --primary-purple: #9a0669;
       --primary-dark: #301b9e;
-      --pista-green: #eef0e6;
+      --pista-green: #fefffb;
       --pista-light: #f7fbfc;
       --text-dark: #2d3436;
       --text-light: #636e72;
       --white: #ffffff;
-      --bg-color: #f6f8fa;
+      --bg-color: #fcfcfc;
       --card-bg: var(--white);
       --section-bg: var(--pista-light);
       --shadow: 0 10px 30px rgba(72, 52, 212, 0.15);
@@ -30,13 +30,13 @@
     /* DARK MODE VARIABLES */
     [data-theme="dark"] {
       --primary-purple: #d5adb9; 
-      --primary-dark: #7b99ff;   
-      --pista-green: #4537e2;    
-      --pista-light: #3448dd;    
-      --text-dark: #e8e8e8;      
+      --primary-dark: #7b99ff;    
+      --pista-green: #4537e2;     
+      --pista-light: #3448dd;     
+      --text-dark: #e8e8e8;       
       --text-light: #a4b0be;     
-      --white: #2e3040;          
-      --bg-color: #1a1b26;      
+      --white: #2e3040;           
+      --bg-color: #1a1b26;        
       --card-bg: #2e3040;
       --section-bg: #1e2030;
       --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -217,7 +217,7 @@
     .hero {
       position: relative;
       min-height: clamp(60vh, 70vw, 75vh);
-      color: white;
+      color: rgba(246, 243, 243, 0.975);
       display: flex;
       align-items: center;
       text-align: center;
@@ -326,8 +326,8 @@
 
     .why-lsm-left {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: clamp(20px, 4vw, 30px);
+  grid-template-columns: 1fr;   /* pehle repeat(2, 1fr) tha */
+  gap: clamp(20px, 4vw, 30px);
     }
 
     .student-card {
@@ -415,47 +415,43 @@
       flex-shrink: 0;
     }
 
-
-    /* COURSES (UPDATED FOR SLIDER/CAROUSEL) */
+    /* UPDATED COURSE SLIDER - PERFECT 4 CARDS VISIBLE */
     .popular-courses {
       background-color: var(--section-bg);
       transition: background-color 0.3s;
     }
 
-    /* Slider Wrapper */
     .course-slider-wrapper {
       position: relative;
       display: flex;
       align-items: center;
-      padding: 0 10px;
+      padding: 0 60px;
+      width: 100%;
     }
 
-    /* The Scrollable Area */
     .course-slider {
       display: flex;
-      gap: 25px;
+      gap: 20px;
       overflow-x: auto;
       scroll-behavior: smooth;
-      padding: 20px 5px; /* Padding for shadow */
+      padding: 20px 20px;
       width: 100%;
-      
-      /* Hide Scrollbar */
       scrollbar-width: none;
       -ms-overflow-style: none;
+      scroll-snap-type: x mandatory;
     }
 
     .course-slider::-webkit-scrollbar {
       display: none;
     }
 
-    /* Fixed width for cards in slider */
     .course-slider .course-card {
-      min-width: 300px;
-      max-width: 300px;
+      min-width: 335px;
+      max-width: 335px;
       flex-shrink: 0;
+      scroll-snap-align: start;
     }
 
-    /* Course Card Styles */
     .course-card {
       background-color: var(--card-bg);
       border-radius: 16px;
@@ -464,7 +460,7 @@
       transition: all 0.3s ease;
       border: var(--course-border);
       display: flex;
-      flex-direction: column; 
+      flex-direction: column;
     }
 
     .course-card:hover {
@@ -494,130 +490,143 @@
       font-size: 0.9rem;
       margin-top: 5px;
       margin-bottom: 10px;
-      flex-grow: 1; 
+      flex-grow: 1;
     }
 
+    /* ENHANCED COURSE ACTION BUTTONS */
     .course-actions {
       display: flex;
-      gap: 12px;
-      margin-top: 15px;
-      flex-wrap: wrap;
-      padding: 0 clamp(15px, 4vw, 20px) clamp(15px, 4vw, 20px);
+      gap: 8px;
+      margin-top: 12px;
+      padding: 0 18px 18px 18px;
+      flex-direction: column;
     }
 
     .course-actions .btn-action {
-      padding: 10px 18px; 
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.95rem; 
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.88rem;
       text-decoration: none;
-      transition: all 0.3s ease;
-      display: inline-block;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      white-space: nowrap;
-      flex-grow: 1;
-      border: 2px solid transparent;
-      text-transform: uppercase; 
+      position: relative;
+      overflow: hidden;
       letter-spacing: 0.5px;
+      height: 48px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
-    /* Enroll Button */
     .btn-enroll {
-      background-color: var(--pista-green);
-      color: var(--primary-purple);
-      box-shadow: 0 4px 12px rgba(186, 220, 88, 0.3);
+      background: linear-gradient(135deg, var(--pista-green), #cbeb5f);
+      color: var(--primary-purple) !important;
+      border: none;
+      font-size: 0.9rem;
     }
+
     .btn-enroll:hover {
-      background-color: #cbeb5f;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(186, 220, 88, 0.6);
+      background: linear-gradient(135deg, #cbeb5f, #d4f4a5);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(186, 220, 88, 0.5);
     }
 
-    /* View Details Button */
+    .btn-enroll::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-enroll:hover::before {
+      left: 100%;
+    }
+
     .btn-view {
-      background-color: var(--primary-dark);
-      color: white;
-      box-shadow: 0 4px 12px rgba(48, 27, 158, 0.3);
-      border: 2px solid var(--primary-dark);
+      background: linear-gradient(135deg, var(--primary-purple), var(--primary-dark));
+      color: white !important;
+      border: none;
     }
+
     .btn-view:hover {
-      background-color: #4532c5;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(48, 27, 158, 0.6);
-    }
-    [data-theme="dark"] .btn-view {
-        background-color: var(--card-bg); 
-        color: var(--text-dark);
-        border: 2px solid var(--text-light);
-        box-shadow: none;
-    }
-    [data-theme="dark"] .btn-view:hover {
-        background-color: var(--primary-dark);
-        color: var(--white);
-        border: 2px solid var(--primary-dark);
+      background: linear-gradient(135deg, #b51a8a, #5a2fc8);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(154, 6, 105, 0.5);
     }
 
-    /* Continue Learning Button */
     .btn-continue {
-        background-color: transparent;
-        color: var(--primary-purple);
-        border: 2px solid var(--primary-purple);
-        box-shadow: none;
-    }
-    .btn-continue:hover {
-        background-color: var(--primary-purple);
-        color: var(--white);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(154, 6, 105, 0.4);
-    }
-    [data-theme="dark"] .btn-continue {
-        color: var(--primary-purple);
-        border: 2px solid var(--primary-purple);
-    }
-    [data-theme="dark"] .btn-continue:hover {
-        background-color: var(--primary-purple);
-        color: var(--bg-color);
+      background: transparent;
+      color: var(--primary-purple) !important;
+      border: 2px solid var(--primary-purple);
+      backdrop-filter: blur(10px);
     }
 
-    /* --- SLIDER NAVIGATION BUTTONS --- */
+    .btn-continue:hover {
+      background: linear-gradient(135deg, var(--primary-purple), var(--primary-dark));
+      color: white !important;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(154, 6, 105, 0.4);
+    }
+
+    /* MODERN SLIDER BUTTONS */
     .slider-btn {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 45px;
-      height: 45px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
-      background-color: var(--card-bg);
-      border: 1px solid rgba(0,0,0,0.1);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      background: linear-gradient(145deg, var(--card-bg), rgba(255,255,255,0.1));
+      border: 2px solid rgba(154, 6, 105, 0.2);
+      box-shadow: 
+        0 8px 25px rgba(0,0,0,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.3);
       cursor: pointer;
-      z-index: 10;
+      z-index: 20;
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--primary-purple);
-      transition: all 0.3s ease;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px);
     }
 
     .slider-btn:hover {
-      background-color: var(--primary-purple);
-      color: #fff;
-      transform: translateY(-50%) scale(1.1);
+      background: linear-gradient(145deg, var(--primary-purple), var(--primary-dark));
+      color: white !important;
+      transform: translateY(-50%) scale(1.15) rotate(5deg);
+      box-shadow: 
+        0 12px 35px rgba(154, 6, 105, 0.4),
+        0 0 0 8px rgba(154, 6, 105, 0.2);
+      border-color: rgba(255,255,255,0.3);
     }
 
-    .prev-btn { left: -20px; }
-    .next-btn { right: -20px; }
+    .slider-btn:active {
+      transform: translateY(-45%) scale(1.05);
+    }
+
+    .prev-btn { left: 5px; }
+    .next-btn { right: 5px; }
 
     [data-theme="dark"] .slider-btn {
-        border: 1px solid rgba(255,255,255,0.1);
-        background-color: #3e4050;
-        color: var(--white);
-    }
-    [data-theme="dark"] .slider-btn:hover {
-        background-color: var(--primary-purple);
+      background: linear-gradient(145deg, var(--card-bg), rgba(0,0,0,0.3));
+      border-color: rgba(213, 173, 185, 0.3);
+      box-shadow: 
+        0 8px 25px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.1);
     }
 
+    [data-theme="dark"] .slider-btn:hover {
+      background: linear-gradient(145deg, var(--primary-purple), var(--primary-dark));
+    }
 
     /* TESTIMONIALS */
     .testimonials-section {
@@ -678,6 +687,19 @@
       font-size: 0.85rem;
     }
 
+    .testimonial-slider-wrapper .course-card {
+  min-width: 330px;
+  max-width: 330px;
+}
+
+.testimonial-card .course-info {
+  padding: 20px;
+}
+
+.testimonial-card .course-actions {
+  padding: 0 20px 20px 20px;
+}
+
 
     /* NEWSLETTER */
     .newsletter {
@@ -726,7 +748,6 @@
       transition: background-color 0.3s;
     }
 
-
     /* MOBILE MENU FIXES & RESPONSIVENESS */
     .mobile-menu-toggle {
       display: none;
@@ -736,6 +757,196 @@
       font-size: 1.5rem;
       cursor: pointer;
     }
+
+    /* === SITE FOOTER === */
+.site-footer {
+  background: #14051f;
+  color: #dfe6e9;
+  padding: 50px 0 0 0;
+  border-top: 10px solid var(--pista-green);
+  margin-top: 40px;
+}
+
+.site-footer a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr 1.2fr 1.2fr 2fr;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.footer-col h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-col ul li {
+  margin-bottom: 8px;
+}
+
+.footer-col ul li a {
+  font-size: 0.9rem;
+  color: #b2bec3;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-col ul li a:hover {
+  color: var(--pista-green);
+  transform: translateX(2px);
+}
+
+/* Brand block */
+.footer-brand .footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.footer-brand .logo-icon {
+  font-size: 1.35rem;
+}
+
+.footer-tagline {
+  font-size: 0.9rem;
+  color: #b2bec3;
+  max-width: 280px;
+  margin-bottom: 18px;
+}
+
+.footer-social {
+  display: flex;
+  gap: 10px;
+}
+
+.footer-social a {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  color: #ffffff;
+  transition: all 0.25s ease;
+  background: rgba(255,255,255,0.03);
+}
+
+.footer-social a:hover {
+  background: var(--pista-green);
+  color: #14051f;
+  border-color: transparent;
+  transform: translateY(-2px);
+}
+
+/* Newsletter */
+.footer-newsletter p {
+  font-size: 0.9rem;
+  color: #b2bec3;
+  margin-bottom: 10px;
+}
+
+.footer-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.footer-form input[type="email"] {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.footer-form button {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--pista-green);
+  color: var(--primary-purple);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.footer-form button:hover {
+  background: #cbeb5f;
+  transform: translateY(-1px);
+}
+
+/* Bottom bar */
+.footer-bottom {
+  margin-top: 30px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 12px 0 18px 0;
+  background: #0b020f;
+}
+
+.footer-bottom-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: #a4b0be;
+}
+
+.footer-bottom .heart {
+  color: #e84393;
+}
+
+.footer-bottom .pista {
+  color: #badc58;
+}
+
+/* Responsive footer */
+@media (max-width: 992px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 30px;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-bottom-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-form {
+    flex-direction: column;
+  }
+
+  .footer-form button {
+    width: 100%;
+  }
+}
+
 
     /* RESPONSIVE BREAKPOINTS */
     @media (max-width: 992px) {
@@ -762,6 +973,14 @@
         margin-bottom: 0;
       }
     }
+
+    @media (max-width: 576px) {
+  .course-slider .course-card {
+    min-width: 260px;
+    max-width: 260px;
+  }
+}
+
 
     @media (max-width: 768px) {
         .navbar .container {
@@ -834,11 +1053,57 @@
             justify-items: center;
         }
 
-        /* HIDE SLIDER BUTTONS ON MOBILE */
-        .slider-btn { display: none; }
-        .course-slider-wrapper { padding: 0; }
-        .prev-btn, .next-btn { display: none; }
+        .course-slider-wrapper { 
+          padding: 0 20px !important; 
+        }
+        .slider-btn { 
+          display: none !important; 
+        }
     }
+
+    .single-why-image {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* Faculty Section */
+.faculty-section {
+  background: var(--bg-color);
+}
+
+.faculty-slider-wrapper .course-card {
+  min-width: 320px;
+  max-width: 320px;
+}
+
+.faculty-card {
+  text-align: center;
+}
+
+.faculty-avatar-wrap {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 25px auto 10px auto;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.faculty-avatar-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.faculty-card .course-header h3 {
+  margin-top: 10px;
+  margin-bottom: 4px;
+}
+
+.faculty-card .course-info p {
+  text-align: center;
+}
+
 
     @media (min-width: 769px) {
         .auth-buttons-nav {
@@ -846,7 +1111,16 @@
         }
     }
 
-    /* EXTRA SMALL DEVICES (< 576px) FIXES */
+    @media (max-width: 576px) {
+  .why-lsm-left {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
+
+
     @media (max-width: 576px) {
       .why-lsm-left {
         grid-template-columns: 1fr;
@@ -896,7 +1170,6 @@
         </button>
         <button class="mobile-menu-toggle" id="mobile-toggle">☰</button>
       </div>
-
     </div>
   </header>
 
@@ -919,31 +1192,13 @@
   <section class="why-lsm">
     <div class="container why-lsm-inner">
       <div class="why-lsm-left">
-        <div class="student-card">
-          <div class="student-avatar-wrap">
-            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop" alt="Student 1">
-          </div>
-          <div class="student-namebar"></div>
-        </div>
-        <div class="student-card">
-          <div class="student-avatar-wrap">
-            <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=800&auto=format&fit=crop" alt="Student 2">
-          </div>
-          <div class="student-namebar"></div>
-        </div>
-        <div class="student-card">
-          <div class="student-avatar-wrap">
-            <img src="https://images.unsplash.com/photo-1558021211-6d1403321394?q=80&w=800&auto=format&fit=crop" alt="Student 3">
-          </div>
-          <div class="student-namebar"></div>
-        </div>
-        <div class="student-card">
-          <div class="student-avatar-wrap">
-            <img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=800&auto=format&fit=crop" alt="Student 4">
-          </div>
-          <div class="student-namebar"></div>
-        </div>
-      </div>
+  <div class="student-card single-why-image">
+    <div class="student-avatar-wrap">
+      <img src="https://i.pinimg.com/736x/e5/5a/38/e55a38e67e9e6b2276f0d4e6f2d9d421.jpg" alt="Students learning">
+    </div>
+    <div class="student-namebar"></div>
+  </div>
+</div>
 
       <div class="why-lsm-right">
         <h2>Why CODELINE AI Learning Platform?</h2>
@@ -968,63 +1223,258 @@
       <p class="section-subtitle">Top-rated classes selected just for you</p>
       
       <div class="course-slider-wrapper">
-          <button id="prevBtn" class="slider-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
-          
-          <div id="course-catalog-container" class="course-slider">
+        <button id="prevBtn" class="slider-btn prev-btn">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        
+        <div id="course-catalog-container" class="course-slider">
+            <!-- Courses will be dynamically loaded here -->
+        </div>
+        
+        <button id="nextBtn" class="slider-btn next-btn">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+<section class="testimonials-section">
+  <div class="container">
+    <h2 class="section-title">Hear From Our Students</h2>
+    <p class="section-subtitle">Discover what learners around the world are saying about our courses</p>
+
+    <div class="course-slider-wrapper testimonial-slider-wrapper">
+      <button id="testiPrev" class="slider-btn prev-btn">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+
+      <div id="testimonial-slider" class="course-slider">
+        <div class="course-card testimonial-card">
+          <div class="course-info">
+            <div class="stars">★★★★★</div>
+            <h3>"Awesome Service And Courses."</h3>
+            <p>The project-based curriculum really helped me apply the concepts immediately. The AI assistance felt like having a personal coding tutor.</p>
+          </div>
+          <div class="course-actions">
+            <div class="student-info">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rohit">
+              <div>
+                <strong>Chetan Jilladwar</strong><br>
+                <small>Full Stack Developer</small>
               </div>
-  
-          <button id="nextBtn" class="slider-btn next-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card testimonial-card">
+          <div class="course-info">
+            <div class="stars">★★★★★</div>
+            <h3>"Great Learning Experience Overall."</h3>
+            <p>I appreciated the flexibility and the deep dives into modern frameworks. The community forum is also super active and helpful!</p>
+          </div>
+          <div class="course-actions">
+            <div class="student-info">
+              <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Kausab">
+              <div>
+                <strong>Kausab</strong><br>
+                <small>Data Science Aspirant</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card testimonial-card">
+          <div class="course-info">
+            <div class="stars">★★★★★</div>
+            <h3>"Great Learning Experience Overall."</h3>
+            <p>I appreciated the flexibility and the deep dives into modern frameworks. The community forum is also super active and helpful!</p>
+          </div>
+          <div class="course-actions">
+            <div class="student-info">
+              <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Kausab">
+              <div>
+                <strong>Omkar</strong><br>
+                <small>Data Science Aspirant</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="course-card testimonial-card">
+          <div class="course-info">
+            <div class="stars">★★★★★</div>
+            <h3>"Great Learning Experience Overall."</h3>
+            <p>I appreciated the flexibility and the deep dives into modern frameworks. The community forum is also super active and helpful!</p>
+          </div>
+          <div class="course-actions">
+            <div class="student-info">
+              <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Kausab">
+              <div>
+                <strong>Rohit</strong><br>
+                <small>Data Science Aspirant</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card testimonial-card">
+          <div class="course-info">
+            <div class="stars">★★★★★</div>
+            <h3>"Fantastic Platform With Quality Courses."</h3>
+            <p>The mentors were responsive and the course material was up-to-date. I landed my first job a month after getting my certificate!</p>
+          </div>
+          <div class="course-actions">
+            <div class="student-info">
+              <img src="https://randomuser.me/api/portraits/men/21.jpg" alt="Omkar">
+              <div>
+                <strong>Harsh</strong><br>
+                <small>UI/UX Designer</small>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <button id="testiNext" class="slider-btn next-btn">
+        <i class="fas fa-chevron-right"></i>
+      </button>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="testimonials-section">
-    <div class="container">
-      <h2 class="section-title">Hear From Our Students</h2>
-      <p class="section-subtitle">Discover what learners around the world are saying about our courses</p>
 
-      <div class="testimonial-grid">
-        <div class="testimonial-card">
-          <div class="stars">★★★★★</div>
-          <h3>"Awesome Service And Courses."</h3>
-          <p>The project-based curriculum really helped me apply the concepts immediately. The AI assistance felt like having a personal coding tutor.</p>
-          <div class="student-info">
-            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rohit">
-            <div>
-              <strong>Rohit Sharma</strong><br>
-              <small>Full Stack Developer</small>
-            </div>
+<section class="faculty-section">
+  <div class="container">
+    <h2 class="section-title">Meet Our Faculty</h2>
+    <p class="section-subtitle">Learn from experienced mentors and industry experts</p>
+
+    <div class="course-slider-wrapper faculty-slider-wrapper">
+      <button id="facultyPrev" class="slider-btn prev-btn">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+
+      <div id="faculty-slider" class="course-slider">
+        <!-- Faculty Card 1 -->
+        <div class="course-card faculty-card">
+          <div class="faculty-avatar-wrap">
+            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=600&auto=format&fit=crop"
+                 alt="Faculty 1">
+          </div>
+
+          <div class="course-header">
+            <h3>Ankush Singla</h3>
+          </div>
+
+          <div class="course-info">
+            <p><strong>Role:</strong> Co‑Founder & Instructor</p>
+            <p><strong>Teaches:</strong> C++ with DSA, Data Science & Machine Learning, Competitive Programming</p>
+          </div>
+
+          <div class="course-actions">
+            <a href="#" class="btn-action btn-view">
+              View Profile
+            </a>
           </div>
         </div>
 
-        <div class="testimonial-card">
-          <div class="stars">★★★★★</div>
-          <h3>"Great Learning Experience Overall."</h3>
-          <p>I appreciated the flexibility and the deep dives into modern frameworks. The community forum is also super active and helpful!</p>
-          <div class="student-info">
-            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Kausab">
-            <div>
-              <strong>Kausab Mirza</strong><br>
-              <small>Data Science Aspirant</small>
-            </div>
+        <!-- Faculty Card 2 -->
+        <div class="course-card faculty-card">
+          <div class="faculty-avatar-wrap">
+            <img src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=600&auto=format&fit=crop"
+                 alt="Faculty 2">
+          </div>
+
+          <div class="course-header">
+            <h3>Parikh Jain</h3>
+          </div>
+
+          <div class="course-info">
+            <p><strong>Role:</strong> Instructor & Founding Member</p>
+            <p><strong>Teaches:</strong> Python with DSA, Competitive Programming, Interview Prep</p>
+          </div>
+
+          <div class="course-actions">
+            <a href="#" class="btn-action btn-view">
+              View Profile
+            </a>
           </div>
         </div>
 
-        <div class="testimonial-card">
-          <div class="stars">★★★★★</div>
-          <h3>"Fantastic Platform With Quality Courses."</h3>
-          <p>The mentors were responsive and the course material was up-to-date. I landed my first job a month after getting my certificate!</p>
-          <div class="student-info">
-            <img src="https://randomuser.me/api/portraits/men/21.jpg" alt="Omkar">
-            <div>
-              <strong>Omkar Singh</strong><br>
-              <small>UI/UX Designer</small>
-            </div>
+        <!-- Faculty Card 3 -->
+        <div class="course-card faculty-card">
+          <div class="faculty-avatar-wrap">
+            <img src="https://images.unsplash.com/photo-1525130413817-d45c1d127c42?q=80&w=600&auto=format&fit=crop"
+                 alt="Faculty 3">
+          </div>
+
+          <div class="course-header">
+            <h3>Nidhi Agarwal</h3>
+          </div>
+
+          <div class="course-info">
+            <p><strong>Role:</strong> Product Manager & Mentor</p>
+            <p><strong>Teaches:</strong> C++ with DSA, Data Analytics, Machine Learning</p>
+          </div>
+
+          <div class="course-actions">
+            <a href="#" class="btn-action btn-view">
+              View Profile
+            </a>
+          </div>
+        </div>
+
+        <!-- Aur bhi faculty cards yahi format se add kar sakte ho -->
+         <div class="course-card faculty-card">
+          <div class="faculty-avatar-wrap">
+            <img src="https://images.unsplash.com/photo-1525130413817-d45c1d127c42?q=80&w=600&auto=format&fit=crop"
+                 alt="Faculty 3">
+          </div>
+
+          <div class="course-header">
+            <h3>Nidhi Agarwal</h3>
+          </div>
+
+          <div class="course-info">
+            <p><strong>Role:</strong> Product Manager & Mentor</p>
+            <p><strong>Teaches:</strong> C++ with DSA, Data Analytics, Machine Learning</p>
+          </div>
+
+          <div class="course-actions">
+            <a href="#" class="btn-action btn-view">
+              View Profile
+            </a>
+          </div>
+        </div>
+        <div class="course-card faculty-card">
+          <div class="faculty-avatar-wrap">
+            <img src="https://images.unsplash.com/photo-1525130413817-d45c1d127c42?q=80&w=600&auto=format&fit=crop"
+                 alt="Faculty 3">
+          </div>
+
+          <div class="course-header">
+            <h3>Nidhi Agarwal</h3>
+          </div>
+
+          <div class="course-info">
+            <p><strong>Role:</strong> Product Manager & Mentor</p>
+            <p><strong>Teaches:</strong> C++ with DSA, Data Analytics, Machine Learning</p>
+          </div>
+
+          <div class="course-actions">
+            <a href="#" class="btn-action btn-view">
+              View Profile
+            </a>
           </div>
         </div>
       </div>
+
+      <button id="facultyNext" class="slider-btn next-btn">
+        <i class="fas fa-chevron-right"></i>
+      </button>
     </div>
-  </section>
+  </div>
+</section>
+
+
 
   <section class="newsletter">
     <div class="container">
@@ -1037,18 +1487,10 @@
     </div>
   </section>
 
-  <footer class="footer">
-    <div class="container">
-      <p>&copy; 2025 CODELINE AI. Designed with 💜 & 🍵 (Pista).</p>
-    </div>
-  </footer>
+  
 
-  <script src="js/config.js"></script>
   <script>
-    // -------------------------------------------------------------------
-    // 1. DYNAMIC COURSE CATALOG GENERATION
-    // -------------------------------------------------------------------
-    // Added more courses to demonstrate scrolling functionality
+    // DYNAMIC COURSE CATALOG GENERATION
     const coursesData = [
         {
             title: "ReactJS Masterclass",
@@ -1125,7 +1567,7 @@
             return `
                 <div class="course-card">
                     <div class="course-image-container">
-                        <img src="${course.image}" alt="${course.title}">
+                        <img src="${course.image}" alt="${course.title}" loading="lazy">
                     </div>
                     <div class="course-header">
                         <h3>${course.title}</h3>
@@ -1143,16 +1585,13 @@
 
     renderCourses();
 
-    // -------------------------------------------------------------------
-    // 2. SLIDER NAVIGATION LOGIC
-    // -------------------------------------------------------------------
+    // UPDATED SLIDER NAVIGATION - PERFECT 4 CARDS VISIBLE
     const scrollContainer = document.getElementById('course-catalog-container');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
 
     if (scrollContainer && prevBtn && nextBtn) {
-        // Scroll amount = card width (300px) + gap (25px)
-        const scrollAmount = 325; 
+        const scrollAmount = 815; // Perfect scroll for 4 cards
 
         nextBtn.addEventListener('click', () => {
             scrollContainer.scrollBy({
@@ -1168,128 +1607,203 @@
             });
         });
 
-        // Hide arrows logic (Optional but good UX)
         function checkScrollButtons() {
-            // Left button
-            if (scrollContainer.scrollLeft <= 0) {
-                prevBtn.style.opacity = "0.5";
+            const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+            
+            if (scrollContainer.scrollLeft <= 5) {
+                prevBtn.style.opacity = "0.4";
                 prevBtn.style.pointerEvents = "none";
+                prevBtn.style.transform = "translateY(-50%) scale(0.95)";
             } else {
                 prevBtn.style.opacity = "1";
                 prevBtn.style.pointerEvents = "auto";
+                prevBtn.style.transform = "translateY(-50%)";
             }
             
-            // Right button (with wiggle room)
-            if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 5) {
-                nextBtn.style.opacity = "0.5";
+            if (scrollContainer.scrollLeft >= maxScroll - 10) {
+                nextBtn.style.opacity = "0.4";
                 nextBtn.style.pointerEvents = "none";
+                nextBtn.style.transform = "translateY(-50%) scale(0.95)";
             } else {
                 nextBtn.style.opacity = "1";
                 nextBtn.style.pointerEvents = "auto";
+                nextBtn.style.transform = "translateY(-50%)";
             }
         }
 
         scrollContainer.addEventListener('scroll', checkScrollButtons);
-        // Initial check
-        setTimeout(checkScrollButtons, 100); 
+        setTimeout(checkScrollButtons, 300);
     }
 
-
-    // -------------------------------------------------------------------
-    // 3. DARK MODE LOGIC 
-    // -------------------------------------------------------------------
+    // DARK MODE LOGIC 
     const darkModeToggle = document.getElementById('dark-mode-toggle');
-    const body = document.body;
-    const icon = darkModeToggle.querySelector('i');
+  const body = document.body;
+  const icon = darkModeToggle.querySelector('i');
 
-    function setTheme(theme) {
-        body.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        if (theme === 'dark') {
-            icon.classList.replace('fa-moon', 'fa-sun');
-        } else {
-            icon.classList.replace('fa-sun', 'fa-moon');
-        }
+  function setTheme(theme) {
+    body.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    if (theme === 'dark') {
+      icon.classList.replace('fa-moon', 'fa-sun');
+    } else {
+      icon.classList.replace('fa-sun', 'fa-moon');
     }
+  }
 
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    setTheme(savedTheme);
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  setTheme(savedTheme);
 
-    darkModeToggle.addEventListener('click', () => {
-        const currentTheme = body.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
+  darkModeToggle.addEventListener('click', () => {
+    const currentTheme = body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+  });
+  
+  // NAVIGATION & UI LOGIC
+  const mobileToggle = document.getElementById('mobile-toggle');
+  const mainNav = document.getElementById('main-nav');
+  
+  mobileToggle.addEventListener('click', () => {
+    mainNav.classList.toggle('active');
+  });
+
+  document.querySelectorAll('.navbar nav ul li a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 768) {
+        mainNav.classList.remove('active');
+      }
     });
+  });
+
+  // Slideshow
+  let slideIndex = 0;
+  showSlides();
+  function showSlides() {
+    let slides = document.getElementsByClassName("slide");
+    for (let i = 0; i < slides.length; i++) slides[i].style.display = "none";
+    slideIndex++;
+    if (slideIndex > slides.length) slideIndex = 1;
+    slides[slideIndex - 1].style.display = "block";
+    setTimeout(showSlides, 4000);
+  }
+
+  // Hero Background Rotator
+  const heroImages = [
+    'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop',
+    '\Codeline Img.png',
+    '\Codeline Img.png'
+  ];
+  let heroIndex = 0;
+
+  function changeHeroBackground() {
+    document.querySelector('.hero').style.backgroundImage = `url('${heroImages[heroIndex]}')`;
+    heroIndex = (heroIndex + 1) % heroImages.length;
+  }
+  setInterval(changeHeroBackground, 5000);
+  changeHeroBackground();
+
+  // Smooth scrolling for anchor links with offset
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        const headerOffset = 80;
+        const elementPosition = target.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - headerOffset;
     
-    // -------------------------------------------------------------------
-    // 4. NAVIGATION & UI LOGIC
-    // -------------------------------------------------------------------
-    const mobileToggle = document.getElementById('mobile-toggle');
-    const mainNav = document.getElementById('main-nav');
-    
-    mobileToggle.addEventListener('click', () => {
-      mainNav.classList.toggle('active');
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+      }
     });
+  });
 
-    document.querySelectorAll('.navbar nav ul li a').forEach(link => {
-      link.addEventListener('click', () => {
-        if (window.innerWidth <= 768) {
-            mainNav.classList.remove('active');
-        }
-      });
-    });
-
-    // Slideshow
-    let slideIndex = 0;
-    showSlides();
-    function showSlides() {
-      let slides = document.getElementsByClassName("slide");
-      for (let i = 0; i < slides.length; i++) slides[i].style.display = "none";
-      slideIndex++;
-      if (slideIndex > slides.length) slideIndex = 1;
-      slides[slideIndex - 1].style.display = "block";
-      setTimeout(showSlides, 4000);
-    }
-
-    // Hero Background Rotator
-    const heroImages = [
-      'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop',
-      'https://cdn.prod.website-files.com/65c2f26b38857b3c9aadda29/6721960f8194328b94601b69_Cover%20Image%20for%20CourseMagic%20blog%20post.webp',
-      'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop'
-    ];
-    let heroIndex = 0;
-
-    function changeHeroBackground() {
-      document.querySelector('.hero').style.backgroundImage = `url('${heroImages[heroIndex]}')`;
-      heroIndex = (heroIndex + 1) % heroImages.length;
-    }
-    setInterval(changeHeroBackground, 5000);
-    changeHeroBackground();
-
-    // Smooth scrolling for anchor links with offset
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            const headerOffset = 80;
-            const elementPosition = target.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.scrollY - headerOffset;
-      
-            window.scrollTo({
-              top: offsetPosition,
-              behavior: "smooth"
-            });
-        }
-      });
-    });
+  // Note: course slider ka saara logic course-catalog.js me initCourseSlider() se chalega
   </script>
   <script src="js/config.js"></script>
 
   <script src="js/course-catalog.js"></script>
 
+  <footer class="site-footer">
+  <div class="container footer-grid">
+
+    <!-- Brand + tagline -->
+    <div class="footer-col footer-brand">
+      <a href="index.html" class="footer-logo">
+        <span class="logo-icon">🚀</span>
+        <span>CODELINE AI</span>
+      </a>
+      <p class="footer-tagline">
+        Project‑based learning platform for developers, designers and working professionals.
+      </p>
+      <div class="footer-social">
+        <a href="#" aria-label="Visit our YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="#" aria-label="Visit our Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Visit our LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" aria-label="Visit our X"><i class="fab fa-x-twitter"></i></a>
+      </div>
+    </div>
+
+    <!-- Product -->
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#popular-courses-section">Courses</a></li>
+        <li><a href="placement.html">Placements</a></li>
+        <li><a href="aboutus.html">About platform</a></li>
+        <li><a href="login.html">Student dashboard</a></li>
+      </ul>
+    </div>
+
+    <!-- Resources -->
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Free workshops</a></li>
+        <li><a href="#">Roadmaps</a></li>
+        <li><a href="#">Help center</a></li>
+      </ul>
+    </div>
+
+    <!-- Company / legal -->
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">Contact us</a></li>
+        <li><a href="#">Become a mentor</a></li>
+        <li><a href="#">Terms &amp; Conditions</a></li>
+        <li><a href="#">Privacy policy</a></li>
+      </ul>
+    </div>
+
+    <!-- Newsletter mini form -->
+    <div class="footer-col footer-newsletter">
+      <h4>Stay updated</h4>
+      <p>Get product updates, roadmap drops and placement stories in your inbox.</p>
+      <form class="footer-form" onsubmit="event.preventDefault();">
+        <input type="email" placeholder="Your email" required>
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container footer-bottom-inner">
+      <p>&copy; 2025 CODELINE AI. All rights reserved.</p>
+      <p>Made with <span class="heart">💜</span> &amp; <span class="pista">🍵</span> for learners.</p>
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>
+
+
+
+
 
 
 

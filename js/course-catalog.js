@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // userId को API में पास करें ताकि यह कोर्स के साथ प्रगति डेटा भी लौटा सके
         fetchCourseCatalog(catalogContainer, userId);
     }
+    initTestimonialSlider();
+    initFacultySlider();   // ⬅️ naya call
 });
 
 /**
@@ -74,85 +76,228 @@ async function fetchCourseCatalog(catalogContainer, userId) {
  * Renders the course cards into the container.
  */
 function displayCatalog(courses, progressMap, catalogContainer) {
-    catalogContainer.innerHTML = ''; // Clear loading message
+  catalogContainer.innerHTML = ''; // Clear loading
 
-    courses.forEach(course => {
-        const isEnrolled = progressMap[course.CourseID] !== undefined;
-        
-        // --- Safe Description Handling ---
-        const descriptionText = String(course.Description || "").trim();
-        const shortDescription = descriptionText.length > 100 
-                                 ? descriptionText.substring(0, 100) + '...'
-                                 : descriptionText;
+  const cardsHTML = courses.map(course => {
+    const isEnrolled = progressMap[course.CourseID] !== undefined;
 
-        // --- Image URL Handling ---
-        const encodedTitle = course.Title ? course.Title.replace(/\s/g, '+') : 'Course+Image';
-        const courseSpecificPlaceholderUrl = `https://via.placeholder.com/300x180?text=${encodedTitle}`;
-        const imageUrl = (course.ImageUrl && course.ImageUrl.trim() !== "") 
-                             ? course.ImageUrl // Apps Script में ImageURL की जगह ImageUrl का उपयोग किया गया है
-                             : courseSpecificPlaceholderUrl; 
+    // Description
+    const descriptionText = String(course.Description || "").trim();
+    const shortDescription =
+      descriptionText.length > 100
+        ? descriptionText.substring(0, 100) + "..."
+        : descriptionText;
 
-        // --- Button Logic ---
-        let actionArea = '';
-        
-        if (isEnrolled) {
-            const courseProgress = progressMap[course.CourseID];
-            
-            // Apps Script से returned fields का उपयोग करें: topicsCompleted
-            let nextTopicIndex = (courseProgress.topicsCompleted || 0) + 1;
-            if (courseProgress.totalTopics && nextTopicIndex > courseProgress.totalTopics) {
-                nextTopicIndex = 1; // Start over or handle completion view
-            }
-            
-            // Enrolled: Show Progress and Continue button
-            actionArea = `
-                <div class="course-footer">
-                    <p class="progress-text">Progress: ${courseProgress.progressPercentage || 0}%</p>
-                    <a href="course-topic.html?courseId=${course.CourseID}&topicIndex=${nextTopicIndex}&userId=${localStorage.getItem('lsm_user_id')}" class="action-link">Continue Learning</a>
-                </div>
-            `;
-        } else {
-            // Not Enrolled: Show Enroll/View Details
-            const userId = localStorage.getItem('lsm_user_id');
-            let enrollLink = userId 
-                             ? `enroll.html?id=${course.CourseID}` // If logged in
-                             : `login.html`; // If not logged in
-                             
-            const onclickAttr = userId ? '' : `onclick="localStorage.setItem('pendingEnrollCourseId', '${course.CourseID}')"`;
+    // Image
+    const encodedTitle = course.Title ? course.Title.replace(/\s/g, "+") : "Course+Image";
+    const courseSpecificPlaceholderUrl =
+      `https://via.placeholder.com/300x180?text=${encodedTitle}`;
+    const imageUrl =
+      course.ImageUrl && course.ImageUrl.trim() !== ""
+        ? course.ImageUrl
+        : courseSpecificPlaceholderUrl;
 
-            actionArea = `
-                <div class="course-footer enroll-links">
-                    <a href="course-detail.html?id=${course.CourseID}">View Details</a>
-                    <a href="${enrollLink}" ${onclickAttr}>Enroll</a>
-                </div>
-            `;
-        }
+    // Buttons (UI same jo tum chahte ho)
+    let actionButtons = "";
 
-        // --- Construct Card HTML ---
-        const cardHTML = `
-            <div class="course-card">
-                
-                <div class="course-image-container">
-                    <img src="${imageUrl}" 
-                         alt="${course.Title} Image" 
-                         onerror="this.onerror=null; this.src='${courseSpecificPlaceholderUrl}';">
-                </div>
-                
-                <div class="course-header">
-                    <h3>${course.Title} <span class="course-id">(${course.CourseID})</span></h3>
-                </div>
-                
-                <div class="course-info">
-                    <p><strong>Instructor:</strong> <span class="instructor-name">${course.Instructor || 'Expert'}</span></p>
-                    <p class="description">${shortDescription}</p>
-                    <p><strong>Duration:</strong> ${course.Duration || 'Self-paced'}</p>
-                </div>
-                
-                ${actionArea}
-            </div>
-        `;
-        
-        // Append to container
-        catalogContainer.innerHTML += cardHTML;
-    });
+    if (isEnrolled) {
+      const courseProgress = progressMap[course.CourseID];
+      let nextTopicIndex = (courseProgress.topicsCompleted || 0) + 1;
+      if (courseProgress.totalTopics && nextTopicIndex > courseProgress.totalTopics) {
+        nextTopicIndex = 1;
+      }
+
+      const continueUrl =
+        `course-topic.html?courseId=${course.CourseID}` +
+        `&topicIndex=${nextTopicIndex}` +
+        `&userId=${localStorage.getItem("lsm_user_id") || ""}`;
+
+      actionButtons = `
+        <a href="${continueUrl}" class="btn-action btn-continue">
+          CONTINUE LEARNING
+        </a>
+        <a href="course-detail.html?id=${course.CourseID}" class="btn-action btn-view">
+          DETAILS
+        </a>
+      `;
+    } else {
+      const userId = localStorage.getItem("lsm_user_id");
+      const enrollLink = userId
+        ? `enroll.html?id=${course.CourseID}`
+        : `login.html`;
+      const onclickAttr = userId
+        ? ""
+        : `onclick="localStorage.setItem('pendingEnrollCourseId', '${course.CourseID}')"` ;
+
+      actionButtons = `
+        <a href="${enrollLink}" ${onclickAttr} class="btn-action btn-enroll">
+          ENROLL NOW
+        </a>
+        <a href="course-detail.html?id=${course.CourseID}" class="btn-action btn-view">
+          VIEW DETAILS
+        </a>
+      `;
+    }
+
+    return `
+      <div class="course-card">
+        <div class="course-image-container">
+          <img src="${imageUrl}"
+               alt="${course.Title} Image"
+               loading="lazy"
+               onerror="this.onerror=null; this.src='${courseSpecificPlaceholderUrl}';">
+        </div>
+
+        <div class="course-header">
+          <h3>${course.Title}</h3>
+        </div>
+
+        <div class="course-info">
+          <p><strong>Instructor:</strong> ${course.Instructor || "Expert"}</p>
+          <p class="description">${shortDescription}</p>
+          <p><strong>Duration:</strong> ${course.Duration || "Self-paced"}</p>
+        </div>
+
+        <div class="course-actions">
+          ${actionButtons}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  catalogContainer.innerHTML = cardsHTML;
+
+  // IMPORTANT: slider ko yahin se initialise karo
+  initCourseSlider();
 }
+
+function initCourseSlider() {
+  const scrollContainer = document.getElementById("course-catalog-container");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  if (!scrollContainer || !prevBtn || !nextBtn) return;
+
+  const CARD_WIDTH = 275;
+  const CARD_GAP = 20;
+  const scrollAmount = 3 * (CARD_WIDTH + CARD_GAP); // 885
+
+  nextBtn.onclick = () => {
+    scrollContainer.scrollBy({ left: scrollAmount, behavior: "smooth" });
+  };
+
+  prevBtn.onclick = () => {
+    scrollContainer.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+  };
+
+  function checkScrollButtons() {
+    const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+
+    if (scrollContainer.scrollLeft <= 5) {
+      prevBtn.style.opacity = "0.4";
+      prevBtn.style.pointerEvents = "none";
+    } else {
+      prevBtn.style.opacity = "1";
+      prevBtn.style.pointerEvents = "auto";
+    }
+
+    if (scrollContainer.scrollLeft >= maxScroll - 10) {
+      nextBtn.style.opacity = "0.4";
+      nextBtn.style.pointerEvents = "none";
+    } else {
+      nextBtn.style.opacity = "1";
+      nextBtn.style.pointerEvents = "auto";
+    }
+  }
+
+  scrollContainer.addEventListener("scroll", checkScrollButtons);
+  setTimeout(checkScrollButtons, 300);
+}
+
+function initTestimonialSlider() {
+  const slider = document.getElementById("testimonial-slider");
+  const prev = document.getElementById("testiPrev");
+  const next = document.getElementById("testiNext");
+  if (!slider || !prev || !next) return;
+
+  const CARD_WIDTH = 275;
+  const CARD_GAP = 20;
+  const scrollAmount = 3 * (CARD_WIDTH + CARD_GAP); // same logic
+
+  next.onclick = () => {
+    slider.scrollBy({ left: scrollAmount, behavior: "smooth" });
+  };
+
+  prev.onclick = () => {
+    slider.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+  };
+
+  function checkButtons() {
+    const maxScroll = slider.scrollWidth - slider.clientWidth;
+
+    if (slider.scrollLeft <= 5) {
+      prev.style.opacity = "0.4";
+      prev.style.pointerEvents = "none";
+    } else {
+      prev.style.opacity = "1";
+      prev.style.pointerEvents = "auto";
+    }
+
+    if (slider.scrollLeft >= maxScroll - 10) {
+      next.style.opacity = "0.4";
+      next.style.pointerEvents = "none";
+    } else {
+      next.style.opacity = "1";
+      next.style.pointerEvents = "auto";
+    }
+  }
+
+  slider.addEventListener("scroll", checkButtons);
+  setTimeout(checkButtons, 300);
+}
+
+
+function initFacultySlider() {
+  const slider = document.getElementById("faculty-slider");
+  const prev = document.getElementById("facultyPrev");
+  const next = document.getElementById("facultyNext");
+  if (!slider || !prev || !next) return;
+
+  const CARD_WIDTH = 275;
+  const CARD_GAP = 20;
+  const scrollAmount = 3 * (CARD_WIDTH + CARD_GAP); // course/testimonial jaisa
+
+  next.onclick = () => {
+    slider.scrollBy({ left: scrollAmount, behavior: "smooth" });
+  };
+
+  prev.onclick = () => {
+    slider.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+  };
+
+  function checkButtons() {
+    const maxScroll = slider.scrollWidth - slider.clientWidth;
+
+    if (slider.scrollLeft <= 5) {
+      prev.style.opacity = "0.4";
+      prev.style.pointerEvents = "none";
+    } else {
+      prev.style.opacity = "1";
+      prev.style.pointerEvents = "auto";
+    }
+
+    if (slider.scrollLeft >= maxScroll - 10) {
+      next.style.opacity = "0.4";
+      next.style.pointerEvents = "none";
+    } else {
+      next.style.opacity = "1";
+      next.style.pointerEvents = "auto";
+    }
+  }
+
+  slider.addEventListener("scroll", checkButtons);
+  setTimeout(checkButtons, 300);
+}
+
+
+
+
