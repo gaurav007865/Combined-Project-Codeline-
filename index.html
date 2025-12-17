@@ -920,6 +920,161 @@
   color: #badc58;
 }
 
+
+
+/* === PLACEMENTS SECTION === */
+.placements-section {
+  padding: clamp(60px, 10vw, 80px) 0;
+  background: linear-gradient(180deg, #ffffff 0%, #fdf7ff 40%, #f6f8fa 100%);
+}
+
+[data-theme="dark"] .placements-section {
+  background: linear-gradient(180deg, #1a1b26 0%, #181627 50%, #12111c 100%);
+}
+
+.placements-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.placements-header .section-title {
+  text-align: left;
+  margin-bottom: 0;
+}
+
+.placements-header .section-title::after {
+  margin-left: 0;
+}
+
+.placement-report-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--primary-purple);
+  font-weight: 600;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(154, 6, 105, 0.06);
+  border: 1px solid rgba(154, 6, 105, 0.15);
+  transition: all 0.25s ease;
+}
+
+.placement-report-link i {
+  font-size: 0.95rem;
+}
+
+.placement-report-link:hover {
+  background: var(--primary-purple);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* Marquee wrapper */
+.placements-marquee {
+  position: relative;
+  overflow: hidden;
+  padding: 10px 0 5px 0;
+}
+
+.placements-track {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+  will-change: transform;
+}
+
+/* Placement card styles */
+.placement-card {
+  min-width: 230px;
+  max-width: 230px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 18px 18px 16px 18px;
+  box-shadow: 0 18px 45px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .placement-card {
+  background: var(--card-bg);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+}
+
+.placement-avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 10px;
+  border: 3px solid #ffe2f5;
+}
+
+[data-theme="dark"] .placement-avatar {
+  border-color: #4537e2;
+}
+
+.placement-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placement-body .student-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  color: var(--text-dark);
+}
+
+.placement-body .company-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--primary-purple);
+  margin-bottom: 4px;
+}
+
+.placement-body .placement-meta {
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+.company-logo-wrap {
+  margin: 4px 0 6px 0;
+}
+
+.company-logo-wrap img {
+  max-width: 90px;        /* jitna chaho utna rakho */
+  max-height: 32px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+
+/* Responsive header */
+@media (max-width: 768px) {
+  .placements-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .placements-header .section-title {
+    text-align: left;
+    width: 100%;
+  }
+  .placement-report-link {
+    align-self: flex-start;
+  }
+}
+
+
 /* Responsive footer */
 @media (max-width: 992px) {
   .footer-grid {
@@ -1342,6 +1497,156 @@
 </section>
 
 
+<section class="placements-section">
+  <div class="container">
+    <div class="placements-header">
+      <h2 class="section-title">Our Students at Top Tech Companies</h2>
+      <a href="#" class="placement-report-link">
+        <i class="fas fa-download"></i>
+        Download placement report
+      </a>
+    </div>
+
+    <div class="placements-marquee">
+      <div class="placements-track" id="placements-track">
+        <!-- Single set of placement cards (JS se duplicate hoga) -->
+       <div class="placement-card">
+  <div class="placement-avatar">
+    <img src="https://images.unsplash.com/photo-1525130413817-d45c1d127c42?q=80&w=400&auto=format&fit=crop" alt="Student">
+  </div>
+  <div class="placement-body">
+  <p class="student-name">Aman Verma</p>
+
+  <div class="company-logo-wrap">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/1280px-Amazon_Web_Services_Logo.svg.png" alt="Google">
+  </div>
+
+  <p class="placement-meta">CS/IT • SDE</p>
+</div>
+
+
+  <!-- HOVER TOOLTIP -->
+  <div class="placement-tooltip">
+    
+    <p class="tooltip-highlight">Landed first job! 🚀</p>
+    <a href="https://www.linkedin.com/in/someprofile"
+       target="_blank" rel="noreferrer"
+       class="tooltip-link">
+      LinkedIn profile <span>↗</span>
+    </a>
+  </div>
+</div>
+
+
+       <div class="placement-card">
+  <div class="placement-avatar">
+    <img src="https://images.unsplash.com/photo-1525130413817-d45c1d127c42?q=80&w=400&auto=format&fit=crop" alt="Student">
+  </div>
+  <div class="placement-body">
+  <p class="student-name">Virat Pant</p>
+
+  <div class="company-logo-wrap">
+    <img src="https://1000logos.net/wp-content/uploads/2016/10/Amazon-Logo.png" alt="Google">
+  </div>
+
+  <p class="placement-meta">CS/IT • SDE</p>
+</div>
+
+
+  <!-- HOVER TOOLTIP -->
+  <div class="placement-tooltip">
+    
+    <p class="tooltip-highlight">Landed first job! 🚀</p>
+    <a href="https://www.linkedin.com/in/someprofile"
+       target="_blank" rel="noreferrer"
+       class="tooltip-link">
+      LinkedIn profile <span>↗</span>
+    </a>
+  </div>
+</div>
+
+        <div class="placement-card">
+  <div class="placement-avatar">
+    <img src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=600&auto=format&fit=crop" alt="Student">
+  </div>
+  <div class="placement-body">
+  <p class="student-name">Aman Verma</p>
+
+  <div class="company-logo-wrap">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRr4mIl10VA8XsH4IqDb8_LZ8Mbs3cbfFvKmA&s" alt="Google">
+  </div>
+
+  <p class="placement-meta">CS/IT • SDE</p>
+</div>
+
+
+  <!-- HOVER TOOLTIP -->
+  <div class="placement-tooltip">
+    
+    <p class="tooltip-highlight">Landed first job! 🚀</p>
+    <a href="https://www.linkedin.com/in/someprofile"
+       target="_blank" rel="noreferrer"
+       class="tooltip-link">
+      LinkedIn profile <span>↗</span>
+    </a>
+  </div>
+</div>
+
+         <div class="placement-card">
+  <div class="placement-avatar">
+    <img src="https://images.unsplash.com/photo-1525130413817-d45c1d127c42?q=80&w=600&auto=format&fit=crop" alt="Student">
+  </div>
+  <div class="placement-body">
+  <p class="student-name">Aman Verma</p>
+
+  <div class="company-logo-wrap">
+    <img src="https://1000logos.net/wp-content/uploads/2016/10/Amazon-Logo.png" alt="Google">
+  </div>
+
+  <p class="placement-meta">CS/IT • SDE</p>
+</div>
+
+
+  <!-- HOVER TOOLTIP -->
+  <div class="placement-tooltip">
+    
+    <p class="tooltip-highlight">Landed first job! 🚀</p>
+    <a href="https://www.linkedin.com/in/someprofile"
+       target="_blank" rel="noreferrer"
+       class="tooltip-link">
+      LinkedIn profile <span>↗</span>
+    </a>
+  </div>
+</div>
+
+        <div class="placement-card">
+          <div class="placement-avatar">
+            <img src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=600&auto=format&fit=crop" alt="Student">
+          </div>
+          <div class="placement-body">
+            <p class="student-name">Rohit Deshmukh</p>
+            <p class="company-name">Media.net</p>
+            <p class="placement-meta">SDE • Tier 2/3 college</p>
+          </div>
+           <div class="placement-tooltip">
+    <p class="tooltip-name">Aman Verma</p>
+    <p class="tooltip-highlight">Landed first job! 🚀</p>
+    <a href="https://www.linkedin.com/in/someprofile"
+       target="_blank" rel="noreferrer"
+       class="tooltip-link">
+      LinkedIn profile <span>↗</span>
+    </a>
+  </div>
+        </div>
+
+        <!-- jitne chaaho utne cards yahan add kar sakte ho -->
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
 <section class="faculty-section">
   <div class="container">
     <h2 class="section-title">Meet Our Faculty</h2>
@@ -1720,6 +2025,55 @@
     });
   });
 
+
+
+
+  // === PLACEMENTS AUTO SCROLL ===
+function initPlacementsMarquee() {
+  const track = document.getElementById('placements-track');
+  if (!track) return;
+
+  // Duplicate cards for seamless loop
+  const cards = Array.from(track.children);
+  cards.forEach(card => {
+    const clone = card.cloneNode(true);
+    track.appendChild(clone);
+  });
+
+  let speed = 0.8; // px per frame (adjust for faster/slower)
+  let position = 0;
+  let isPaused = false;
+
+  function step() {
+    if (!isPaused) {
+      position -= speed;
+      const firstCard = track.children[0];
+      const cardWidth = firstCard.getBoundingClientRect().width + 20; // + gap
+
+      // If first card fully out of view, move it to end
+      if (Math.abs(position) >= cardWidth) {
+        track.appendChild(firstCard);
+        position += cardWidth;
+      }
+      track.style.transform = `translateX(${position}px)`;
+    }
+    requestAnimationFrame(step);
+  }
+
+  // Pause on hover
+  track.addEventListener('mouseenter', () => { isPaused = true; });
+  track.addEventListener('mouseleave', () => { isPaused = false; });
+
+  requestAnimationFrame(step);
+}
+
+// DOMContentLoaded ke andar call karo:
+document.addEventListener('DOMContentLoaded', () => {
+  // tumhara existing code: auth, courses, sliders, etc.
+  initPlacementsMarquee();
+});
+
+
   // Note: course slider ka saara logic course-catalog.js me initCourseSlider() se chalega
   </script>
   <script src="js/config.js"></script>
@@ -1793,7 +2147,7 @@
   <div class="footer-bottom">
     <div class="container footer-bottom-inner">
       <p>&copy; 2025 CODELINE AI. All rights reserved.</p>
-      <p>Made with <span class="heart">💜</span> &amp; <span class="pista">🍵</span> for learners.</p>
+      <p><span class="heart">💜</span> &amp; <span class="pista">🍵</span> for learners.</p>
     </div>
   </div>
 </footer>
