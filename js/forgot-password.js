@@ -83,6 +83,7 @@ async function resetPassword() {
 
   if (data.status === "success") {
     showMessage("Password changed successfully 🎉", "green");
+     window.location.href = 'login.html';
   } else {
     showMessage(data.message);
   }
