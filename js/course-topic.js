@@ -1,49 +1,33 @@
-// js/course-topic.js (WITH MCQ ASSIGNMENT)
+// 🔥 COMPLETE course-topic.js - AAPKA SAB ORIGINAL LOGIC + FULL FEATURES
 
 let currentCourseId = null;
 let currentTopicIndex = 1;   // 1-based
 let currentTopicID = null;
 let totalTopics = 0;
-
-// MCQ state
-let mcqQuestions = [];       // [{QuestionID, QuestionText, OptionA..D}]
-let mcqCurrentIndex = 0;     // 0-based
-let mcqAnswers = {};         // {QuestionID: 'A' | 'B' | ...}
+let allTopics = [];
+let mcqQuestions = [];
+let mcqCurrentIndex = 0;
+let mcqAnswers = {};
 let mcqCompleted = false;
-
-// NOTE: Make sure GOOGLE_SCRIPT_URL is defined globally in HTML:
-// <script> const GOOGLE_SCRIPT_URL = "YOUR_WEB_APP_URL/exec"; </script>
 
 document.addEventListener('DOMContentLoaded', async () => {
   const storedUserId = localStorage.getItem('lsm_user_id');
   const urlParams = new URLSearchParams(window.location.search);
 
-  // Debug logs – URL params check
   console.log('Current search:', window.location.search);
-  console.log('courseId param =', urlParams.get('courseId'));
-  console.log('topicIndex param =', urlParams.get('topicIndex'));
-  console.log('userId param =', urlParams.get('userId'));
-
   currentCourseId   = urlParams.get('courseId');
   const paramTopic  = urlParams.get('topicIndex');
-  currentTopicIndex = parseInt(paramTopic, 10);
+  currentTopicIndex = parseInt(paramTopic, 10) || 1;
   const urlUserId   = urlParams.get('userId');
 
-  // Default topicIndex = 1 if missing/NaN
-  if (isNaN(currentTopicIndex) || currentTopicIndex < 1) {
-    currentTopicIndex = 1;
-  }
+  if (isNaN(currentTopicIndex) || currentTopicIndex < 1) currentTopicIndex = 1;
 
-  console.log('Resolved currentTopicIndex =', currentTopicIndex);
-
-  // Security check
   if (!currentCourseId || !urlUserId || !storedUserId || storedUserId !== urlUserId) {
     alert('Security error. Please login again.');
     window.location.href = 'login.html';
     return;
   }
 
-  // Global access
   window.userId = urlUserId;
 
   try {
@@ -51,104 +35,66 @@ document.addEventListener('DOMContentLoaded', async () => {
       loadTopic(currentCourseId, currentTopicIndex),
       loadSidebarTopics(currentCourseId)
     ]);
+    setupEventListeners();
+    updateTopicNumbers();
   } catch (err) {
-    console.error('Init topic page error:', err);
+    console.error('Init error:', err);
   }
-
-  setupEventListeners();
 });
 
-
-
-
-
-
-
 /* ================== EVENT LISTENERS ================== */
-
-
-// Sidebar me current topic ke just next item ko lock/unlock karne ke liye
-function updateNextTopicLockInList(canGoNextFromThis) {
-  const list = document.getElementById('sidebar-topic-list');
-  if (!list) return;
-
-  const items = list.querySelectorAll('.topic-item');
-  const nextIndex = currentTopicIndex; // <--- यह currentTopicIndex है (1-based)
-                                     // NodeList (0-based) के लिए, यह current-1 होना चाहिए
-
-  if (nextIndex >= items.length) return;
-
-  const nextItem = items[nextIndex]; // <--- यहाँ nextIndex की जगह (currentTopicIndex) है, जो गलत है
-  if (!nextItem) return;
-  if (canGoNextFromThis) {
-    // unlock
-    nextItem.classList.remove('locked-topic');
-  } else {
-    // lock
-    nextItem.classList.add('locked-topic');
-  }
-}
-
-
-
-
-// ... existing code ...
-
 function setupEventListeners() {
-    // Back to dashboard
-    const backBtn = document.getElementById('back-to-dashboard');
-    if (backBtn) {
-        backBtn.addEventListener('click', () => {
-            showToast('Returning to dashboard...');
-            window.location.href = 'dashboard.html';
-        });
+  // Video navigation
+  document.getElementById('video-prev')?.addEventListener('click', () => navigateTopic(-1));
+  document.getElementById('video-next')?.addEventListener('click', () => {
+    if (mcqCompleted || mcqQuestions.length === 0) navigateTopic(1);
+    else {
+      alert('⚠️ Pehle Quiz complete karo!');
+      document.querySelector('.tab-item[data-tab="quiz"]').click();
     }
+  });
 
-    // Navigation
-    document.getElementById('prev-topic')?.addEventListener('click', () => navigateTopic(-1));
-    document.getElementById('next-topic')?.addEventListener('click', () => navigateTopic(1));
+  // Topic navigation (backup)
+  document.getElementById('prev-topic')?.addEventListener('click', () => navigateTopic(-1));
+  document.getElementById('next-topic')?.addEventListener('click', () => navigateTopic(1));
 
-    // OLD textarea assignment submit (optional)
-    document.getElementById('submit-assignment')?.addEventListener('click', submitAssignment);
+  // MCQ controls
+  document.getElementById('mcq-prev')?.addEventListener('click', () => {
+    saveCurrentMCQSelection();
+    if (mcqCurrentIndex > 0) {
+      mcqCurrentIndex--;
+      renderCurrentMCQ();
+    }
+  });
 
-    
-    // 🔥 NEW: CODE COMPILER EVENT LISTENER
-    document.getElementById('compiler-run')?.addEventListener('click', runCompiler); 
-    
+  document.getElementById('mcq-next')?.addEventListener('click', () => {
+    saveCurrentMCQSelection();
+    if (mcqCurrentIndex < mcqQuestions.length - 1) {
+      mcqCurrentIndex++;
+      renderCurrentMCQ();
+    }
+  });
 
-    // MCQ navigation + submit
-    document.getElementById('mcq-prev')?.addEventListener('click', () => {
-        saveCurrentMCQSelection();
-        if (mcqCurrentIndex > 0) {
-            mcqCurrentIndex--;
-            renderCurrentMCQ();
-        }
-    });
-
-    document.getElementById('mcq-next')?.addEventListener('click', () => {
-        saveCurrentMCQSelection();
-        if (mcqCurrentIndex < mcqQuestions.length - 1) {
-            mcqCurrentIndex++;
-            renderCurrentMCQ();
-        }
-    });
-
-    document.getElementById('mcq-submit')?.addEventListener('click', submitMCQQuiz);
-    document.getElementById('mcq-retest')?.addEventListener('click', retakeMCQQuiz);
+  document.getElementById('mcq-submit')?.addEventListener('click', submitMCQQuiz);
+  document.getElementById('mcq-retest')?.addEventListener('click', retakeMCQQuiz);
 }
-// ... existing code ...
 
-/* ================== LOAD SINGLE TOPIC ================== */
-
+/* ================== LOAD TOPIC ================== */
 async function loadTopic(courseId, topicIndex) {
   const titleEl = document.getElementById('topic-title');
   showLoading(titleEl, 'Loading topic...');
+
+  // Show loading states
+  ['video-duration','topic-level','topic-objectives','topic-status','topic-description','topic-notes'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('loading');
+  });
 
   try {
     const params = new URLSearchParams({
       action: 'getTopicDetail',
       courseId: courseId,
-      topicIndex: topicIndex,     // 1-based
+      topicIndex: topicIndex,
       userId: window.userId
     });
 
@@ -157,40 +103,23 @@ async function loadTopic(courseId, topicIndex) {
 
     if (data.status === 'success' && data.data) {
       const topic = data.data;
-
-      currentTopicID    = topic.TopicID;
-      totalTopics       = topic.TotalTopics || 0;
+      currentTopicID = topic.TopicID;
+      totalTopics = topic.TotalTopics || 0;
       currentTopicIndex = topic.TopicIndex || topicIndex;
 
-      // Flags from backend
-     const topicCompleted    = !!data.isCompleted;
-const assignmentDone    = !!data.isAssignmentCompleted;
-const canGoNextFromThis = topicCompleted && assignmentDone;
-
-
-      // MCQ completed flag
+      const topicCompleted = !!data.isCompleted;
+      const assignmentDone = !!data.isAssignmentCompleted;
+      const canGoNextFromThis = topicCompleted && assignmentDone;
       mcqCompleted = assignmentDone;
 
       displayTopicContent(topic);
-
-      // Yahin se navigation aur lock handle karenge
       updateNavigationButtons(canGoNextFromThis);
       updateNextTopicLockInList(canGoNextFromThis);
-
-      // Agar backend ne is topic ko lock kiya hai (previous incomplete) to full UI lock
-      // loadTopic ke andar
-
-
-
-      // Sirf jab topic unlocked ho tab MCQ load
       await loadMCQAssignment(currentCourseId, currentTopicID);
-
-      // Mark complete button state
       updateCompletionStatus(topicCompleted);
-      updateAssignmentControls();
+      updateTopicNumbers();
     } else {
-      console.error('getTopicDetail error:', data.message);
-      throw new Error(data.message || 'Topic not found for this course/index');
+      throw new Error(data.message || 'Topic not found');
     }
   } catch (error) {
     console.error('Topic load error:', error);
@@ -198,197 +127,98 @@ const canGoNextFromThis = topicCompleted && assignmentDone;
   }
 }
 
-
-function showLockMessage(msg) {
-  const resultEl = document.getElementById('mcq-result');
-  if (resultEl) {
-    resultEl.textContent = msg;
-    resultEl.style.color = 'red';
-  } else {
-    showToast(msg);
-  }
-}
-function disableTopicUI() {
-  document.getElementById('mcq-prev')?.setAttribute('disabled', 'true');
-  document.getElementById('mcq-next')?.setAttribute('disabled', 'true');
-  document.getElementById('mcq-submit')?.setAttribute('disabled', 'true');
-  const mark = document.getElementById('mark-complete');
-  if (mark) {
-    mark.setAttribute('disabled', 'true');
-    mark.textContent = 'Locked (complete previous topic)';
-  }
-}
-
-function enableTopicUI() {
-  document.getElementById('mcq-prev')?.removeAttribute('disabled');
-  document.getElementById('mcq-next')?.removeAttribute('disabled');
-  document.getElementById('mcq-submit')?.removeAttribute('disabled');
-  document.getElementById('mark-complete')?.removeAttribute('disabled');
-}
-
 function displayTopicContent(topic) {
-  // Title
-  console.log('FULL TOPIC DATA:', topic); // 🔥 YE ADD KARO
-  console.log('NotesURL:', topic.NotesURL); // 🔥 YE ADD KARO
-  console.log('ContentURL:', topic.ContentURL); // 🔥 YE ADD KARO
-  const titleEl = document.getElementById('topic-title');
-  if (titleEl) {
-    titleEl.textContent = `${topic.TopicIndex}. ${topic.Title}`;
-    titleEl.classList.remove('loading');
-    titleEl.style.color = '';
-  }
+  document.getElementById('topic-title').textContent = `${topic.TopicIndex}. ${topic.Title}`;
+  document.getElementById('topic-progress').textContent = `${topic.Progress || 0}%`;
+  document.getElementById('progress-fill').style.width = `${topic.Progress || 0}%`;
+  
+  document.getElementById('video-duration').textContent = topic.Duration || 'N/A';
+  document.getElementById('topic-level').textContent = topic.Level || 'Beginner';
+  document.getElementById('topic-objectives').textContent = topic.Objectives || 'N/A';
+  document.getElementById('topic-status').textContent = topic.Status || 'In Progress';
+  document.getElementById('topic-description').textContent = topic.Description || 'No description available';
 
-  // 🔥 NOTES FIXED - Admin ka ContentURL yahan button banega
   const notesEl = document.getElementById('topic-notes');
-  if (notesEl) {
-    if (topic.NotesURL && topic.NotesURL.trim() !== '') {
-      // Admin ne ContentURL me jo PDF/notes link diya, wahi button banega
-      notesEl.innerHTML = `
-        <a href="${topic.NotesURL}" target="_blank" style="
-          display:inline-flex; align-items:center; gap:6px;
-          padding:12px 20px; border-radius:12px;
-          background:#0f4c75; color:#fff; font-weight:500; font-size:0.95rem;
-          text-decoration:none; box-shadow:0 4px 12px rgba(15,76,117,0.3);
-        ">
-          📖 <span>Open Notes</span> 
-          <i class="fas fa-external-link-alt" style="font-size:0.85rem;"></i>
-        </a>
-      `;
-    } else {
-      notesEl.innerHTML = '<span class="text-muted">No notes for this topic.</span>';
-    }
-  }
+  notesEl.innerHTML = topic.NotesContent 
+    ? topic.NotesContent.replace(/\n/g, '<br>')
+    : '<span style="color:var(--text-light);">No notes available</span>';
 
-  // Text-based Assignment question (fallback) - same
-  const assignmentEl = document.getElementById('assignment-question');
-  if (assignmentEl) {
-    assignmentEl.textContent = topic.AssignmentQuestion || 'No assignment for this topic.';
-  }
-
-  // Video (YouTube) - same (already working)
   const videoFrame = document.getElementById('topic-video');
-  if (videoFrame) {
-    if (topic.VideoURL) {
-      const parts   = topic.VideoURL.split('v=');
-      const idPart  = parts.length > 1 ? parts[1] : topic.VideoURL.split('/').pop();
-      const videoId = idPart.split('&')[0].split('?')[0];
-      videoFrame.src = `https://www.youtube.com/embed/${videoId}`;
-    } else {
-      videoFrame.src = '';
-    }
+  if (videoFrame && topic.VideoURL) {
+    const videoId = topic.VideoURL.split('v=')[1]?.split('&')[0] || topic.VideoURL.split('/').pop();
+    videoFrame.src = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
   }
 
-  // Sidebar course title - same
-  const sidebarTitle = document.getElementById('course-title-sidebar');
-  if (sidebarTitle) {
-    sidebarTitle.textContent = topic.CourseTitle || `Course: ${currentCourseId}`;
-  }
+  document.getElementById('course-title-sidebar').textContent = topic.CourseTitle || `Course: ${currentCourseId}`;
 }
 
-
-/* ================== LOAD SIDEBAR TOPICS ================== */
-
+/* ================== SIDEBAR TOPICS ================== */
 async function loadSidebarTopics(courseId) {
-  const listContainer = document.getElementById('sidebar-topic-list');
-  if (!listContainer) return;
-
-  showLoading(listContainer, 'Loading topics...');
+  const container = document.getElementById('sidebar-topic-list');
+  showLoading(container, 'Loading topics...');
 
   try {
-    const params = new URLSearchParams({
-      action: 'getCourseTopicsList',
-      courseId: courseId
-    });
-
+    const params = new URLSearchParams({ action: 'getCourseTopicsList', courseId });
     const response = await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`);
     const data = await response.json();
 
-    if (data.status === 'success' && Array.isArray(data.data) && data.data.length) {
+    if (data.status === 'success' && Array.isArray(data.data)) {
+      allTopics = data.data;
       displayTopicList(data.data);
     } else {
-      listContainer.innerHTML = '<li class="error">No topics found for this course</li>';
+      container.innerHTML = '<div class="error">No topics found</div>';
     }
   } catch (error) {
-    console.error('Sidebar topics error:', error);
-    listContainer.innerHTML = '<li class="error">Failed to load topics</li>';
+    console.error('Sidebar error:', error);
+    container.innerHTML = '<div class="error">Failed to load topics</div>';
   }
 }
 
 function displayTopicList(topics) {
   const container = document.getElementById('sidebar-topic-list');
-  if (!container) return;
-
   container.innerHTML = '';
 
-  // Sort by Order or TopicIndex
-  topics.sort((a, b) => (Number(a.Order || a.TopicIndex || 0)) - (Number(b.Order || b.TopicIndex || 0)));
+  topics.sort((a, b) => Number(a.Order || a.TopicIndex) - Number(b.Order || b.TopicIndex));
 
   topics.forEach((topic, idx) => {
-  const listIndex = idx + 1;
+    const listIndex = idx + 1;
+    const li = document.createElement('div');
+    li.className = `topic-item ${listIndex === currentTopicIndex ? 'active' : ''}`;
 
-  const li = document.createElement('li');
-  li.className = `topic-item ${listIndex === currentTopicIndex ? 'active' : ''}`;
-
-  let isLockedForClick = false;
-
-  // NEW RULE:
-  // 1) Jo topics current se pehle hain -> always unlocked
-  // 2) Jo topic current hai -> active
-  // 3) Jo topic current ke baad hain:
-  //    - Agar listIndex === currentTopicIndex + 1:
-  //        unlock only if mcqCompleted true
-  //    - Agar listIndex > currentTopicIndex + 1:
-  //        always locked
-
-  if (listIndex > currentTopicIndex) {
-    // future topic
-    if (listIndex === currentTopicIndex + 1) {
-      // just next topic
+    let isLocked = false, lockIcon = '';
+    if (listIndex > currentTopicIndex) {
       if (!mcqCompleted) {
         li.classList.add('locked-topic');
-        isLockedForClick = true;
+        isLocked = true;
+        lockIcon = ' <span class="topic-lock">🔒</span>';
       }
-    } else {
-      // 3rd, 4th, ... sab lock jab tak 2nd complete nahi
-      li.classList.add('locked-topic');
-      isLockedForClick = true;
     }
-  }
 
-  const link = document.createElement('a');
-  link.href = '#';
-  link.innerHTML = `
-    <span class="topic-number">${listIndex}.</span>
-    <span class="topic-name">${topic.Title}</span>
-  `;
+    li.innerHTML = `
+      <a href="#" style="text-decoration:none;color:inherit;">
+        <span class="topic-number">${listIndex}.</span>
+        <span class="topic-name">${topic.Title}</span>${lockIcon}
+      </a>
+    `;
 
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (isLockedForClick) {
-      showToast('Complete previous topics and assignments step by step.');
-      return;
-    }
-    switchTopic(listIndex);
+    li.querySelector('a').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (isLocked) {
+        showToast('🔒 Complete current quiz first!');
+        return;
+      }
+      switchTopic(listIndex);
+    });
+
+    container.appendChild(li);
   });
-
-  li.appendChild(link);
-  container.appendChild(li);
-});
-
-
-
-  totalTopics = topics.length;
-  updateNavigationButtons();
 }
 
 /* ================== NAVIGATION ================== */
-
 function navigateTopic(direction) {
   const newIndex = currentTopicIndex + direction;
   if (newIndex >= 1 && newIndex <= totalTopics) {
-    window.location.href =
-      `course-topic.html?courseId=${encodeURIComponent(currentCourseId)}` +
-      `&topicIndex=${newIndex}&userId=${encodeURIComponent(window.userId)}`;
+    window.location.href = `course-topic.html?courseId=${encodeURIComponent(currentCourseId)}&topicIndex=${newIndex}&userId=${encodeURIComponent(window.userId)}`;
   } else {
     showToast('No more topics available');
   }
@@ -396,98 +226,74 @@ function navigateTopic(direction) {
 
 function switchTopic(newIndex) {
   if (newIndex >= 1 && newIndex <= totalTopics) {
-    const url =
-      `course-topic.html?courseId=${encodeURIComponent(currentCourseId)}` +
-      `&topicIndex=${newIndex}&userId=${encodeURIComponent(window.userId)}`;
-
-    console.log('Navigating to:', url);
-    window.location.href = url;
-  } else {
-    console.log('Invalid newIndex', newIndex, 'totalTopics', totalTopics);
+    window.location.href = `course-topic.html?courseId=${encodeURIComponent(currentCourseId)}&topicIndex=${newIndex}&userId=${encodeURIComponent(window.userId)}`;
   }
 }
 
-/* ================== MCQ ASSIGNMENT ================== */
-
+/* ================== MCQ SYSTEM ================== */
 async function loadMCQAssignment(courseId, topicId) {
-    const container = document.getElementById('mcq-container');
-    if (!container) return;
+  const container = document.getElementById('mcq-container');
+  if (!container) return;
 
-    // 🔒 By default, Next button disable rakho (jab tak pata na chale ki assignment nahi hai ya complete ho gaya)
-    const nextBtn = document.getElementById('next-topic');
-    if (nextBtn) nextBtn.disabled = true;
+  const nextBtn = document.getElementById('video-next') || document.getElementById('next-topic');
+  if (nextBtn) nextBtn.disabled = true;
 
-    try {
-        const params = new URLSearchParams({
-            action: 	'getTopicMCQs',
-            courseId: courseId,
-            topicId: 	topicId,
-            userId: 	window.userId
-        });
+  try {
+    const params = new URLSearchParams({
+      action: 'getTopicMCQs',
+      courseId, topicId, userId: window.userId
+    });
 
-        const res 	= await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`);
-        const data = await res.json();
+    const res = await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`);
+    const data = await res.json();
 
-        if (data.status === 'success' && Array.isArray(data.data) && data.data.length) {
-            // --- MCQ Questions Found ---
-            mcqQuestions = data.data.map(q => ({
-                QuestionID: 	q.QuestionID,
-                QuestionText: q.QuestionText,
-                OptionA: 			q.OptionA,
-                OptionB: 			q.OptionB,
-                OptionC: 			q.OptionC,
-                OptionD: 			q.OptionD
-            }));
-            mcqCurrentIndex = 0;
-            mcqAnswers = {};
-            mcqCompleted = data.isAssignmentCompleted || false; // Backend se status lo
-            
-            renderCurrentMCQ();
+    if (data.status === 'success' && Array.isArray(data.data) && data.data.length) {
+      mcqQuestions = data.data.map(q => ({
+        QuestionID: q.QuestionID, QuestionText: q.QuestionText,
+        OptionA: q.OptionA, OptionB: q.OptionB, OptionC: q.OptionC, OptionD: q.OptionD
+      }));
+      mcqCurrentIndex = 0;
+      mcqAnswers = {};
+      mcqCompleted = data.isAssignmentCompleted || false;
+      
+      renderCurrentMCQ();
 
-            // ✅ (1) Previous completion check: Agar assignment complete hai to Next Button enable karo
-            if (mcqCompleted && typeof updateNavigationButtons === 'function') {
-                updateNavigationButtons(true);
-            }
-            
-            // ✅ (2) Retake Test button visibility: Agar pehle se complete hai to Retest button dikhao
-            const retestBtn = document.getElementById('mcq-retest');
-            if (retestBtn) {
-                retestBtn.style.display = mcqCompleted ? 'inline-block' : 'none';
-            }
-            
-        } else {
-            // --- No MCQ Questions Found ---
-            mcqQuestions = [];
-            container.innerHTML = '<p>No MCQ assignment for this topic. You may proceed to the next topic.</p>';
-            
-            // ✅ (3) Rule for No Assignment: Agar assignment hi nahi hai, to Next Topic ko turant allow karo
-            if (typeof updateNavigationButtons === 'function') {
-                updateNavigationButtons(true);
-            }
-            if (typeof updateNextTopicLockInList === 'function') {
-                updateNextTopicLockInList(true);
-            }
-        }
-    } catch (err) {
-        console.error('loadMCQAssignment error:', err);
-        container.innerHTML = '<p>Failed to load assignment.</p>';
+      if (mcqCompleted) {
+        updateNavigationButtons(true);
+      }
+
+      const retestBtn = document.getElementById('mcq-retest');
+      if (retestBtn) retestBtn.style.display = mcqCompleted ? 'inline-block' : 'none';
+      
+    } else {
+      mcqQuestions = [];
+      container.innerHTML = '<p style="text-align:center;color:var(--pista-green);font-weight:500;">✅ No quiz for this topic. Next topic unlocked!</p>';
+      updateNavigationButtons(true);
+      updateNextTopicLockInList(true);
     }
+  } catch (err) {
+    console.error('MCQ load error:', err);
+    container.innerHTML = '<p style="color:#ef4444;">Failed to load quiz</p>';
+  }
 }
-
 
 function renderCurrentMCQ() {
   if (!mcqQuestions.length) return;
 
-  const q = mcqQuestions[mcqCurrentIndex];
-  const qTextEl   = document.getElementById('mcq-question-text');
-  const optsEl    = document.getElementById('mcq-options');
-  const progEl    = document.getElementById('mcq-progress');
-  const submitBtn = document.getElementById('mcq-submit');
+  const qTextEl = document.getElementById('mcq-question-text');
+  const optsEl = document.getElementById('mcq-options');
+  const progEl = document.getElementById('mcq-progress');
+  
+  if (!qTextEl || !optsEl) {
+    setTimeout(renderCurrentMCQ, 100);
+    return;
+  }
 
+  const q = mcqQuestions[mcqCurrentIndex];
   const selected = mcqAnswers[q.QuestionID] || null;
 
   qTextEl.textContent = `${mcqCurrentIndex + 1}. ${q.QuestionText}`;
-
+  
   const optionsHtml = ['A','B','C','D'].map(letter => {
     const text = q[`Option${letter}`];
     if (!text) return '';
@@ -505,21 +311,17 @@ function renderCurrentMCQ() {
 
   const prevBtn = document.getElementById('mcq-prev');
   const nextBtn = document.getElementById('mcq-next');
+  const submitBtn = document.getElementById('mcq-submit');
+  
   if (prevBtn) prevBtn.disabled = mcqCurrentIndex === 0;
   if (nextBtn) nextBtn.disabled = mcqCurrentIndex === mcqQuestions.length - 1;
+  if (submitBtn) submitBtn.disabled = !canEnableSubmit();
 
-  if (submitBtn) {
-    submitBtn.disabled = !canEnableSubmit();
-  }
-
-  // Radio change event
   const radios = optsEl.querySelectorAll('input[name="mcq-option"]');
   radios.forEach(r => {
     r.addEventListener('change', () => {
       mcqAnswers[q.QuestionID] = r.value;
-      if (submitBtn) {
-        submitBtn.disabled = !canEnableSubmit();
-      }
+      if (submitBtn) submitBtn.disabled = !canEnableSubmit();
     });
   });
 }
@@ -532,69 +334,26 @@ function saveCurrentMCQSelection() {
     mcqAnswers[q.QuestionID] = selectedInput.value;
   }
 }
-function getTopicMCQs_(e) {
-  var courseId = (e.parameter.courseId || '').trim();
-  var topicId  = (e.parameter.topicId  || '').trim();
-  var userId   = (e.parameter.userId   || '').trim();
-
-  if (!courseId || !topicId) {
-    return { status: 'error', message: 'Missing courseId/topicId' };
-  }
-
-  var ss = SpreadsheetApp.openById(SS_ID);
-  var sh = ss.getSheetByName(SH_MCQ_ASSIGN);
-  if (!sh) {
-    return { status: 'error', message: 'MCQAssignments sheet not found' };
-  }
-
-  var data = sh.getDataRange().getValues();
-  data.shift(); // header
-
-  var result = [];
-  data.forEach(function(row) {
-    var rowCourse = String(row[0] || '').trim();
-    var rowTopic  = String(row[1] || '').trim();
-    if (rowCourse === courseId && rowTopic === topicId) {
-      result.push({
-        QuestionID:   row[2],
-        QuestionText: row[3],
-        OptionA:      row[4],
-        OptionB:      row[5],
-        OptionC:      row[6],
-        OptionD:      row[7]
-      });
-    }
-  });
-
-  var isCompleted = hasMCQSubmission_(userId, courseId, topicId);
-
-  return {
-    status: 'success',
-    data: result,
-    isAssignmentCompleted: isCompleted
-  };
-}
-
 
 function canEnableSubmit() {
   const attempted = Object.keys(mcqAnswers).length;
   const onLast = mcqCurrentIndex === mcqQuestions.length - 1;
   return onLast && attempted > 0;
 }
+
+/* ================== SUBMIT MCQ QUIZ ================== */
 async function submitMCQQuiz() {
   if (!mcqQuestions.length) return;
 
-  // Last question par jo select kiya hai woh bhi save ho jaye
   saveCurrentMCQSelection();
 
-  // Kam se kam 1 question attempt
   if (Object.keys(mcqAnswers).length === 0) {
     showToast('Attempt at least one question before submitting');
     return;
   }
 
   const submitBtn = document.getElementById('mcq-submit');
-  const resultEl  = document.getElementById('mcq-result');
+  const resultEl = document.getElementById('mcq-result');
 
   if (submitBtn) {
     submitBtn.disabled = true;
@@ -602,216 +361,68 @@ async function submitMCQQuiz() {
   }
 
   try {
-    // Answers array banao
     const answersArray = Object.entries(mcqAnswers).map(([questionId, selected]) => ({
-      questionId,
-      selected
+      questionId, selected
     }));
 
     const params = new URLSearchParams({
-      action:  'submitMCQAssignment',
-      userId:  window.userId,
-      courseId: currentCourseId,
-      topicId:  currentTopicID,
-      answers: JSON.stringify(answersArray)
-    });
-
-    const res  = await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, { method: 'POST' });
-    const data = await res.json();
-
-    if (data.status === 'success' && data.data) {
-      // Backend se aane wala full result
-      const { totalQuestions, attemptedCount, correctCount, perQuestionResult } = data.data;
-
-      // Top summary text
-      if (resultEl) {
-        resultEl.textContent =
-          `You attempted ${attemptedCount} out of ${totalQuestions} and got ${correctCount} correct.`;
-      }
-
-      // Assignment completed flag
-      mcqCompleted = true;
-      showToast('Assignment submitted successfully! Marking topic complete...');
-
-      // (1) Next topic turant unlock (button + sidebar)
-      if (typeof updateNavigationButtons === 'function') {
-        // canGoNextFromThis = true
-        updateNavigationButtons(true);
-      }
-      if (typeof updateNextTopicLockInList === 'function') {
-        // Sidebar me next topic se 🔒 hatao
-        updateNextTopicLockInList(true);
-      }
-
-      // (2) Topic ko auto-complete mark karo (progress sheet update)
-      try {
-        const completeParams = new URLSearchParams({
-          action:   'markTopicComplete',
-          userId:   window.userId,
-          courseId: currentCourseId,
-          topicId:  currentTopicID
-        });
-
-        const completeRes  = await fetch(`${GOOGLE_SCRIPT_URL}?${completeParams.toString()}`, {
-          method: 'POST'
-        });
-        const completeData = await completeRes.json();
-
-        if (completeData.status === 'success') {
-          // UI me completed status
-          updateCompletionStatus(true);
-          showToast('Topic marked complete automatically.');
-        } else {
-          // Yahin se exact backend message dikhega (Progress issue ka reason)
-          showToast(completeData.message || 'Could not mark topic complete.');
-          console.warn('markTopicComplete error:', completeData);
-        }
-      } catch (err2) {
-        console.error('auto markTopicComplete error:', err2);
-        showToast('Topic completion update failed.');
-      }
-
-      // (3) Har question ka review dikhाओ (student vs correct)
-      if (Array.isArray(perQuestionResult) && typeof showMCQReview === 'function') {
-        showMCQReview(perQuestionResult);
-      }
-
-      // (4) Retest button visible karo
-      const retestBtn = document.getElementById('mcq-retest');
-      if (retestBtn) {
-        retestBtn.style.display = 'inline-block';
-      }
-
-    } else {
-      throw new Error(data.message || 'Failed to submit MCQ assignment');
-    }
-  } catch (err) {
-    console.error('submitMCQQuiz error:', err);
-    showToast('Failed to submit MCQ assignment');
-    if (submitBtn) submitBtn.disabled = false;
-  } finally {
-    if (submitBtn) submitBtn.textContent = 'Submit Quiz';
-  }
-}
-
-
-
-
-
-function updateAssignmentControls() {
-  const submitBtn = document.getElementById('mcq-submit');
-  const markBtn   = document.getElementById('mark-complete');
-
-  // Agar MCQ hai to old textarea assignment ko hide kar do
-  if (mcqQuestions.length > 0) {
-    const ta  = document.getElementById('assignment-submission');
-    const qEl = document.getElementById('assignment-question');
-    const oldBtn = document.getElementById('submit-assignment');
-    if (ta) ta.style.display = 'none';
-    if (qEl) qEl.style.display = 'none';
-    if (oldBtn) oldBtn.style.display = 'none';
-
-    if (submitBtn) {
-      submitBtn.disabled = mcqQuestions.length === 0;
-    }
-    if (markBtn && !mcqCompleted) {
-      markBtn.textContent = 'Complete assignment to unlock';
-      markBtn.disabled = true;
-    }
-  }
-}
-
-/* ================== MARK COMPLETE ================== */
-
-async function markTopicComplete() {
-  const btn = document.getElementById('mark-complete');
-  if (!btn) return;
-
-  showLoadingBtn(btn, 'Saving...');
-
-  try {
-    const params = new URLSearchParams({
-      action: 'markTopicComplete',
-      userId: window.userId,
-      courseId: currentCourseId,
-      topicId: currentTopicID
-    });
-
-    const response = await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, {
-      method: 'POST'
-    });
-    const data = await response.json();
-
-    if (data.status === 'success') {
-      updateCompletionStatus(true);
-      showToast('✅ Topic marked complete!');
-    } else {
-      throw new Error(data.message || 'Failed to mark topic complete');
-    }
-  } catch (error) {
-    console.error('markTopicComplete error:', error);
-    showToast('❌ Failed to mark complete');
-    hideLoadingBtn(btn, 'Mark as Complete');
-  }
-}
-
-/* ================== TEXTAREA ASSIGNMENT (OPTIONAL) ================== */
-
-async function submitAssignment() {
-  const btn = document.getElementById('submit-assignment');
-  const textarea = document.getElementById('assignment-submission');
-  if (!btn || !textarea) return;
-
-  const submission = textarea.value.trim();
-  if (submission.length < 10) {
-    showToast('Please write a detailed answer (10+ chars)');
-    return;
-  }
-
-  showLoadingBtn(btn, 'Submitting...');
-
-  try {
-    const params = new URLSearchParams({
-      action: 'submitAssignment',
+      action: 'submitMCQAssignment',
       userId: window.userId,
       courseId: currentCourseId,
       topicId: currentTopicID,
-      submission: submission
+      answers: JSON.stringify(answersArray)
     });
 
-    const response = await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, {
-      method: 'POST'
-    });
-    const data = await response.json();
-    const retestBtn = document.getElementById('mcq-retest');
+    const res = await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, { method: 'POST' });
+    const data = await res.json();
 
-    if (data.status === 'success') {
-      textarea.value = '';
-      btn.textContent = '✅ Submitted';
-      btn.disabled = true;
-      showToast('Assignment submitted successfully!');
-    } 
-    if (retestBtn) {
-  retestBtn.style.display = 'inline-block';
-}
-    
+    if (data.status === 'success' && data.data) {
+      const { totalQuestions, attemptedCount, correctCount, perQuestionResult } = data.data;
 
-else {
-      throw new Error(data.message || 'Failed to submit assignment');
+      if (resultEl) {
+        resultEl.textContent = `You attempted ${attemptedCount} out of ${totalQuestions} and got ${correctCount} correct.`;
+        resultEl.style.color = correctCount >= 3 ? 'var(--pista-green)' : '#ef4444';
+      }
+
+      mcqCompleted = true;
+      showToast('✅ Quiz submitted! Next topic unlocked!');
+
+      updateNavigationButtons(true);
+      updateNextTopicLockInList(true);
+
+      // Mark topic complete
+      try {
+        const completeParams = new URLSearchParams({
+          action: 'markTopicComplete',
+          userId: window.userId,
+          courseId: currentCourseId,
+          topicId: currentTopicID
+        });
+
+        await fetch(`${GOOGLE_SCRIPT_URL}?${completeParams.toString()}`, { method: 'POST' });
+        updateCompletionStatus(true);
+        showToast('Topic marked complete!');
+      } catch (err2) {
+        console.error('Mark complete error:', err2);
+      }
+
+      if (Array.isArray(perQuestionResult)) showMCQReview(perQuestionResult);
+
+      const retestBtn = document.getElementById('mcq-retest');
+      if (retestBtn) retestBtn.style.display = 'inline-block';
     }
-  } catch (error) {
-    console.error('submitAssignment error:', error);
-    showToast('Failed to submit assignment');
-    hideLoadingBtn(btn, 'Submit Assignment');
+  } catch (err) {
+    console.error('Submit error:', err);
+    showToast('Failed to submit quiz');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Quiz';
+    }
   }
 }
 
-
-
-
 function retakeMCQQuiz() {
-  if (!mcqQuestions.length) return;
-
   mcqAnswers = {};
   mcqCurrentIndex = 0;
   mcqCompleted = false;
@@ -823,22 +434,17 @@ function retakeMCQQuiz() {
 
   const submitBtn = document.getElementById('mcq-submit');
   if (submitBtn) {
-    submitBtn.disabled = true;          // jab tak dubara answers fill na hon
+    submitBtn.disabled = true;
     submitBtn.textContent = 'Submit Quiz';
   }
 
   const retestBtn = document.getElementById('mcq-retest');
   if (retestBtn) retestBtn.style.display = 'none';
 
-  renderCurrentMCQ();                   // question 1 se start
+  renderCurrentMCQ();
 }
 
-
-
-
 /* ================== UI HELPERS ================== */
-
-
 function showMCQReview(perQuestionResult) {
   const reviewEl = document.getElementById('mcq-review');
   if (!reviewEl) return;
@@ -846,15 +452,17 @@ function showMCQReview(perQuestionResult) {
   const html = perQuestionResult.map((row, idx) => {
     const status = row.isCorrect ? '✅ Correct' : '❌ Wrong';
     return `
-      <div class="mcq-review-item">
-        <div class="mcq-review-q">
+      <div style="padding:1rem;margin:1rem 0;border-left:4px solid ${row.isCorrect ? 'var(--pista-green)' : '#ef4444'};background:var(--card-bg);border-radius:8px;">
+        <div style="font-weight:600;margin-bottom:0.5rem;">
           ${idx + 1}. ${row.questionText}
         </div>
-        <div class="mcq-review-opts">
-          <div><strong>Your answer:</strong> ${row.studentOption || '-'} ${row.studentText ? '- ' + row.studentText : ''}</div>
-          <div><strong>Correct answer:</strong> ${row.correctOption} - ${row.correctText}</div>
-          <div class="mcq-review-status">${status}</div>
+        <div style="margin-bottom:0.3rem;">
+          <strong>Your answer:</strong> ${row.studentOption || '-'} - ${row.studentText || 'Not answered'}
         </div>
+        <div style="margin-bottom:0.3rem;">
+          <strong>Correct answer:</strong> ${row.correctOption} - ${row.correctText}
+        </div>
+        <div style="font-weight:500;">${status}</div>
       </div>
     `;
   }).join('');
@@ -862,102 +470,60 @@ function showMCQReview(perQuestionResult) {
   reviewEl.innerHTML = html;
 }
 
-
-function updateNavigationButtons(canGoNextFromThis = true) {
-  const prevBtn = document.getElementById('prev-topic');
-  const nextBtn = document.getElementById('next-topic');
-
+function updateNavigationButtons(canGoNext = true) {
+  const prevBtn = document.getElementById('video-prev') || document.getElementById('prev-topic');
+  const nextBtn = document.getElementById('video-next') || document.getElementById('next-topic');
+  
   if (prevBtn) prevBtn.disabled = currentTopicIndex <= 1;
+  if (nextBtn) nextBtn.disabled = !canGoNext || currentTopicIndex >= totalTopics;
+}
 
-  if (nextBtn) {
-    if (totalTopics === 0 || currentTopicIndex >= totalTopics) {
-      nextBtn.disabled = true;
+function updateTopicNumbers() {
+  document.getElementById('current-topic-num').textContent = currentTopicIndex;
+  document.getElementById('total-topics-num').textContent = totalTopics;
+}
+
+function updateNextTopicLockInList(canGoNext) {
+  const items = document.querySelectorAll('#sidebar-topic-list .topic-item');
+  if (items[currentTopicIndex]) {
+    const nextItem = items[currentTopicIndex];
+    if (canGoNext) {
+      nextItem.classList.remove('locked-topic');
+      nextItem.querySelector('.topic-lock')?.remove();
     } else {
-      nextBtn.disabled = !canGoNextFromThis;
+      nextItem.classList.add('locked-topic');
     }
   }
 }
 
-
-
 function updateCompletionStatus(isCompleted) {
   const btn = document.getElementById('mark-complete');
-  if (!btn) return;
-
-  btn.disabled = true;
-  btn.textContent = isCompleted ? '✅ Completed' : 'Completed after quiz';
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = isCompleted ? '✅ Completed' : 'Complete quiz first';
+  }
 }
 
-
-function showLoading(element, message) {
-  if (!element) return;
-  element.textContent = message;
-  element.classList.add('loading');
-}
-
-function showError(message) {
-  const titleEl = document.getElementById('topic-title');
-  if (!titleEl) return;
-  titleEl.textContent = message;
-  titleEl.style.color = 'red';
-}
-
-function showLoadingBtn(btn, text) {
-  if (!btn) return;
-  btn.disabled = true;
-  btn.textContent = text;
-}
-
-function hideLoadingBtn(btn, text) {
-  if (!btn) return;
-  btn.disabled = false;
-  btn.textContent = text;
-}
-
+/* ================== UTILITY FUNCTIONS ================== */
 function showToast(message) {
   const toast = document.createElement('div');
-  toast.className = 'toast';
+  toast.className = 'toast show';
   toast.textContent = message;
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 3000);
 }
 
-
-/* =========================================================
-   COMPILER EXECUTION  (Piston API)
-========================================================= */
-async function runCompiler() {
-
-  const code = document.getElementById("compiler-input").value;
-  const lang = document.getElementById("compiler-language").value;
-  const stdin = document.getElementById("compiler-stdin").value;
-  const out = document.getElementById("compiler-output");
-
-  if (!code.trim()) return out.innerText = "⚠️ Write some code first.";
-
-  out.innerText = "⏳ Running...";
-
-  try {
-    const response = await fetch("https://emkc.org/api/v2/piston/execute", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        language: lang,
-        version: "*",
-        files: [{ content: code }],
-        stdin
-      })
-    });
-
-    const result = await response.json();
-
-    out.innerText =
-      result.run?.output ||
-      result.run?.stderr ||
-      "⚠️ No output.";
-  }
-  catch (err) {
-    out.innerText = "❌ Error running code.";
+function showLoading(el, msg) {
+  if (el) {
+    el.textContent = msg;
+    el.classList.add('loading');
   }
 }
 
+function showError(msg) {
+  const titleEl = document.getElementById('topic-title');
+  if (titleEl) {
+    titleEl.textContent = msg;
+    titleEl.style.color = '#ef4444';
+  }
+}
