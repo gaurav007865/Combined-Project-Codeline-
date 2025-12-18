@@ -30,6 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     initTestimonialSlider();
     initFacultySlider();   // ⬅️ naya call
+    initPlacementsMarquee();
+    
 });
 
 /**

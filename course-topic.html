@@ -1,531 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Course Topic - LSM Portal</title>
-
-  <!-- Base styles -->
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Course Topic - CODELINE AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  
+  <!-- 🔥 GOOGLE SCRIPT URL - Yahan apna URL dalo -->
+  <script>const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwbp2TRprxwMuUxjS1Yz1BGs6jQIaTAx30cfVD0daUPm8nvRLQm6OkGKkMqijaitsdBXQ/exec";</script>
+  
   <style>
     :root {
-  /* Color Palette */
-  --primary: #0f4c75; /* A deep, professional blue */
-  --primary-dark: #002d62;
-  --accent: #ffb703; /* Bright contrasting accent */
-  --bg-main: #f8f9fa; /* Light background */
-  --bg-card: #ffffff;
-  --text-main: #212529;
-  --text-muted: #6c757d;
-  --border-color: #e9ecef;
-
-  /* Spacing & Typography */
-  --spacing-unit: 8px;
-  --radius-lg: 12px;
-  --radius-md: 8px;
-  --font-body: 'Inter', sans-serif;
-  --font-code: 'Fira Code', monospace;
-
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.08);
-}
-
-/* Base Reset & Typography */
-* {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: var(--font-body);
-  margin: 0;
-  background: var(--bg-main);
-  color: var(--text-main);
-  line-height: 1.6;
-}
-
-h1, h2, h3 {
-  color: var(--text-main);
-  font-weight: 700;
-  margin-top: 0;
-}
-
-/* ========== STRUCTURE & LAYOUT ========== */
-
-.page-container {
-  display: flex;
-  min-height: 100vh;
-}
-
-/* Card Styling (Glassmorphism/Soft Shadow Effect) */
-.card {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  padding: calc(2 * var(--spacing-unit)); /* 16px */
-  margin-bottom: calc(2 * var(--spacing-unit));
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-color);
-  transition: transform 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
-
-.card h2 {
-  font-size: 1.15rem;
-  margin-bottom: 1rem;
-  border-bottom: 2px solid var(--border-color);
-  padding-bottom: 0.5rem;
-  color: var(--primary);
-}
-
-/* ========== SIDEBAR (Enhanced Dark Mode) ========== */
-
-.topics-sidebar {
-  width: 300px;
-  background: var(--primary-dark);
-  color: #f8f9fa;
-  padding: calc(3 * var(--spacing-unit)) calc(2 * var(--spacing-unit));
-  box-shadow: 6px 0 20px rgba(0, 0, 0, 0.2);
-  flex-shrink: 0;
-}
-
-.sidebar-title-main {
-  font-size: 1.25rem;
-  color: var(--accent);
-}
-
-.topic-list {
-  padding-top: 1rem;
-}
-
-.topic-item a {
-  display: block;
-  padding: 0.75rem 1rem;
-  margin: 0.2rem 0;
-  border-radius: var(--radius-md);
-  color: #e5e7eb;
-  text-decoration: none;
-  transition: background 0.15s, color 0.15s;
-  font-size: 0.9rem;
-}
-
-.topic-item a:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.topic-item.active a {
-  background: var(--accent);
-  color: var(--primary-dark);
-  font-weight: 600;
-  box-shadow: var(--shadow-sm);
-  transform: translateX(2px);
-}
-
-/* ========== MAIN CONTENT & HEADER ========== */
-
-.topic-main {
-  flex-grow: 1;
-  padding: calc(4 * var(--spacing-unit));
-}
-
-.topic-layout {
-  display: grid;
-  grid-template-columns: 2fr 1.2fr;
-  gap: calc(3 * var(--spacing-unit));
-  align-items: flex-start;
-}
-
-.topic-header h1 {
-  font-size: 2rem;
-  margin: 0.5rem 0;
-  letter-spacing: -0.02em;
-}
-
-.breadcrumb {
-  font-size: 0.85rem;
-}
-
-/* Buttons (Modern Gradient Look) */
-.btn-primary, .btn-secondary {
-  border-radius: 50px;
-  padding: 0.7rem 1.5rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  transition: all 0.3s ease;
-}
-
-.btn-primary {
-  background: linear-gradient(45deg, var(--primary), #1a608a);
-  color: white;
-  box-shadow: 0 4px 15px rgba(15, 76, 117, 0.3);
-}
-
-.btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(15, 76, 117, 0.5);
-}
-
-.btn-secondary {
-  background: var(--border-color);
-  color: var(--text-main);
-  border: 1px solid #ced4da;
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background: #dee2e6;
-}
-
-.btn-back {
-  background: var(--text-muted);
-  color: white;
-  padding: 0.5rem 1rem;
-  font-size: 0.85rem;
-}
-
-
-/* Video & Notes */
-#topic-notes {
-  white-space: pre-wrap;
-  color: var(--text-main);
-  font-size: 1rem;
-}
-
-/* Video & Notes section mein badlav */
-.video-wrapper {
-    /* Pura ka pura yeh naya code daal do */
-    position: relative;                 /* Absolute positioning ke liye parent */
-    width: 100%;
-    padding-bottom: 56.25%;             /* 16:9 Aspect Ratio (9/16 = 0.5625) */
-    height: 0;
-    overflow: hidden;
-    border-radius: var(--radius-md);    /* Card se match karne ke liye */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Shadow wahi rakho */
-    margin-bottom: 0;
-}
-
-/* iframe ko container ke andar puri tarah faila do */
-#topic-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;                       /* Iframe ki border hatane ke liye */
-}
-
-/* ========== ASSIGNMENT & MCQ STYLING ========== */
-
-#mcq-container {
-  padding-bottom: 1rem;
-}
-
-#mcq-question-text {
-  font-size: 1.1rem;
-  font-weight: 500;
-  margin-bottom: 1.5rem;
-}
-
-
-
-#mcq-options label {
-  display: block;
-  background: var(--bg-main);
-  padding: 1rem;
-  margin-bottom: 0.6rem;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  border: 1px solid var(--border-color);
-  transition: all 0.2s ease;
-}
-
-#mcq-options label:hover {
-  background: #e9ecef;
-  border-color: var(--primary);
-}
-
-#mcq-options input[type="radio"]:checked + span {
-  font-weight: 600;
-  color: var(--primary);
-}
-
-.mcq-nav {
-  display: flex;
-  gap: 10px;
-  margin-top: 1.5rem;
-  justify-content: space-between;
-}
-
-#mcq-submit {
-  flex-grow: 1;
-}
-
-/* MCQ Review Box */
-.mcq-review-box {
-  border-left: 5px solid var(--accent);
-  background: #fff8e1;
-  padding: 15px;
-  color: var(--text-main);
-  margin-top: 20px;
-}
-
-.mcq-review-status.correct { color: #198754; font-weight: 700; }
-.mcq-review-status.incorrect { color: #dc3545; font-weight: 700; }
-
-
-/* ========== COMPILER STYLES (Professional Dark Theme) ========== */
-
-#compiler-card {
-    background: #212529; /* Dark card background */
-    color: #e9ecef;
-    border: 1px solid #495057;
-    padding: 1.5rem;
-}
-
-#compiler-card h2 {
-    color: var(--accent); /* Accent color for dark card heading */
-    border-bottom-color: #495057;
-    /* NEW: Heading ki bottom margin badhao */
-    margin-bottom: 1rem; 
-}
-
-.compiler-select {
-    background: #343a40;
-    color: #f8f9fa;
-    border: 1px solid #495057;
-    /* NEW: Box model aur padding sudharo */
-    padding: 8px 12px;
-    border-radius: var(--radius-md);
-    margin-bottom: 15px; 
-    display: block; /* Poori width lo */
-}
-
-
-
-.compiler-editor {
-    width: 100%;
-    min-height: 200px; 
-    background: #1c1f23; /* Very dark editor background */
-    color: #f8f9fa;
-    border-radius: var(--radius-md);
-    padding: 1rem;
-    font-size: 0.95rem; /* Thoda bada font */
-    font-family: var(--font-code);
-    border: 1px solid #495057;
-    resize: vertical;
-    /* NEW: Focus effect */
-    transition: border-color 0.3s;
-}
-
-.compiler-editor:focus {
-    outline: none;
-    border-color: var(--accent); /* Focus hone par accent color */
-}
-
-#compiler-stdin {
-    min-height: 80px; /* Thoda chhota input area */
-}
-
-.compiler-output {
-    background: #343a40;
-    color: #5bc0de; /* Light blue output text */
-    padding: 1rem;
-    min-height: 80px;
-    border-radius: var(--radius-md);
-    border: 1px solid #495057;
-    white-space: pre-wrap;
-    overflow-x: auto;
-    font-family: var(--font-code);
-}
-/* ========== RESPONSIVENESS (Mobile First) ========== */
-
-@media (max-width: 992px) {
-  .topic-layout {
-    grid-template-columns: 1fr; /* Stack columns on tablets/mobile */
-  }
-}
-
-@media (max-width: 768px) {
-  .page-container {
-    flex-direction: column;
-  }
-
-  .topics-sidebar {
-    width: 100%;
-    max-height: 280px; /* Limit height on mobile */
-    overflow-y: auto;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  }
-
-  .topic-main {
-    padding: calc(2 * var(--spacing-unit));
-  }
-
-  .topic-header {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .topic-nav-buttons {
-    width: 100%;
-    justify-content: space-between;
-  }
-}
-
-@media (max-width: 480px) {
-  .btn-primary, .btn-secondary {
-    padding: 0.6rem 1rem;
-    font-size: 0.8rem;
-  }
-}
+      --primary-purple: #6f036a;--primary-dark: #3b1a91;--pista-green: #badc58;
+      --bg-color: #f6f7fb;--white: #ffffff;--card-bg: var(--white);
+      --text-dark: #111827;--text-light: #6b7280;
+      --shadow-light: 0 8px 20px rgba(15, 23, 42, 0.08);
+      --shadow-deep: 0 20px 45px rgba(15, 23, 42, 0.18);
+    }
+    [data-theme="dark"] {
+      --primary-purple: #c084fc;--primary-dark: #60a5fa;--pista-green: #22c55e;
+      --bg-color: #050816;--white: #020617;--card-bg: #020617;
+      --text-dark: #e5e7eb;--text-light: #9ca3af;
+      --shadow-light: 0 10px 30px rgba(0,0,0,0.55);
+      --shadow-deep: 0 24px 60px rgba(0,0,0,0.85);
+    }
+    *{box-sizing:border-box;}
+    body{font-family:'Poppins',sans-serif;margin:0;background:radial-gradient(circle at top,rgba(186,220,88,0.18),transparent 55%),var(--bg-color);color:var(--text-dark);min-height:100vh;overflow-x:hidden;}
+    
+    .udemy-layout{display:flex;flex-direction:column;min-height:100vh;}
+    .video-hero{position:relative;height:65vh;min-height:450px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);display:flex;align-items:center;justify-content:center;}
+    .video-hero iframe{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:20px 20px 0 0;border:none;box-shadow:var(--shadow-deep);}
+    
+    .course-content{padding:2rem;max-width:1400px;margin:0 auto;width:100%;}
+    .course-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;}
+    .course-title-main h1{margin:0;font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;color:var(--primary-dark);}
+    .course-progress{display:flex;align-items:center;gap:1rem;font-size:0.95rem;color:var(--text-light);}
+    .progress-bar{background:rgba(148,163,184,0.3);height:8px;border-radius:4px;overflow:hidden;flex:1;max-width:200px;}
+    .progress-fill{background:var(--pista-green);height:100%;border-radius:4px;transition:width 0.3s ease;}
+    
+    /* 🔥 VIDEO CONTROLS */
+    .video-controls{padding:1rem 2rem;display:flex;gap:1rem;background:var(--card-bg);border-radius:0 0 20px 20px;box-shadow:var(--shadow-light);}
+    .video-controls button{padding:0.8rem 1.5rem;min-width:120px;}
+    
+    .content-tabs{display:flex;gap:0.5rem;margin-bottom:2rem;overflow-x:auto;padding-bottom:1rem;}
+    .tab-item{padding:1rem 1.5rem;border-radius:12px 12px 0 0;background:var(--card-bg);color:var(--text-light);font-weight:600;font-size:0.95rem;transition:all 0.3s ease;cursor:pointer;border:2px solid transparent;border-bottom:none;}
+    .tab-item.active{background:var(--primary-purple);color:#fff;border-color:var(--primary-purple);box-shadow:var(--shadow-light);}
+    .tab-item:hover{background:rgba(111,3,106,0.1);color:var(--primary-purple);}
+    
+    .tab-panel{display:none;}
+    .tab-panel.active{display:block;}
+    
+    .video-details{padding:2.5rem;background:var(--card-bg);border-radius:0 20px 20px 20px;box-shadow:var(--shadow-light);}
+    .video-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem;margin-bottom:2rem;}
+    .meta-item h3{margin:0 0 0.5rem;color:var(--primary-dark);font-size:1.1rem;font-weight:600;}
+    .meta-item p{margin:0;color:var(--text-light);font-size:1rem;}
+    
+    .topic-notes{white-space:pre-wrap;font-size:1.05rem;line-height:1.7;color:var(--text-dark);}
+    
+    .quiz-card,.pdf-resources{background:var(--card-bg);border-radius:20px;padding:2.5rem;box-shadow:var(--shadow-light);}
+    .quiz-header{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;}
+    .quiz-header h2{margin:0;font-size:1.4rem;color:var(--primary-dark);font-weight:600;}
+    
+    .mcq-question{font-size:1.2rem;font-weight:600;margin-bottom:2rem;line-height:1.6;color:var(--primary-dark);}
+    .mcq-option{display:block;padding:1.2rem;margin-bottom:1rem;border:2px solid rgba(148,163,184,0.3);border-radius:14px;cursor:pointer;transition:all 0.3s ease;background:var(--card-bg);}
+    .mcq-option:hover{border-color:var(--pista-green);box-shadow:var(--shadow-light);}
+    .mcq-option input[type="radio"]{margin-right:0.5rem;}
+    
+    .assignment-actions{display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap;}
+    .btn-primary{background:linear-gradient(135deg,var(--primary-purple),var(--primary-dark));color:#fff;border:none;padding:1rem 2rem;border-radius:14px;font-weight:600;cursor:pointer;transition:all 0.3s ease;box-shadow:0 6px 20px rgba(111,3,106,0.4);}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:var(--shadow-deep);}
+    .btn-primary:disabled{opacity:0.6;cursor:not-allowed;transform:none;background:#9ca3af;}
+    .btn-secondary{background:var(--card-bg);color:var(--text-dark);border:2px solid rgba(148,163,184,0.5);padding:1rem 2rem;border-radius:14px;font-weight:600;cursor:pointer;transition:all 0.3s ease;}
+    .btn-secondary:hover{background:var(--text-light);}
+    .btn-secondary:disabled{opacity:0.5;cursor:not-allowed;}
+    
+    /* 🔥 LOCKED TOPIC STYLES */
+    .topic-item.locked-topic{opacity:0.5;background:rgba(148,163,184,0.3)!important;cursor:not-allowed;}
+    .topic-item.locked-topic:hover{transform:none;background:rgba(148,163,184,0.3)!important;}
+    .topic-lock{color:#ef4444;font-size:1.1rem;}
+    
+    .topics-sidebar{position:fixed;right:2rem;top:2rem;width:340px;max-height:80vh;background:var(--card-bg);border-radius:20px;padding:2rem;box-shadow:var(--shadow-deep);overflow-y:auto;z-index:100;display:none;}
+    .topics-sidebar.active{display:block;}
+    .topics-sidebar h3{margin:0 0 1.5rem 0;color:var(--primary-purple);font-size:1.2rem;font-weight:600;}
+    .topic-item{padding:1.1rem;border-radius:12px;margin-bottom:0.8rem;background:rgba(186,220,88,0.1);cursor:pointer;transition:all 0.3s ease;font-weight:500;}
+    .topic-item:hover{transform:translateX(-5px);background:var(--pista-green);color:var(--primary-purple);}
+    .topic-item.active{background:var(--primary-purple);color:#fff;box-shadow:var(--shadow-light);}
+    
+    .loading{color:var(--text-light);font-style:italic;}
+    .toast{position:fixed;top:20px;right:20px;background:var(--primary-purple);color:white;padding:1rem 1.5rem;border-radius:10px;z-index:1000;transform:translateX(400px);transition:all 0.3s ease;}
+    .toast.show{transform:translateX(0);}
+    
+    @media (max-width:768px){
+      .video-hero{height:50vh;}
+      .course-content{padding:1rem;}
+      .topics-sidebar{right:1rem;top:1rem;width:90vw;max-height:50vh;}
+      .video-meta{grid-template-columns:1fr;}
+      .video-controls{flex-direction:column;gap:0.5rem;}
+    }
   </style>
 </head>
-<body>
-  <div class="page-container">
-    <!-- Sidebar: Topic list -->
-    <aside class="topics-sidebar">
-      <div class="sidebar-header">
-        <div class="sidebar-label">Learning Path</div>
-        <div class="sidebar-title-main">
-          <span class="icon">📚</span>
-          <span>Course Topics</span>
+<body data-theme="light">
+  <div class="udemy-layout">
+    <!-- VIDEO HERO -->
+    <div class="video-hero">
+      <iframe id="topic-video" src="" title="Course Video" allowfullscreen></iframe>
+    </div>
+
+    <!-- 🔥 VIDEO CONTROLS -->
+    <div class="video-controls">
+      <button id="video-prev" class="btn-secondary" disabled><i class="fas fa-step-backward"></i> Previous</button>
+      <button id="video-next" class="btn-primary" disabled>Next <i class="fas fa-step-forward"></i></button>
+      <div style="margin-left:auto;color:var(--text-light);font-weight:500;">
+        Topic <span id="current-topic-num">1</span> of <span id="total-topics-num">10</span>
+      </div>
+    </div>
+
+    <div class="course-content">
+      <!-- Course Header -->
+      <div class="course-header">
+        <div class="course-title-main">
+          <h1 id="topic-title" class="loading">Loading Topic...</h1>
+          <div class="course-progress">
+            <span>Progress: <strong id="topic-progress">0%</strong></span>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+            </div>
+          </div>
         </div>
-        <div id="course-title-sidebar">Course</div>
+        <button class="btn-primary" id="topics-toggle-btn">
+          📚 Topics <i class="fas fa-chevron-down"></i>
+        </button>
       </div>
 
-      <ul id="sidebar-topic-list" class="topic-list">
-        <!-- JS will inject topics here -->
-      </ul>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="topic-main">
-      <div class="topic-main-inner">
-        <div class="topic-header">
-          <div class="left-header">
-            <button id="back-to-dashboard" class="btn-back" title="Back to Dashboard">
-              <span class="icon">←</span>
-              <span>Back to Dashboard</span>
-            </button>
-            <div>
-              <p class="breadcrumb">
-                <span>Dashboard</span> · <span>My Courses</span> · <span>Current Topic</span>
-              </p>
-              <h1 id="topic-title" class="loading">Loading topic...</h1>
-              <p class="topic-subtitle" id="topic-subtitle"></p>
-            </div>
-          </div>
-
-          
-        </div>
-
-        <div class="topic-layout">
-          <!-- Left column: Notes + Video -->
-          <div>
-            
-
-            <div class="card">
-              <h2><span class="emoji">🎥</span> Video Lecture</h2>
-              <div class="video-wrapper">
-                <iframe
-                  id="topic-video"
-                  src=""
-                  title="Topic Video"
-                  allowfullscreen
-                ></iframe>
-              </div>
-            </div>
-            <div class="topic-nav-buttons">
-            <button id="prev-topic" class="btn-secondary" type="button">Previous</button>
-            <button id="next-topic" class="btn-primary" type="button">Next</button>
-
-
-
-
-            <div class="card">
-              <h2><span class="emoji">📖</span> Topic Notes</h2>
-              <div id="topic-notes">Loading notes...</div>
-            </div>
-          </div>
-          </div>
-
-          
-
-          <!-- Right column: Assignment -->
-          <div>
-            <div class="card">
-  <div class="assignment-header">
-  <h2><span class="emoji">✏️</span> Quiz</h2>
-</div>
-
-<!-- MCQ area -->
-<div id="mcq-container">
-  <p id="mcq-question-text">Loading question...</p>
-
-  <div id="mcq-options">
-    <!-- JS se radio options inject honge -->
-  </div>
-
-  <div class="mcq-nav">
-    <button id="mcq-prev" class="btn-secondary" type="button">Previous</button>
-    <button id="mcq-next" class="btn-secondary" type="button">Next</button>
-    <button id="mcq-submit" class="btn-primary" type="button" disabled>Submit Quiz</button>
-    <button id="mcq-retest" class="btn-secondary" type="button" style="display:none;">
-    Retake Test
-  </button>
-  </div>
-
-  <p id="mcq-progress" class="topic-subtitle"></p>
-  <p id="mcq-result" class="topic-subtitle"></p>
-
-  <!-- 🔥 NEW: per-question review yahin render hoga -->
-  <div id="mcq-review" class="mcq-review-box"></div>
-</div>
-
-
-  <!-- Agar kisi topic me MCQ na ho, to old textarea use kar sakte ho (optional fallback) -->
-</div>
-
-
-          </div>
-        </div>
-        <div class="card" id="compiler-card" style="margin-top:20px;">
-  <h2><span class="emoji">💻</span> Code Compiler</h2>
-
-  <label style="font-size:14px; font-weight:600;">Language:</label>
-  <select id="compiler-language" class="compiler-select">
-    <option value="c">C</option>
-    <option value="cpp">C++</option>
-    <option value="java">Java</option>
-    <option value="python">Python</option>
-    <option value="javascript">JavaScript</option>
-  </select>
-
-  <textarea id="compiler-input" class="compiler-editor" placeholder="Write your code..."></textarea>
-  <h3 style="margin-top:15px;">Input:</h3>
-<textarea id="compiler-stdin" class="compiler-editor" style="height:120px;" placeholder="Enter input here..."></textarea>
-
-
-  <button id="compiler-run" class="btn-primary" style="margin-top:12px;">Run Code</button>
-
-  <h3 style="margin-top:15px;">Output:</h3>
-  <pre id="compiler-output" class="compiler-output"></pre>
-</div>
-
+      <!-- Content Tabs -->
+      <div class="content-tabs">
+        <div class="tab-item active" data-tab="details">📋 Details</div>
+        <div class="tab-item" data-tab="notes">📝 Notes</div>
+        <div class="tab-item" data-tab="quiz">🧠 Quiz</div>
+        <div class="tab-item" data-tab="pdfs">📄 PDFs</div>
       </div>
-    </main>
+
+      <!-- DETAILS TAB -->
+      <div id="details" class="tab-panel active">
+        <div class="video-details">
+          <div class="video-meta">
+            <div class="meta-item">
+              <h3>⏱️ Duration</h3>
+              <p id="video-duration" class="loading">Loading...</p>
+            </div>
+            <div class="meta-item">
+              <h3>📊 Level</h3>
+              <p id="topic-level" class="loading">Loading...</p>
+            </div>
+            <div class="meta-item">
+              <h3>🎯 Objectives</h3>
+              <p id="topic-objectives" class="loading">Loading...</p>
+            </div>
+            <div class="meta-item">
+              <h3>📈 Status</h3>
+              <p id="topic-status" class="loading">Loading...</p>
+            </div>
+          </div>
+          <div id="topic-description" class="loading" style="font-size:1.1rem;line-height:1.7;color:var(--text-dark);">
+            Loading course details...
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTES TAB -->
+      <div id="notes" class="tab-panel">
+        <div class="video-details">
+          <div id="topic-notes" class="topic-notes loading">Loading notes...</div>
+        </div>
+      </div>
+
+      <!-- QUIZ TAB -->
+      <div id="quiz" class="tab-panel">
+        <div class="quiz-card">
+          <div class="quiz-header">
+            <h2><i class="fas fa-brain"></i> Practice Quiz</h2>
+            <div style="color:var(--text-light);">Test your knowledge • 5-10 mins</div>
+          </div>
+          
+          <div id="mcq-container">
+            <div id="mcq-question-text" class="mcq-question loading">Loading quiz question...</div>
+            <div id="mcq-options"></div>
+            <div id="mcq-progress" style="color:var(--text-light);margin-bottom:1rem;"></div>
+            <div class="assignment-actions">
+              <button id="mcq-prev" class="btn-secondary" disabled>Previous</button>
+              <button id="mcq-next" class="btn-secondary" disabled>Next</button>
+              <button id="mcq-submit" class="btn-primary" disabled>Submit Quiz</button>
+              <button id="mcq-retest" class="btn-secondary" style="display:none;">Retake Quiz</button>
+            </div>
+            <div id="mcq-result" style="margin-top:2rem;padding:1rem;border-radius:10px;background:rgba(186,220,88,0.1);"></div>
+            <div id="mcq-review"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PDF TAB -->
+      <div id="pdfs" class="tab-panel">
+        <div class="pdf-resources">
+          <div class="pdf-header">
+            <h3><i class="fas fa-file-pdf"></i> Downloadable Resources</h3>
+          </div>
+          <div class="pdf-list" id="pdf-list">
+            <div class="pdf-item">
+              <i class="fas fa-file-pdf"></i>
+              <span>📖 Topic Notes PDF</span>
+            </div>
+            <div class="pdf-item">
+              <i class="fas fa-file-pdf"></i>
+              <span>📋 Cheatsheet</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topics Sidebar -->
+    <div class="topics-sidebar" id="topics-sidebar">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <h3 id="course-title-sidebar">📚 Course Topics</h3>
+        <button onclick="closeTopics()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-light);padding:0;">×</button>
+      </div>
+      <div id="sidebar-topic-list" class="loading">Loading topics...</div>
+    </div>
   </div>
 
-  <!-- Config: must define GOOGLE_SCRIPT_URL -->
-  <script src="js/config.js"></script>
-<script src="js/course-topic.js"></script>
+  <!-- 🔥 ALL SCRIPTS -->
+  <script>
+    // Tab switching + Sidebar
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.tab-item').forEach(tab => {
+        tab.addEventListener('click', function() {
+          document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+          this.classList.add('active');
+          document.getElementById(this.dataset.tab).classList.add('active');
+        });
+      });
 
+      document.getElementById('topics-toggle-btn').addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.getElementById('topics-sidebar').classList.toggle('active');
+      });
+
+      window.closeTopics = function() {
+        document.getElementById('topics-sidebar').classList.remove('active');
+      };
+
+      document.addEventListener('click', function(e) {
+        if (!e.target.closest('#topics-toggle-btn') && !e.target.closest('#topics-sidebar')) {
+          document.getElementById('topics-sidebar').classList.remove('active');
+        }
+      });
+    });
+  </script>
+
+  <!-- 🔥 MAIN JS FILE -->
+  <script src="js/course-topic.js"></script>
 </body>
 </html>
